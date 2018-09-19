@@ -1,8 +1,9 @@
-#include "Win32Application.h"
+#include "Win32GraphicsApp.h"
 
 #include <stdexcept>
 
-Win32Application::Win32Application(std::string applicationName, HINSTANCE& hInstance) : hInstance(hInstance), d3D11Renderer(nullptr) {
+Win32GraphicsApp::Win32GraphicsApp(std::string applicationName, HINSTANCE& hInstance) : hInstance(hInstance), d3D11Renderer(nullptr) {
+	WNDCLASS windowClass;
 	windowClass.lpszClassName = L"CMP502 Window Class";
 	windowClass.lpfnWndProc = WindowProc;
 	windowClass.hInstance = hInstance;
@@ -33,29 +34,29 @@ Win32Application::Win32Application(std::string applicationName, HINSTANCE& hInst
 	);
 
 	if (windowHandle == nullptr) {
-		throw Win32ApplicationException("failed to create window");
+		throw Win32GraphicsAppException("failed to create window");
 	}
 }
 
-Win32Application::~Win32Application() {
+Win32GraphicsApp::~Win32GraphicsApp() {
 
 }
 
-void Win32Application::showWindow() {
+void Win32GraphicsApp::showWindow() {
 	ShowWindow(windowHandle, SW_SHOW);
 	SetForegroundWindow(windowHandle);
 	SetFocus(windowHandle);
 }
 
-HWND Win32Application::getWindowHandle() {
+HWND Win32GraphicsApp::getWindowHandle() {
 	return windowHandle;
 }
 
-void Win32Application::assignD3D11Renderer(D3D11Renderer &d3D11Renderer) {
+void Win32GraphicsApp::assignD3D11Renderer(D3D11Renderer &d3D11Renderer) {
 	this->d3D11Renderer = &d3D11Renderer;
 }
 
-void Win32Application::run() {
+void Win32GraphicsApp::run() {
 	if (!d3D11Renderer) {
 		return;
 	}
@@ -71,7 +72,7 @@ void Win32Application::run() {
 	}
 }
 
-LRESULT Win32Application::handleWindowMsg(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT Win32GraphicsApp::handleWindowMsg(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
@@ -81,20 +82,20 @@ LRESULT Win32Application::handleWindowMsg(HWND windowHandle, UINT msg, WPARAM wP
 	}
 }
 
-LRESULT Win32Application::WindowProc(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam) {
-	Win32Application* win32Application = nullptr;
+LRESULT Win32GraphicsApp::WindowProc(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam) {
+	Win32GraphicsApp* win32GraphicsApp = nullptr;
 
 	if (msg == WM_NCCREATE) {
 		auto * pCreate = reinterpret_cast<CREATESTRUCT*>(lParam);
-		win32Application = static_cast<Win32Application*>(pCreate->lpCreateParams);
-		SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(win32Application));
+		win32GraphicsApp = static_cast<Win32GraphicsApp*>(pCreate->lpCreateParams);
+		SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(win32GraphicsApp));
 	}
 	else {
-		win32Application = reinterpret_cast<Win32Application*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
+		win32GraphicsApp = reinterpret_cast<Win32GraphicsApp*>(GetWindowLongPtr(windowHandle, GWLP_USERDATA));
 	}
 
-	if (win32Application) {
-		return win32Application->handleWindowMsg(windowHandle, msg, wParam, lParam);
+	if (win32GraphicsApp) {
+		return win32GraphicsApp->handleWindowMsg(windowHandle, msg, wParam, lParam);
 	}
 	else {
 		return DefWindowProc(windowHandle, msg, wParam, lParam);

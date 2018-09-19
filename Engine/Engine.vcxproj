@@ -82,11 +82,11 @@
   <ItemGroup>
     <ClCompile Include="D3D11Renderer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Win32Application.cpp" />
+    <ClCompile Include="Win32GraphicsApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3D11Renderer.h" />
-    <ClInclude Include="Win32Application.h" />
+    <ClInclude Include="Win32GraphicsApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

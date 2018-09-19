@@ -5,10 +5,10 @@
 
 #include "D3D11Renderer.h"
 
-class Win32Application {
+class Win32GraphicsApp {
 public:
-	Win32Application(std::string applicationName, HINSTANCE& hInstance);
-	~Win32Application();
+	Win32GraphicsApp(std::string applicationName, HINSTANCE& hInstance);
+	~Win32GraphicsApp();
 
 	void showWindow();
 	HWND getWindowHandle();
@@ -17,7 +17,6 @@ public:
 
 private:
 	HINSTANCE& hInstance;
-	WNDCLASS windowClass;
 	HWND windowHandle;
 	D3D11Renderer* d3D11Renderer;
 
@@ -26,13 +25,13 @@ private:
 	LRESULT handleWindowMsg(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam);
 };
 
-class Win32ApplicationException : public std::exception {
+class Win32GraphicsAppException : public std::exception {
 private:
 	DWORD errorCode;
 	const char* msg;
 
 public:
-	Win32ApplicationException(const char* msg) : std::exception(), msg(msg), errorCode(GetLastError()) { }
+	Win32GraphicsAppException(const char* msg) : std::exception(), msg(msg), errorCode(GetLastError()) { }
 
 	DWORD getErrorCode() const { return errorCode; }
 	const char* what() const throw() override {
