@@ -18,13 +18,11 @@ void logErrorAndNotifyUser(const std::string& log, const std::string& userNotifi
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
 	try {
-		Win32GraphicsApp win32GraphicsApp("CMP502", hInstance);
-
-		D3D11Renderer d3D11Renderer(win32GraphicsApp.getWindowHandle());
-		win32GraphicsApp.assignD3D11Renderer(d3D11Renderer);
-
-		win32GraphicsApp.showWindow();
-		win32GraphicsApp.run();
+		Win32GraphicsApp graphicsApp("CMP502", hInstance);
+		D3D11Renderer d3D11Renderer(graphicsApp.getWindowHandle());
+		graphicsApp.assignGraphicsRenderer(d3D11Renderer);
+		graphicsApp.showWindow();
+		graphicsApp.run();
 	} catch (const D3D11RendererException& e) {
 		logErrorAndNotifyUser(e.what(), "Failed to initialize DirectX. Error code " + std::to_string(e.getErrorCode()));
 		return EXIT_FAILURE;

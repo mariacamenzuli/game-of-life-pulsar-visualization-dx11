@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-Win32GraphicsApp::Win32GraphicsApp(std::string applicationName, HINSTANCE& hInstance) : hInstance(hInstance), d3D11Renderer(nullptr) {
+Win32GraphicsApp::Win32GraphicsApp(std::string applicationName, HINSTANCE& hInstance) : d3D11Renderer(nullptr) {
 	WNDCLASS windowClass;
 	windowClass.lpszClassName = L"CMP502 Window Class";
 	windowClass.lpfnWndProc = WindowProc;
@@ -17,12 +17,11 @@ Win32GraphicsApp::Win32GraphicsApp(std::string applicationName, HINSTANCE& hInst
 
 	RegisterClass(&windowClass);
 
-	auto applicationNameWideString = std::wstring(applicationName.begin(), applicationName.end()).c_str();
 	windowHandle = CreateWindowEx(
-		0,                              // Optional window styles.
-		windowClass.lpszClassName,      // Window class
-		applicationNameWideString,      // Window text
-		WS_OVERLAPPEDWINDOW,            // Window style
+		0,                                                                      // Optional window styles.
+		windowClass.lpszClassName,                                              // Window class
+		std::wstring(applicationName.begin(), applicationName.end()).c_str(),   // Window text
+		WS_OVERLAPPEDWINDOW,                                                    // Window style
 
 		// Size and position
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
@@ -38,9 +37,7 @@ Win32GraphicsApp::Win32GraphicsApp(std::string applicationName, HINSTANCE& hInst
 	}
 }
 
-Win32GraphicsApp::~Win32GraphicsApp() {
-
-}
+Win32GraphicsApp::~Win32GraphicsApp() = default;
 
 void Win32GraphicsApp::showWindow() {
 	ShowWindow(windowHandle, SW_SHOW);
@@ -48,11 +45,11 @@ void Win32GraphicsApp::showWindow() {
 	SetFocus(windowHandle);
 }
 
-HWND Win32GraphicsApp::getWindowHandle() {
+HWND Win32GraphicsApp::getWindowHandle() const {
 	return windowHandle;
 }
 
-void Win32GraphicsApp::assignD3D11Renderer(D3D11Renderer &d3D11Renderer) {
+void Win32GraphicsApp::assignGraphicsRenderer(D3D11Renderer &d3D11Renderer) {
 	this->d3D11Renderer = &d3D11Renderer;
 }
 

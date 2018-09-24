@@ -11,12 +11,11 @@ public:
 	~Win32GraphicsApp();
 
 	void showWindow();
-	HWND getWindowHandle();
-	void assignD3D11Renderer(D3D11Renderer &d3D11Renderer);
+	HWND getWindowHandle() const;
+	void assignGraphicsRenderer(D3D11Renderer &d3D11Renderer);
 	void run();
 
 private:
-	HINSTANCE& hInstance;
 	HWND windowHandle;
 	D3D11Renderer* d3D11Renderer;
 
@@ -31,10 +30,10 @@ private:
 	const char* msg;
 
 public:
-	Win32GraphicsAppException(const char* msg) : std::exception(), msg(msg), errorCode(GetLastError()) { }
+	Win32GraphicsAppException(const char* msg) : msg(msg), errorCode(GetLastError()) { }
 
 	DWORD getErrorCode() const { return errorCode; }
-	const char* what() const throw() override {
+	const char* what() const noexcept override {
 		return msg;
 	}
 };
