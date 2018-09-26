@@ -12,12 +12,16 @@
 #include <wrl.h>
 #include <d3dx10math.h>
 
+#include "Scene.h"
+#include "ColorShader.h"
+
 class D3D11Renderer {
 public:
 	D3D11Renderer(HWND windowHandle);
 	~D3D11Renderer();
 
-	void renderFrame();
+	void renderFrame(Scene& scene);
+	ID3D11Device* getDevice();
 
 private:
 	struct MonitorDescriptor {
@@ -43,8 +47,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterState;
 	D3DXMATRIX projectionMatrix;
-	D3DXMATRIX worldMatrix;
 	D3DXMATRIX orthoMatrix;
+	ColorShader colorShader;
 
 	PhysicalDeviceDescriptor queryPhysicalDeviceDescriptors();
 	void createSwapChainAndDevice(HWND windowHandle);

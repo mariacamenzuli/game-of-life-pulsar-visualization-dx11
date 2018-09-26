@@ -37,11 +37,10 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle) {
 	// Create the projection matrix for 3D rendering.
 	D3DXMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
 
-	// Initialize the world matrix to the identity matrix.
-	D3DXMatrixIdentity(&worldMatrix);
-
 	// Create an orthographic projection matrix for 2D rendering.
 	D3DXMatrixOrthoLH(&orthoMatrix, (float) 800, (float) 600, SCREEN_NEAR, SCREEN_DEPTH); //todo: fix hardcoded screen size
+
+	colorShader.compile(device.Get(), L"../Engine/color.vs", L"../Engine/color.ps");
 }
 
 D3D11Renderer::~D3D11Renderer() {
@@ -51,30 +50,46 @@ D3D11Renderer::~D3D11Renderer() {
 	}
 }
 
-void D3D11Renderer::renderFrame() {
-	float color[4];
-
-	// Setup the color to clear the buffer to.
-	color[0] = 0.5f;
-	color[1] = 0.5f;
-	color[2] = 0.5f;
-	color[3] = 1.0f;
-
-	// Clear the back buffer.
+void D3D11Renderer::renderFrame(Scene& scene) {
+	// Clear buffers
+	float color[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	deviceContext->ClearRenderTargetView(renderTargetView.Get(), color);
-
-	// Clear the depth buffer.
 	deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	auto camera = scene.getCamera();
+	camera->calculateViewMatrix();
+
+	D3DXMATRIX viewMatrix;
+	camera->getViewMatrix(viewMatrix);
+
+	// Bind the vertex buffer to the input-assembler stage.
+	unsigned int stride = sizeof(Model::Vertex);
+	unsigned int offset = 0;
+	auto vertexBuffer = scene.getVertexBuffer();
+	deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+
+	// Bind the index buffer to the input-assembler stage.
+	deviceContext->IASetIndexBuffer(scene.getIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
+
+	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	colorShader.prepareShaderInput(deviceContext.Get(), scene.getWorldMatrix(), viewMatrix, projectionMatrix);
+
+	deviceContext->DrawIndexed(scene.getIndexCount(), 0, 0);
 
 	// Present the back buffer to the screen since rendering is complete.
 	if (VSYNC_ENABLED) {
 		// Lock to screen refresh rate.
 		swapChain->Present(1, 0);
-	}
-	else {
+	} else {
 		// Present as fast as possible.
 		swapChain->Present(0, 0);
 	}
+}
+
+ID3D11Device* D3D11Renderer::getDevice() {
+	return device.Get();
 }
 
 D3D11Renderer::PhysicalDeviceDescriptor D3D11Renderer::queryPhysicalDeviceDescriptors() {

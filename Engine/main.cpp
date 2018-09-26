@@ -3,6 +3,7 @@
 
 #include "Win32GraphicsApp.h"
 #include "D3D11Renderer.h"
+#include "Scene.h"
 
 void logErrorAndNotifyUser(const std::string& log, const std::string& userNotification) {
 	std::cerr << log << std::endl;
@@ -17,10 +18,16 @@ void logErrorAndNotifyUser(const std::string& log, const std::string& userNotifi
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
+	//todo removed hardcoded screen width and height
 	try {
 		Win32GraphicsApp graphicsApp("CMP502", hInstance);
 		D3D11Renderer d3D11Renderer(graphicsApp.getWindowHandle());
-		graphicsApp.assignGraphicsRenderer(d3D11Renderer);
+
+		Scene scene { d3D11Renderer.getDevice() };
+		scene.getCamera()->setPosition(0.0f, 0.0f, -10.0f);
+
+		graphicsApp.setGraphicsRenderer(d3D11Renderer);
+		graphicsApp.setScene(scene);
 		graphicsApp.showWindow();
 		graphicsApp.run();
 	} catch (const D3D11RendererException& e) {

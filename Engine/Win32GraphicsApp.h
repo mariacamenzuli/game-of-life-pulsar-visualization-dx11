@@ -4,6 +4,7 @@
 #include <string>
 
 #include "D3D11Renderer.h"
+#include "Scene.h"
 
 class Win32GraphicsApp {
 public:
@@ -12,12 +13,14 @@ public:
 
 	void showWindow();
 	HWND getWindowHandle() const;
-	void assignGraphicsRenderer(D3D11Renderer &d3D11Renderer);
+	void setGraphicsRenderer(D3D11Renderer& d3D11Renderer);
+	void setScene(Scene& scene);
 	void run();
 
 private:
 	HWND windowHandle;
 	D3D11Renderer* d3D11Renderer;
+	Scene* scene;
 
 	static LRESULT CALLBACK WindowProc(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam);
 

@@ -49,12 +49,16 @@ HWND Win32GraphicsApp::getWindowHandle() const {
 	return windowHandle;
 }
 
-void Win32GraphicsApp::assignGraphicsRenderer(D3D11Renderer &d3D11Renderer) {
+void Win32GraphicsApp::setGraphicsRenderer(D3D11Renderer& d3D11Renderer) {
 	this->d3D11Renderer = &d3D11Renderer;
 }
 
+void Win32GraphicsApp::setScene(Scene& scene) {
+	this->scene = &scene;
+}
+
 void Win32GraphicsApp::run() {
-	if (!d3D11Renderer) {
+	if (!d3D11Renderer || !scene) {
 		return;
 	}
 
@@ -65,7 +69,7 @@ void Win32GraphicsApp::run() {
 			DispatchMessage(&msg);
 		}
 
-		d3D11Renderer->renderFrame();
+		d3D11Renderer->renderFrame(*scene);
 	}
 }
 
