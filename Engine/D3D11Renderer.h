@@ -17,7 +17,7 @@
 
 class D3D11Renderer {
 public:
-	D3D11Renderer(HWND windowHandle);
+	D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight);
 	~D3D11Renderer();
 
 	void renderFrame(Scene& scene);
@@ -36,6 +36,9 @@ private:
 		VideoCardDescriptor videoCard;
 		MonitorDescriptor monitor;
 	};
+
+	int screenWidth;
+	int screenHeight;
 
 	PhysicalDeviceDescriptor hardwareInfo;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;

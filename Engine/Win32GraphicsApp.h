@@ -8,7 +8,7 @@
 
 class Win32GraphicsApp {
 public:
-	Win32GraphicsApp(std::string applicationName, HINSTANCE& hInstance);
+	Win32GraphicsApp(std::string applicationName, int screenWidth, int screenHeight, HINSTANCE& hInstance);
 	~Win32GraphicsApp();
 
 	void showWindow();

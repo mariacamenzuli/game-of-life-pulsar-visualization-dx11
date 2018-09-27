@@ -2,12 +2,11 @@
 
 #include "D3D11Renderer.h"
 
-const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
-D3D11Renderer::D3D11Renderer(HWND windowHandle) {
+D3D11Renderer::D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight) : screenWidth(screenWidth), screenHeight(screenHeight) {
 	hardwareInfo = queryPhysicalDeviceDescriptors();
 	createSwapChainAndDevice(windowHandle);
 
@@ -30,15 +29,14 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle) {
 	createRasterizerState();
 	setupViewport();
 
-	float fieldOfView, screenAspect;
-	fieldOfView = (float)D3DX_PI / 4.0f;
-	screenAspect = (float) 800 / (float) 600; //todo: fix hardcoded screen size
+	float fieldOfView = static_cast<float>(D3DX_PI) / 4.0f;
+	float screenAspect = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
 
 	// Create the projection matrix for 3D rendering.
 	D3DXMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
 
 	// Create an orthographic projection matrix for 2D rendering.
-	D3DXMatrixOrthoLH(&orthoMatrix, (float) 800, (float) 600, SCREEN_NEAR, SCREEN_DEPTH); //todo: fix hardcoded screen size
+	D3DXMatrixOrthoLH(&orthoMatrix, static_cast<float>(screenWidth), static_cast<float>(screenHeight), SCREEN_NEAR, SCREEN_DEPTH);
 
 	colorShader.compile(device.Get(), L"../Engine/color.vs", L"../Engine/color.ps");
 }
@@ -46,7 +44,7 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle) {
 D3D11Renderer::~D3D11Renderer() {
 	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 	if (swapChain.Get()) {
-		swapChain->SetFullscreenState(false, NULL);
+		swapChain->SetFullscreenState(false, nullptr);
 	}
 }
 
@@ -132,8 +130,8 @@ D3D11Renderer::PhysicalDeviceDescriptor D3D11Renderer::queryPhysicalDeviceDescri
 	unsigned int denominator = 0;
 	bool foundMatchingMode = false;
 	for (int i = 0; i < numModes && !foundMatchingMode; i++) {
-		if (displayModeList[i].Width == (unsigned int)800) { //todo: fix hardcoded width
-			if (displayModeList[i].Height == (unsigned int)600) { //todo: fix hardcoded height
+		if (displayModeList[i].Width == static_cast<unsigned int>(screenWidth)) {
+			if (displayModeList[i].Height == static_cast<unsigned int>(screenHeight)) {
 				numerator = displayModeList[i].RefreshRate.Numerator;
 				denominator = displayModeList[i].RefreshRate.Denominator;
 				foundMatchingMode = true;
@@ -166,8 +164,8 @@ void D3D11Renderer::createSwapChainAndDevice(HWND windowHandle) {
 
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 	swapChainDesc.BufferCount = 1; // Back buffer
-	swapChainDesc.BufferDesc.Width = 800; //todo fix hardcoded width
-	swapChainDesc.BufferDesc.Height = 600; //todo: fix hardcoded height
+	swapChainDesc.BufferDesc.Width = screenWidth;
+	swapChainDesc.BufferDesc.Height = screenHeight;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 	// Set the refresh rate of the back buffer.
@@ -189,13 +187,8 @@ void D3D11Renderer::createSwapChainAndDevice(HWND windowHandle) {
 	swapChainDesc.SampleDesc.Count = 1;
 	swapChainDesc.SampleDesc.Quality = 0;
 
-	// Set to full screen or windowed mode.
-	if (FULL_SCREEN) {
-		swapChainDesc.Windowed = false;
-	}
-	else {
-		swapChainDesc.Windowed = true;
-	}
+	// Set to windowed mode.
+	swapChainDesc.Windowed = true; // would need to be false for full screen
 
 	// Set the scan line ordering and scaling to unspecified.
 	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -230,8 +223,8 @@ void D3D11Renderer::createSwapChainAndDevice(HWND windowHandle) {
 void D3D11Renderer::createDepthAndStencilBuffer() {
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
-	depthBufferDesc.Width = 800; //todo: fix hardcoded width
-	depthBufferDesc.Height = 600; //todo: fix hardcoded height
+	depthBufferDesc.Width = screenWidth;
+	depthBufferDesc.Height = screenHeight;
 	depthBufferDesc.MipLevels = 1;
 	depthBufferDesc.ArraySize = 1;
 	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -314,8 +307,8 @@ void D3D11Renderer::createRasterizerState() {
 
 void D3D11Renderer::setupViewport() {
 	D3D11_VIEWPORT viewport;
-	viewport.Width = (float)800; //todo: fix hardcoded width
-	viewport.Height = (float)600; //todo: fix hardcoded height
+	viewport.Width = static_cast<float>(screenWidth);
+	viewport.Height = static_cast<float>(screenHeight);
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	viewport.TopLeftX = 0.0f;

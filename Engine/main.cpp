@@ -18,10 +18,12 @@ void logErrorAndNotifyUser(const std::string& log, const std::string& userNotifi
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
-	//todo removed hardcoded screen width and height
+
 	try {
-		Win32GraphicsApp graphicsApp("CMP502", hInstance);
-		D3D11Renderer d3D11Renderer(graphicsApp.getWindowHandle());
+		const int screenWidth = 800;
+		const int screenHeight = 600;
+		Win32GraphicsApp graphicsApp("CMP502", screenWidth, screenHeight, hInstance);
+		D3D11Renderer d3D11Renderer(graphicsApp.getWindowHandle(), screenWidth, screenHeight);
 
 		Scene scene { d3D11Renderer.getDevice() };
 		scene.getCamera()->setPosition(0.0f, 0.0f, -10.0f);

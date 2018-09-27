@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-Win32GraphicsApp::Win32GraphicsApp(std::string applicationName, HINSTANCE& hInstance) : d3D11Renderer(nullptr) {
+Win32GraphicsApp::Win32GraphicsApp(std::string applicationName, int screenWidth, int screenHeight, HINSTANCE& hInstance) : d3D11Renderer(nullptr) {
 	WNDCLASS windowClass;
 	windowClass.lpszClassName = L"CMP502 Window Class";
 	windowClass.lpfnWndProc = WindowProc;
@@ -24,7 +24,8 @@ Win32GraphicsApp::Win32GraphicsApp(std::string applicationName, HINSTANCE& hInst
 		WS_OVERLAPPEDWINDOW,                                                    // Window style
 
 		// Size and position
-		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		screenWidth, screenHeight,
 
 		nullptr,       // Parent window
 		nullptr,       // Menu
