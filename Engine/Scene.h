@@ -2,7 +2,6 @@
 
 #include <d3d11.h>
 
-#include "Camera.h"
 #include "Model.h"
 
 class Scene {
@@ -10,7 +9,6 @@ public:
 	Scene(ID3D11Device* device);
 	~Scene();
 
-	Camera* getCamera();
 	ID3D11Buffer* getVertexBuffer() const;
 	ID3D11Buffer* getIndexBuffer() const;
 	int getIndexCount();
@@ -25,7 +23,6 @@ private:
 			D3DXMatrixIdentity(&worldMatrix);
 		};
 	};
-	Camera camera;
 	SceneObject sceneObject;
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;

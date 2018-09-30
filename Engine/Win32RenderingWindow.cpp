@@ -54,8 +54,9 @@ void Win32RenderingWindow::setGraphicsRenderer(D3D11Renderer& d3D11Renderer) {
 	this->d3D11Renderer = &d3D11Renderer;
 }
 
-void Win32RenderingWindow::setScene(Scene& scene) {
+void Win32RenderingWindow::setSceneAndCamera(Scene& scene, Camera& camera) {
 	this->scene = &scene;
+	this->camera = &camera;
 }
 
 void Win32RenderingWindow::run() {
@@ -70,7 +71,7 @@ void Win32RenderingWindow::run() {
 			DispatchMessage(&msg);
 		}
 
-		d3D11Renderer->renderFrame(*scene);
+		d3D11Renderer->renderFrame(*scene, *camera);
 	}
 }
 

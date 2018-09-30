@@ -13,6 +13,7 @@
 #include <d3dx10math.h>
 
 #include "Scene.h"
+#include "Camera.h"
 #include "ColorShader.h"
 
 class D3D11Renderer {
@@ -20,7 +21,7 @@ public:
 	D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight);
 	~D3D11Renderer();
 
-	void renderFrame(Scene& scene);
+	void renderFrame(Scene& scene, Camera& camera);
 	ID3D11Device* getDevice();
 
 private:

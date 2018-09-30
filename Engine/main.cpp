@@ -4,6 +4,7 @@
 #include "Win32RenderingWindow.h"
 #include "D3D11Renderer.h"
 #include "Scene.h"
+#include "Camera.h"
 
 void logErrorAndNotifyUser(const std::string& log, const std::string& userNotification) {
 	std::cerr << log << std::endl;
@@ -26,10 +27,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 		D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(), screenWidth, screenHeight);
 
 		Scene scene { d3D11Renderer.getDevice() };
-		scene.getCamera()->setPosition(0.0f, 0.0f, -10.0f);
+		Camera camera {};
+		camera.setPosition(0.0f, 0.0f, -10.0f);
 
 		renderingWindow.setGraphicsRenderer(d3D11Renderer);
-		renderingWindow.setScene(scene);
+		renderingWindow.setSceneAndCamera(scene, camera);
 		renderingWindow.showWindow();
 		renderingWindow.run();
 	} catch (const D3D11RendererException& e) {

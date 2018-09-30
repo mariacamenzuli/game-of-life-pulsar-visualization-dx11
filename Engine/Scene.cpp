@@ -3,8 +3,6 @@
 #include "Scene.h"
 
 Scene::Scene(ID3D11Device* device) {
-	camera.setPosition(0.0f, 0.0f, 0.0f);
-
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
@@ -49,10 +47,6 @@ Scene::Scene(ID3D11Device* device) {
 }
 
 Scene::~Scene() = default;
-
-Camera* Scene::getCamera() {
-	return &camera;
-}
 
 ID3D11Buffer* Scene::getVertexBuffer() const {
 	return vertexBuffer.Get();

@@ -48,17 +48,16 @@ D3D11Renderer::~D3D11Renderer() {
 	}
 }
 
-void D3D11Renderer::renderFrame(Scene& scene) {
+void D3D11Renderer::renderFrame(Scene& scene, Camera& camera) {
 	// Clear buffers
 	float color[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	deviceContext->ClearRenderTargetView(renderTargetView.Get(), color);
 	deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	auto camera = scene.getCamera();
-	camera->calculateViewMatrix();
+	camera.calculateViewMatrix();
 
 	D3DXMATRIX viewMatrix;
-	camera->getViewMatrix(viewMatrix);
+	camera.getViewMatrix(viewMatrix);
 
 	// Bind the vertex buffer to the input-assembler stage.
 	unsigned int stride = sizeof(Model::Vertex);
