@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 		triangle1.rotateX(0.523599f);
 		triangle1.rotateZ(0.523599f);
 
-		triangle2.translate(0.0f, 0.0f, -0.1f);
+		triangle2.translate(1.0f, 0.0f, -0.1f);
 		triangle2.scale(2.0f, 2.0f, 2.0f);
 
 		Camera camera;
