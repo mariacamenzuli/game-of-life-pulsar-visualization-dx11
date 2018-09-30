@@ -127,8 +127,6 @@ void ColorShader::prepareShaderInput(ID3D11DeviceContext* deviceContext, D3DXMAT
 	// Finanly set the constant buffer in the vertex shader with the updated values.
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, matrixBuffer.GetAddressOf());
 
-
-
 	deviceContext->IASetInputLayout(layout.Get());
 	deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
 	deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);

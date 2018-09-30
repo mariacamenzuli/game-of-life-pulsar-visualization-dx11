@@ -9,14 +9,14 @@ Scene::Scene(ID3D11Device* device) {
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(Model::Vertex) * sceneObject.model.vertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(Model::Vertex) * sceneObject.getModel()->vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = sceneObject.model.vertices;
+	vertexData.pSysMem = sceneObject.getModel()->vertices;
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -28,14 +28,14 @@ Scene::Scene(ID3D11Device* device) {
 
 	// Set up the description of the static index buffer.
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * sceneObject.model.indexCount;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * sceneObject.getModel()->indexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = sceneObject.model.indices;
+	indexData.pSysMem = sceneObject.getModel()->indices;
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
@@ -57,9 +57,9 @@ ID3D11Buffer* Scene::getIndexBuffer() const {
 }
 
 int Scene::getIndexCount() {
-	return sizeof(unsigned long) * sceneObject.model.indexCount;
+	return sizeof(unsigned long) * sceneObject.getModel()->indexCount;
 }
 
 D3DXMATRIX Scene::getWorldMatrix() {
-	return sceneObject.worldMatrix;
+	return *sceneObject.getWorldMatrix();
 }

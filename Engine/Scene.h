@@ -3,6 +3,7 @@
 #include <d3d11.h>
 
 #include "Model.h"
+#include "SceneObject.h"
 
 class Scene {
 public:
@@ -15,14 +16,6 @@ public:
 	D3DXMATRIX getWorldMatrix();
 
 private:
-	struct SceneObject {
-		Model model;
-		D3DXMATRIX worldMatrix;
-
-		SceneObject() {
-			D3DXMatrixIdentity(&worldMatrix);
-		};
-	};
 	SceneObject sceneObject;
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
