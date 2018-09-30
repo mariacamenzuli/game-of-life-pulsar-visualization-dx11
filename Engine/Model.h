@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include <wrl/client.h>
 #include <d3dx10.h>
 
 class Model {

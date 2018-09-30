@@ -1,23 +1,25 @@
 #pragma once
 
-#include <d3d11.h>
+#include <vector>
 
 #include "Model.h"
 #include "SceneObject.h"
 
 class Scene {
 public:
-	Scene(ID3D11Device* device);
+	Scene();
 	~Scene();
 
-	ID3D11Buffer* getVertexBuffer() const;
-	ID3D11Buffer* getIndexBuffer() const;
 	int getIndexCount();
-	D3DXMATRIX getWorldMatrix();
+	int getVertexCount();
+	Model::Vertex* getVertices();
+	unsigned long* getIndices();
+
+	void addSceneObject(SceneObject* sceneObject);
+	std::vector<SceneObject*>* getSceneObjects();
 
 private:
-	SceneObject sceneObject;
-
-	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+	std::vector<SceneObject*> sceneObjects;
+	std::vector<Model::Vertex> vertices;
+	std::vector<unsigned long> indices;
 };

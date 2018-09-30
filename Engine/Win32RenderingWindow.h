@@ -4,8 +4,6 @@
 #include <string>
 
 #include "D3D11Renderer.h"
-#include "Scene.h"
-#include "Camera.h"
 
 class Win32RenderingWindow {
 public:
@@ -15,14 +13,11 @@ public:
 	void showWindow();
 	HWND getWindowHandle() const;
 	void setGraphicsRenderer(D3D11Renderer& d3D11Renderer);
-	void setSceneAndCamera(Scene& scene, Camera& camera);
 	void run();
 
 private:
 	HWND windowHandle;
 	D3D11Renderer* d3D11Renderer;
-	Scene* scene;
-	Camera* camera;
 
 	static LRESULT CALLBACK WindowProc(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam);
 

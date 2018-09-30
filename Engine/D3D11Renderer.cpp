@@ -6,7 +6,7 @@ const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
-D3D11Renderer::D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight) : screenWidth(screenWidth), screenHeight(screenHeight) {
+D3D11Renderer::D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight, Scene* scene, Camera* camera) : screenWidth(screenWidth), screenHeight(screenHeight), scene(scene), camera(camera) {
 	hardwareInfo = queryPhysicalDeviceDescriptors();
 	createSwapChainAndDevice(windowHandle);
 
@@ -39,6 +39,8 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle, const int screenWidth, const int
 	D3DXMatrixOrthoLH(&orthoMatrix, static_cast<float>(screenWidth), static_cast<float>(screenHeight), SCREEN_NEAR, SCREEN_DEPTH);
 
 	colorShader.compile(device.Get(), L"../Engine/color.vs", L"../Engine/color.ps");
+
+	setupVertexAndIndexBuffers();
 }
 
 D3D11Renderer::~D3D11Renderer() {
@@ -48,32 +50,35 @@ D3D11Renderer::~D3D11Renderer() {
 	}
 }
 
-void D3D11Renderer::renderFrame(Scene& scene, Camera& camera) {
+void D3D11Renderer::renderFrame() {
 	// Clear buffers
 	float color[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	deviceContext->ClearRenderTargetView(renderTargetView.Get(), color);
 	deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-	camera.calculateViewMatrix();
+	camera->calculateViewMatrix();
 
 	D3DXMATRIX viewMatrix;
-	camera.getViewMatrix(viewMatrix);
+	camera->getViewMatrix(viewMatrix);
 
 	// Bind the vertex buffer to the input-assembler stage.
 	unsigned int stride = sizeof(Model::Vertex);
 	unsigned int offset = 0;
-	auto vertexBuffer = scene.getVertexBuffer();
-	deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
 
 	// Bind the index buffer to the input-assembler stage.
-	deviceContext->IASetIndexBuffer(scene.getIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
+	deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	colorShader.prepareShaderInput(deviceContext.Get(), scene.getWorldMatrix(), viewMatrix, projectionMatrix);
-
-	deviceContext->DrawIndexed(scene.getIndexCount(), 0, 0);
+	int indexStartLocation = 0;
+	auto sceneObjects = *scene->getSceneObjects();
+	for (auto sceneObject : sceneObjects) {
+		colorShader.prepareShaderInput(deviceContext.Get(), *sceneObject->getWorldMatrix(), viewMatrix, projectionMatrix);
+		deviceContext->DrawIndexed(sceneObject->getModel()->indexCount, indexStartLocation, 0);
+		indexStartLocation = indexStartLocation + sceneObject->getModel()->indexCount;
+	}
 
 	// Present the back buffer to the screen since rendering is complete.
 	if (VSYNC_ENABLED) {
@@ -313,4 +318,48 @@ void D3D11Renderer::setupViewport() {
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
 	deviceContext->RSSetViewports(1, &viewport);
+}
+
+void D3D11Renderer::setupVertexAndIndexBuffers() {
+	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+	HRESULT result;
+
+	// Set up the description of the static vertex buffer.
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(Model::Vertex) * scene->getVertexCount();
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the vertex data.
+	vertexData.pSysMem = scene->getVertices();
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	// Now create the vertex buffer.
+	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
+	if (FAILED(result)) {
+		throw std::runtime_error("Failed to create vertex buffer for scene.");
+	}
+
+	// Set up the description of the static index buffer.
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * scene->getIndexCount();
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the index data.
+	indexData.pSysMem = scene->getIndices();
+	indexData.SysMemPitch = 0;
+	indexData.SysMemSlicePitch = 0;
+
+	// Create the index buffer.
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
+	if (FAILED(result)) {
+		throw std::runtime_error("Failed to create index buffer for scene.");
+	}
 }

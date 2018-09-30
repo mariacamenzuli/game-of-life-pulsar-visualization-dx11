@@ -23,15 +23,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	try {
 		const int screenWidth = 800;
 		const int screenHeight = 600;
-		Win32RenderingWindow renderingWindow("CMP502", screenWidth, screenHeight, hInstance);
-		D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(), screenWidth, screenHeight);
 
-		Scene scene { d3D11Renderer.getDevice() };
-		Camera camera {};
+		Scene scene;
+		SceneObject triangle;
+		scene.addSceneObject(&triangle);
+
+		Camera camera;
 		camera.setPosition(0.0f, 0.0f, -10.0f);
 
+		Win32RenderingWindow renderingWindow("CMP502", screenWidth, screenHeight, hInstance);
+		D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(), screenWidth, screenHeight, &scene, &camera);
+
 		renderingWindow.setGraphicsRenderer(d3D11Renderer);
-		renderingWindow.setSceneAndCamera(scene, camera);
 		renderingWindow.showWindow();
 		renderingWindow.run();
 	} catch (const D3D11RendererException& e) {

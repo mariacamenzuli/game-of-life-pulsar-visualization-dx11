@@ -18,10 +18,10 @@
 
 class D3D11Renderer {
 public:
-	D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight);
+	D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight, Scene* scene, Camera* camera);
 	~D3D11Renderer();
 
-	void renderFrame(Scene& scene, Camera& camera);
+	void renderFrame();
 	ID3D11Device* getDevice();
 
 private:
@@ -40,6 +40,8 @@ private:
 
 	int screenWidth;
 	int screenHeight;
+	Scene* scene;
+	Camera* camera;
 
 	PhysicalDeviceDescriptor hardwareInfo;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
@@ -50,6 +52,10 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterState;
+
+	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+
 	D3DXMATRIX projectionMatrix;
 	D3DXMATRIX orthoMatrix;
 	ColorShader colorShader;
@@ -59,6 +65,7 @@ private:
 	void createDepthAndStencilBuffer();
 	void createRasterizerState();
 	void setupViewport();
+	void setupVertexAndIndexBuffers();
 };
 
 class D3D11RendererException : public std::exception {
