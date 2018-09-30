@@ -25,8 +25,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 		const int screenHeight = 600;
 
 		Scene scene;
-		SceneObject triangle;
-		scene.addSceneObject(&triangle);
+		SceneObject triangle1;
+		scene.addSceneObject(&triangle1);
+		SceneObject triangle2;
+		scene.addSceneObject(&triangle2);
+
+		triangle1.rotateY(0.523599f);
+		triangle1.rotateX(0.523599f);
+		triangle1.rotateZ(0.523599f);
+
+		triangle2.translate(0.0f, 0.0f, -0.1f);
+		triangle2.scale(2.0f, 2.0f, 2.0f);
 
 		Camera camera;
 		camera.setPosition(0.0f, 0.0f, -10.0f);

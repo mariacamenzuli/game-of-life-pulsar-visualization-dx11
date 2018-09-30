@@ -38,7 +38,7 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle, const int screenWidth, const int
 	// Create an orthographic projection matrix for 2D rendering.
 	D3DXMatrixOrthoLH(&orthoMatrix, static_cast<float>(screenWidth), static_cast<float>(screenHeight), SCREEN_NEAR, SCREEN_DEPTH);
 
-	colorShader.compile(device.Get(), L"../Engine/color.vs", L"../Engine/color.ps");
+	colorShader.compile(device.Get(), L"../Engine/color-vertex.hlsl", L"../Engine/color-pixel.hlsl");
 
 	setupVertexAndIndexBuffers();
 }
