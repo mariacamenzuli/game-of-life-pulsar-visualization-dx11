@@ -6,10 +6,10 @@
 #include "D3D11Renderer.h"
 #include "Scene.h"
 
-class Win32GraphicsApp {
+class Win32RenderingWindow {
 public:
-	Win32GraphicsApp(std::string applicationName, int screenWidth, int screenHeight, HINSTANCE& hInstance);
-	~Win32GraphicsApp();
+	Win32RenderingWindow(std::string applicationName, int screenWidth, int screenHeight, HINSTANCE& hInstance);
+	~Win32RenderingWindow();
 
 	void showWindow();
 	HWND getWindowHandle() const;
@@ -27,13 +27,13 @@ private:
 	LRESULT handleWindowMsg(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam);
 };
 
-class Win32GraphicsAppException : public std::exception {
+class Win32RenderingWindowException : public std::exception {
 private:
 	DWORD errorCode;
 	const char* msg;
 
 public:
-	Win32GraphicsAppException(const char* msg) : msg(msg), errorCode(GetLastError()) { }
+	Win32RenderingWindowException(const char* msg) : msg(msg), errorCode(GetLastError()) { }
 
 	DWORD getErrorCode() const { return errorCode; }
 	const char* what() const noexcept override {

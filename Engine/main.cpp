@@ -1,7 +1,7 @@
 #include <iostream>
 #include <windows.h>
 
-#include "Win32GraphicsApp.h"
+#include "Win32RenderingWindow.h"
 #include "D3D11Renderer.h"
 #include "Scene.h"
 
@@ -22,20 +22,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	try {
 		const int screenWidth = 800;
 		const int screenHeight = 600;
-		Win32GraphicsApp graphicsApp("CMP502", screenWidth, screenHeight, hInstance);
-		D3D11Renderer d3D11Renderer(graphicsApp.getWindowHandle(), screenWidth, screenHeight);
+		Win32RenderingWindow renderingWindow("CMP502", screenWidth, screenHeight, hInstance);
+		D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(), screenWidth, screenHeight);
 
 		Scene scene { d3D11Renderer.getDevice() };
 		scene.getCamera()->setPosition(0.0f, 0.0f, -10.0f);
 
-		graphicsApp.setGraphicsRenderer(d3D11Renderer);
-		graphicsApp.setScene(scene);
-		graphicsApp.showWindow();
-		graphicsApp.run();
+		renderingWindow.setGraphicsRenderer(d3D11Renderer);
+		renderingWindow.setScene(scene);
+		renderingWindow.showWindow();
+		renderingWindow.run();
 	} catch (const D3D11RendererException& e) {
 		logErrorAndNotifyUser(e.what(), "Failed to initialize DirectX. Error code " + std::to_string(e.getErrorCode()));
 		return EXIT_FAILURE;
-	} catch (const Win32GraphicsAppException& e) {
+	} catch (const Win32RenderingWindowException& e) {
 		logErrorAndNotifyUser(e.what(), "A windows application error has occurred. Error code " + std::to_string(e.getErrorCode()));
 		return EXIT_FAILURE;
 	} catch (const std::exception& e) {
