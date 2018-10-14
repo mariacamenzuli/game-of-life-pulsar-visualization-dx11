@@ -12,12 +12,10 @@ public:
 
 	void showWindow();
 	HWND getWindowHandle() const;
-	void setGraphicsRenderer(D3D11Renderer& d3D11Renderer);
-	void run();
+    void pollForMessage(MSG* msg);
 
 private:
 	HWND windowHandle;
-	D3D11Renderer* d3D11Renderer;
 
 	static LRESULT CALLBACK WindowProc(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam);
 

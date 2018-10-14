@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-Win32RenderingWindow::Win32RenderingWindow(std::string applicationName, int screenWidth, int screenHeight, HINSTANCE& hInstance) : d3D11Renderer(nullptr) {
+Win32RenderingWindow::Win32RenderingWindow(std::string applicationName, int screenWidth, int screenHeight, HINSTANCE& hInstance) {
 	WNDCLASS windowClass;
 	windowClass.lpszClassName = L"CMP502 Window Class";
 	windowClass.lpfnWndProc = WindowProc;
@@ -50,23 +50,10 @@ HWND Win32RenderingWindow::getWindowHandle() const {
 	return windowHandle;
 }
 
-void Win32RenderingWindow::setGraphicsRenderer(D3D11Renderer& d3D11Renderer) {
-	this->d3D11Renderer = &d3D11Renderer;
-}
-
-void Win32RenderingWindow::run() {
-	if (!d3D11Renderer) {
-		return;
-	}
-
-	MSG msg = { };
-	while (msg.message != WM_QUIT) {
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		d3D11Renderer->renderFrame();
+void Win32RenderingWindow::pollForMessage(MSG* msg) {
+	if (PeekMessage(msg, nullptr, 0, 0, PM_REMOVE)) {
+		TranslateMessage(msg);
+		DispatchMessage(msg);
 	}
 }
 

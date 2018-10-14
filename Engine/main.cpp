@@ -43,9 +43,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 		Win32RenderingWindow renderingWindow("CMP502", screenWidth, screenHeight, hInstance);
 		D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(), screenWidth, screenHeight, &scene, &camera);
 
-		renderingWindow.setGraphicsRenderer(d3D11Renderer);
 		renderingWindow.showWindow();
-		renderingWindow.run();
+        MSG msg = {};
+        while (msg.message != WM_QUIT) {
+            renderingWindow.pollForMessage(&msg);
+            triangle1.rotateZ(0.1f);
+            d3D11Renderer.renderFrame();
+        }
 	} catch (const D3D11RendererException& e) {
 		logErrorAndNotifyUser(e.what(), "Failed to initialize DirectX. Error code " + std::to_string(e.getErrorCode()));
 		return EXIT_FAILURE;
