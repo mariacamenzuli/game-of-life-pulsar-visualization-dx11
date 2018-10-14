@@ -6,7 +6,7 @@
 
 class SceneObject {
 public:
-    SceneObject();
+    SceneObject(Model* model);
     ~SceneObject();
 
     Model* getModel();
@@ -19,6 +19,6 @@ public:
     void rotateZ(float angleInRadians);
 
 private:
-    Model model;
+    Model* model;
     D3DXMATRIX worldMatrix;
 };

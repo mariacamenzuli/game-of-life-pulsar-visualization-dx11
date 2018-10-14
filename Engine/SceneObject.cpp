@@ -1,13 +1,13 @@
 #include "SceneObject.h"
 
-SceneObject::SceneObject() {
+SceneObject::SceneObject(Model* model): model(model) {
     D3DXMatrixIdentity(&worldMatrix);
 }
 
 SceneObject::~SceneObject() = default;
 
 Model* SceneObject::getModel() {
-    return &model;
+    return model;
 }
 
 D3DXMATRIX* SceneObject::getWorldMatrix() {

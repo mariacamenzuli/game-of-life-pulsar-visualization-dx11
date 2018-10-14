@@ -76,8 +76,8 @@ void D3D11Renderer::renderFrame() {
     auto sceneObjects = *scene->getSceneObjects();
     for (auto sceneObject : sceneObjects) {
         colorShader.prepareShaderInput(deviceContext.Get(), *sceneObject->getWorldMatrix(), viewMatrix, projectionMatrix);
-        deviceContext->DrawIndexed(sceneObject->getModel()->indexCount, indexStartLocation, 0);
-        indexStartLocation = indexStartLocation + sceneObject->getModel()->indexCount;
+        deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, 0);
+        indexStartLocation = indexStartLocation + sceneObject->getModel()->getIndexCount();
     }
 
     // Present the back buffer to the screen since rendering is complete.

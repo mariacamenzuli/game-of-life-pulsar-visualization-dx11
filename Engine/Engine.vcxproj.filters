@@ -12,6 +12,12 @@
     <Filter Include="Shader Files">
       <UniqueIdentifier>{acebe109-b59a-4ab9-a79a-5dbe78fa680f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Models">
+      <UniqueIdentifier>{7d73ac9f-3cbc-4b38-aeab-2b940ae66979}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Models">
+      <UniqueIdentifier>{5d24965d-e90d-41bc-bb8c-5face1ae8800}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -26,9 +32,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ColorShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -37,6 +40,9 @@
     </ClCompile>
     <ClCompile Include="SceneObject.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeModel.cpp">
+      <Filter>Source Files\Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +66,9 @@
     </ClInclude>
     <ClInclude Include="SceneObject.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeModel.h">
+      <Filter>Header Files\Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

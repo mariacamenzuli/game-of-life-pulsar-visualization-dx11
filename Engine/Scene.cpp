@@ -11,18 +11,18 @@ Scene::~Scene() = default;
 void Scene::addSceneObject(SceneObject* sceneObject) {
     sceneObjects.push_back(sceneObject);
 
-    for (int i = 0; i < sceneObject->getModel()->vertexCount; i++) {
-        vertices.push_back(sceneObject->getModel()->vertices[i]);
+    for (int i = 0; i < sceneObject->getModel()->getVertexCount(); i++) {
+        vertices.push_back(sceneObject->getModel()->getVertices()[i]);
     }
-    for (int i = 0; i < sceneObject->getModel()->indexCount; i++) {
-        indices.push_back(sceneObject->getModel()->indices[i]);
+    for (int i = 0; i < sceneObject->getModel()->getIndexCount(); i++) {
+        indices.push_back(sceneObject->getModel()->getIndices()[i]);
     }
 }
 
 int Scene::getIndexCount() {
     int indexCount = 0;
     for (auto sceneObject : sceneObjects) {
-        indexCount = indexCount + sceneObject->getModel()->indexCount;
+        indexCount = indexCount + sceneObject->getModel()->getIndexCount();
     }
     return indexCount;
 }
@@ -30,7 +30,7 @@ int Scene::getIndexCount() {
 int Scene::getVertexCount() {
     int vertexCount = 0;
     for (auto sceneObject : sceneObjects) {
-        vertexCount = vertexCount + sceneObject->getModel()->vertexCount;
+        vertexCount = vertexCount + sceneObject->getModel()->getVertexCount();
     }
     return vertexCount;
 }

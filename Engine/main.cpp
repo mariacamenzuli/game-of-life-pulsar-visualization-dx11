@@ -5,6 +5,7 @@
 #include "D3D11Renderer.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "CubeModel.h"
 
 void logErrorAndNotifyUser(const std::string& log, const std::string& userNotification) {
     std::cerr << log << std::endl;
@@ -24,14 +25,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
         const int screenWidth = 800;
         const int screenHeight = 600;
 
+        CubeModel cubeModel;
         Scene scene;
-        SceneObject triangle1;
-        scene.addSceneObject(&triangle1);
-        SceneObject triangle2;
-        scene.addSceneObject(&triangle2);
-
-        triangle2.translate(1.0f, 0.0f, -0.1f);
-        triangle2.scale(2.0f, 2.0f, 2.0f);
+        SceneObject cube(&cubeModel);
+        scene.addSceneObject(&cube);
 
         Camera camera;
         camera.setPosition(0.0f, 0.0f, -10.0f);
@@ -43,7 +40,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
         MSG msg = {};
         while (msg.message != WM_QUIT) {
             renderingWindow.pollForMessage(&msg);
-            triangle1.rotateZ(0.01f);
+            // cube.rotateY(0.01f);
+            cube.rotateX(0.01f);
             d3D11Renderer.renderFrame();
         }
     } catch (const D3D11RendererException& e) {

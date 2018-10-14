@@ -9,10 +9,10 @@ public:
         D3DXVECTOR4 color;
     };
 
-    Vertex* vertices;
-    unsigned long* indices;
-    int vertexCount, indexCount;
+    virtual ~Model() = default;;
 
-    Model();
-    ~Model();
+    virtual int getVertexCount() = 0;
+    virtual int getIndexCount() = 0;
+    virtual Vertex* getVertices() = 0;
+    virtual unsigned long* getIndices() = 0;
 };
