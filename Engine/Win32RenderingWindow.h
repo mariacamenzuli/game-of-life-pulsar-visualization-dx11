@@ -7,31 +7,33 @@
 
 class Win32RenderingWindow {
 public:
-	Win32RenderingWindow(std::string applicationName, int screenWidth, int screenHeight, HINSTANCE& hInstance);
-	~Win32RenderingWindow();
+    Win32RenderingWindow(std::string applicationName, int screenWidth, int screenHeight, HINSTANCE& hInstance);
+    ~Win32RenderingWindow();
 
-	void showWindow();
-	HWND getWindowHandle() const;
+    void showWindow();
+    HWND getWindowHandle() const;
     void pollForMessage(MSG* msg);
 
 private:
-	HWND windowHandle;
+    HWND windowHandle;
 
-	static LRESULT CALLBACK WindowProc(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK WindowProc(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam);
 
-	LRESULT handleWindowMsg(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam);
+    LRESULT handleWindowMsg(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam);
 };
 
 class Win32RenderingWindowException : public std::exception {
 private:
-	DWORD errorCode;
-	const char* msg;
+    DWORD errorCode;
+    const char* msg;
 
 public:
-	Win32RenderingWindowException(const char* msg) : errorCode(GetLastError()), msg(msg) { }
+    Win32RenderingWindowException(const char* msg) : errorCode(GetLastError()), msg(msg) {
+    }
 
-	DWORD getErrorCode() const { return errorCode; }
-	const char* what() const noexcept override {
-		return msg;
-	}
+    DWORD getErrorCode() const { return errorCode; }
+
+    const char* what() const noexcept override {
+        return msg;
+    }
 };

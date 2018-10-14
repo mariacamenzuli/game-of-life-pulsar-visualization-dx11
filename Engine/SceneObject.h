@@ -6,19 +6,19 @@
 
 class SceneObject {
 public:
-	SceneObject();
-	~SceneObject();
+    SceneObject();
+    ~SceneObject();
 
-	Model* getModel();
-	D3DXMATRIX* getWorldMatrix();
+    Model* getModel();
+    D3DXMATRIX* getWorldMatrix();
 
-	void translate(float x, float y, float z);
-	void scale(float x, float y, float z);
-	void rotateX(float angleInRadians);
-	void rotateY(float angleInRadians);
-	void rotateZ(float angleInRadians);
+    void translate(float x, float y, float z);
+    void scale(float x, float y, float z);
+    void rotateX(float angleInRadians);
+    void rotateY(float angleInRadians);
+    void rotateZ(float angleInRadians);
 
 private:
-	Model model;
-	D3DXMATRIX worldMatrix;
+    Model model;
+    D3DXMATRIX worldMatrix;
 };

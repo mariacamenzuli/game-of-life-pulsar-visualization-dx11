@@ -7,20 +7,20 @@
 
 class ColorShader {
 public:
-	ColorShader();
+    ColorShader();
 
-	void compile(ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilename);
-	void prepareShaderInput(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix);
+    void compile(ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilename);
+    void prepareShaderInput(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix);
 
 private:
-	struct MatrixBufferType {
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
-	};
+    struct MatrixBufferType {
+        D3DXMATRIX world;
+        D3DXMATRIX view;
+        D3DXMATRIX projection;
+    };
 
-	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> layout;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> matrixBuffer;
+    Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
+    Microsoft::WRL::ComPtr<ID3D11InputLayout> layout;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> matrixBuffer;
 };

@@ -4,15 +4,15 @@
 
 class Model {
 public:
-	struct Vertex {
-		D3DXVECTOR3 position;
-		D3DXVECTOR4 color;
-	};
+    struct Vertex {
+        D3DXVECTOR3 position;
+        D3DXVECTOR4 color;
+    };
 
-	Vertex* vertices;
-	unsigned long* indices;
-	int vertexCount, indexCount;
+    Vertex* vertices;
+    unsigned long* indices;
+    int vertexCount, indexCount;
 
-	Model();
-	~Model();
+    Model();
+    ~Model();
 };

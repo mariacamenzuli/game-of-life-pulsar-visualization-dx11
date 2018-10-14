@@ -18,66 +18,70 @@
 
 class D3D11Renderer {
 public:
-	D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight, Scene* scene, Camera* camera);
-	~D3D11Renderer();
+    D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight, Scene* scene, Camera* camera);
+    ~D3D11Renderer();
 
-	void renderFrame();
-	ID3D11Device* getDevice();
+    void renderFrame();
+    ID3D11Device* getDevice();
 
 private:
-	struct MonitorDescriptor {
-		unsigned int refreshRateNumerator;
-		unsigned int refreshRateDenominator;
-	};
-	struct VideoCardDescriptor {
-		int memory;
-		std::string description;
-	};
-	struct PhysicalDeviceDescriptor {
-		VideoCardDescriptor videoCard;
-		MonitorDescriptor monitor;
-	};
+    struct MonitorDescriptor {
+        unsigned int refreshRateNumerator;
+        unsigned int refreshRateDenominator;
+    };
 
-	int screenWidth;
-	int screenHeight;
-	Scene* scene;
-	Camera* camera;
+    struct VideoCardDescriptor {
+        int memory;
+        std::string description;
+    };
 
-	PhysicalDeviceDescriptor hardwareInfo;
-	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
-	Microsoft::WRL::ComPtr<ID3D11Device> device;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterState;
+    struct PhysicalDeviceDescriptor {
+        VideoCardDescriptor videoCard;
+        MonitorDescriptor monitor;
+    };
 
-	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+    int screenWidth;
+    int screenHeight;
+    Scene* scene;
+    Camera* camera;
 
-	D3DXMATRIX projectionMatrix;
-	D3DXMATRIX orthoMatrix;
-	ColorShader colorShader;
+    PhysicalDeviceDescriptor hardwareInfo;
+    Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
+    Microsoft::WRL::ComPtr<ID3D11Device> device;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterState;
 
-	PhysicalDeviceDescriptor queryPhysicalDeviceDescriptors();
-	void createSwapChainAndDevice(HWND windowHandle);
-	void createDepthAndStencilBuffer();
-	void createRasterizerState();
-	void setupViewport();
-	void setupVertexAndIndexBuffers();
+    Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+
+    D3DXMATRIX projectionMatrix;
+    D3DXMATRIX orthoMatrix;
+    ColorShader colorShader;
+
+    PhysicalDeviceDescriptor queryPhysicalDeviceDescriptors();
+    void createSwapChainAndDevice(HWND windowHandle);
+    void createDepthAndStencilBuffer();
+    void createRasterizerState();
+    void setupViewport();
+    void setupVertexAndIndexBuffers();
 };
 
 class D3D11RendererException : public std::exception {
 private:
-	long errorCode;
-	const char* msg;
+    long errorCode;
+    const char* msg;
 
 public:
-	D3D11RendererException(const char* msg, int errorCode) : errorCode(errorCode), msg(msg) { }
+    D3D11RendererException(const char* msg, int errorCode) : errorCode(errorCode), msg(msg) {
+    }
 
-	long getErrorCode() const { return errorCode; }
-	const char* what() const noexcept override {
-		return msg;
-	}
+    long getErrorCode() const { return errorCode; }
+
+    const char* what() const noexcept override {
+        return msg;
+    }
 };
