@@ -13,6 +13,7 @@ public:
     void showWindow();
     HWND getWindowHandle() const;
     void pollForMessage(MSG* msg);
+    void postQuitMessage();
 
 private:
     HWND windowHandle;

@@ -87,6 +87,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneObject.cpp" />
+    <ClCompile Include="UserInputInterpreter.cpp" />
     <ClCompile Include="Win32RenderingWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +98,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneObject.h" />
+    <ClInclude Include="UserInputInterpreter.h" />
     <ClInclude Include="Win32RenderingWindow.h" />
   </ItemGroup>
   <ItemGroup>

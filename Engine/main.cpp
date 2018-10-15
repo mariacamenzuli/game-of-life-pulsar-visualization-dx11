@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "CubeModel.h"
+#include "UserInputInterpreter.h"
 
 void logErrorAndNotifyUser(const std::string& log, const std::string& userNotification) {
     std::cerr << log << std::endl;
@@ -20,7 +21,6 @@ void logErrorAndNotifyUser(const std::string& log, const std::string& userNotifi
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
-
     try {
         const int screenWidth = 800;
         const int screenHeight = 600;
@@ -35,10 +35,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
         Win32RenderingWindow renderingWindow("CMP502", screenWidth, screenHeight, hInstance);
         D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(), screenWidth, screenHeight, &scene, &camera);
+        UserInputInterpreter userInput(screenWidth, screenHeight, hInstance, renderingWindow.getWindowHandle());
 
         renderingWindow.showWindow();
+
+        const float deltaTime = 1.0f / 60.0f; //todo: https://gafferongames.com/post/fix_your_timestep/
+
         MSG msg = {};
         while (msg.message != WM_QUIT) {
+            userInput.detect();
+
+            if (userInput.isEscapePressed()) {
+                renderingWindow.postQuitMessage();
+            }
+
             renderingWindow.pollForMessage(&msg);
             // cube.rotateY(0.01f);
             cube.rotateX(0.01f);

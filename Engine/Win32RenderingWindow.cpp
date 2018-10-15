@@ -57,6 +57,10 @@ void Win32RenderingWindow::pollForMessage(MSG* msg) {
     }
 }
 
+void Win32RenderingWindow::postQuitMessage() {
+    PostQuitMessage(0);
+}
+
 LRESULT Win32RenderingWindow::handleWindowMsg(HWND windowHandle, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
     case WM_DESTROY:
