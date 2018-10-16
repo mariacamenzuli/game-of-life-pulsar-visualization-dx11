@@ -5,19 +5,26 @@
 class Camera {
 public:
     Camera();
-    Camera(const Camera& camera);
     ~Camera();
 
-    void setPosition(float x, float y, float z);
-    void setRotation(float x, float y, float z);
+    void moveStraight(float motion);
+    void moveSideways(float motion);
 
-    D3DXVECTOR3 getPosition() const;
-    D3DXVECTOR3 getRotation() const;
+    void pitch(float rotationX);
+    void yaw(float rotationY);
+    void roll(float rotationZ);
 
     void calculateViewMatrix();
     void getViewMatrix(D3DXMATRIX& viewMatrix) const;
 private:
-    float positionX, positionY, positionZ = 0;
-    float rotationX, rotationY, rotationZ = 0;
+    struct Orientation {
+        D3DXVECTOR3 forward, up, right;
+    };
+
+
+    Orientation orientation;
+    D3DXVECTOR3 position, rotation, lookAtPoint;
     D3DXMATRIX viewMatrix;
+
+    void initOrientation();
 };

@@ -75,6 +75,38 @@ bool UserInputInterpreter::isEscapePressed() {
     return (keyboardState[DIK_ESCAPE] & 0x80) != 0;
 }
 
+bool UserInputInterpreter::isQPressed() {
+    return (keyboardState[DIK_Q] & 0x80) != 0;
+}
+
+bool UserInputInterpreter::isWPressed() {
+    return (keyboardState[DIK_W] & 0x80) != 0;
+}
+
+bool UserInputInterpreter::isEPressed() {
+    return (keyboardState[DIK_E] & 0x80) != 0;
+}
+
+bool UserInputInterpreter::isAPressed() {
+    return (keyboardState[DIK_A] & 0x80) != 0;
+}
+
+bool UserInputInterpreter::isSPressed() {
+    return (keyboardState[DIK_S] & 0x80) != 0;
+}
+
+bool UserInputInterpreter::isDPressed() {
+    return (keyboardState[DIK_D] & 0x80) != 0;
+}
+
+bool UserInputInterpreter::isZPressed() {
+    return (keyboardState[DIK_Z] & 0x80) != 0;
+}
+
+bool UserInputInterpreter::isCPressed() {
+    return (keyboardState[DIK_C] & 0x80) != 0;
+}
+
 void UserInputInterpreter::getMouseLocation(int& mouseX, int& mouseY) const {
     mouseX = this->mouseX;
     mouseY = this->mouseY;

@@ -31,7 +31,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
         scene.addSceneObject(&cube);
 
         Camera camera;
-        camera.setPosition(0.0f, 0.0f, -10.0f);
+        camera.moveStraight(-10.0f);
 
         Win32RenderingWindow renderingWindow("CMP502", screenWidth, screenHeight, hInstance);
         D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(), screenWidth, screenHeight, &scene, &camera);
@@ -47,6 +47,38 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
             if (userInput.isEscapePressed()) {
                 renderingWindow.postQuitMessage();
+            }
+
+            if (userInput.isWPressed()) {
+                camera.moveStraight(0.5f);
+            }
+
+            if (userInput.isSPressed()) {
+                camera.moveStraight(-0.5f);
+            }
+
+            if (userInput.isAPressed()) {
+                camera.moveSideways(-0.5f);
+            }
+
+            if (userInput.isDPressed()) {
+                camera.moveSideways(0.5f);
+            }
+
+            if (userInput.isQPressed()) {
+                camera.yaw(-0.05f);
+            }
+
+            if (userInput.isEPressed()) {
+                camera.yaw(0.05f);
+            }
+
+            if (userInput.isZPressed()) {
+                camera.pitch(-0.05f);
+            }
+
+            if (userInput.isCPressed()) {
+                camera.pitch(0.05f);
             }
 
             renderingWindow.pollForMessage(&msg);

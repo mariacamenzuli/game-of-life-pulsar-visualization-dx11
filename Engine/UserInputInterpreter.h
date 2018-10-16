@@ -15,6 +15,14 @@ public:
 
     void detect();
     bool isEscapePressed();
+    bool isQPressed();
+    bool isWPressed();
+    bool isEPressed();
+    bool isAPressed();
+    bool isSPressed();
+    bool isDPressed();
+    bool isZPressed();
+    bool isCPressed();
     void getMouseLocation(int& mouseX, int& mouseY) const;
 
 private:
