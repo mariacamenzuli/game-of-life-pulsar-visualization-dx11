@@ -63,7 +63,6 @@ void Camera::initOrientation() {
     orientation.up.x = 0.0f;
     orientation.up.y = 1.0f;
     orientation.up.z = 0.0f;
-    D3DXVec3Cross(&orientation.right, &orientation.up, &orientation.forward);
 
     // Rotate about origin
     D3DXVec3TransformCoord(&orientation.forward, &orientation.forward, &rotationMatrix);
