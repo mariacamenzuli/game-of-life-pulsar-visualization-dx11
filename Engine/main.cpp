@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "CubeModel.h"
 #include "UserInputInterpreter.h"
+#include "MetricsTracker.h"
 
 void logErrorAndNotifyUser(const std::string& log, const std::string& userNotification) {
     std::cerr << log << std::endl;
@@ -41,8 +42,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
         const float deltaTime = 1.0f / 60.0f; //todo: https://gafferongames.com/post/fix_your_timestep/
 
+        MetricsTracker metricsTracker;
+        int fpsLogTracker = 0;
+
         MSG msg = {};
         while (msg.message != WM_QUIT) {
+            if (fpsLogTracker % 300 == 0) {
+                std::string log = "FPS: " + std::to_string(metricsTracker.framesPerSecond) + "\n";
+                OutputDebugStringW(std::wstring(log.begin(), log.end()).c_str());
+                fpsLogTracker = 0;
+            }
+
             userInput.detect();
 
             if (userInput.isEscapePressed()) {
@@ -83,8 +93,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
             renderingWindow.pollForMessage(&msg);
             // cube.rotateY(0.01f);
+            
             cube.rotateX(0.01f);
+
             d3D11Renderer.renderFrame();
+
+            metricsTracker.newFrameRendered();
+            fpsLogTracker++;
         }
     } catch (const D3D11RendererException& e) {
         logErrorAndNotifyUser(e.what(), "Failed to initialize DirectX. Error code " + std::to_string(e.getErrorCode()));
