@@ -1,42 +1,24 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: color.vs
-////////////////////////////////////////////////////////////////////////////////
-
-
-/////////////
-// GLOBALS //
-/////////////
-cbuffer MatrixBuffer
-{
-	matrix worldMatrix;
-	matrix viewMatrix;
-	matrix projectionMatrix;
+// Global Variables
+cbuffer ConstantMatricesBuffer {
+	float4x4 worldMatrix;
+    float4x4 viewMatrix;
+    float4x4 projectionMatrix;
 };
 
-
-//////////////
-// TYPEDEFS //
-//////////////
-struct VertexInputType
-{
-    float4 position : POSITION;
-    float4 color : COLOR;
+// Type Definitions
+struct VertexInputType {
+    vector<float, 4> position : POSITION;
+    vector<float, 4> color : COLOR;
 };
 
-struct PixelInputType
-{
-    float4 position : SV_POSITION;
-    float4 color : COLOR;
+struct PixelInputType {
+    vector<float, 4> position : SV_POSITION;
+    vector<float, 4> color : COLOR;
 };
 
-
-////////////////////////////////////////////////////////////////////////////////
-// Vertex Shader
-////////////////////////////////////////////////////////////////////////////////
-PixelInputType ColorVertexShader(VertexInputType input)
-{
+// Shader Function
+PixelInputType ColorVertexShader(VertexInputType input) {
     PixelInputType output;
-    
 
 	// Change the position vector to be 4 units for proper matrix calculations.
     input.position.w = 1.0f;

@@ -8,6 +8,7 @@
 #include "CubeModel.h"
 #include "UserInputInterpreter.h"
 #include "MetricsTracker.h"
+#include "ObjModel.h"
 
 void logErrorAndNotifyUser(const std::string& log, const std::string& userNotification) {
     std::cerr << log << std::endl;
@@ -26,10 +27,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
         const int screenWidth = 800;
         const int screenHeight = 600;
 
-        CubeModel cubeModel;
         Scene scene;
-        SceneObject cube(&cubeModel);
-        scene.addSceneObject(&cube);
+
+        ObjModel treeModel = ObjModel::loadFromFile("../Engine/Resources/Models/lowpolytree.obj");
+        SceneObject tree(&treeModel);
+        scene.addSceneObject(&tree);
+
+        // CubeModel cubeModel;
+        // SceneObject cube(&cubeModel);
+        // scene.addSceneObject(&cube);
 
         Camera camera;
         camera.moveStraight(-10.0f);
@@ -94,7 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
             renderingWindow.pollForMessage(&msg);
             // cube.rotateY(0.01f);
             
-            cube.rotateX(0.01f);
+            // cube.rotateX(0.01f);
 
             d3D11Renderer.renderFrame();
 

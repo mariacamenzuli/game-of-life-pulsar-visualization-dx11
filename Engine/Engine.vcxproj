@@ -86,6 +86,7 @@
     <ClCompile Include="D3D11Renderer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MetricsTracker.cpp" />
+    <ClCompile Include="ObjModel.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="UserInputInterpreter.cpp" />
@@ -98,6 +99,7 @@
     <ClInclude Include="D3D11Renderer.h" />
     <ClInclude Include="MetricsTracker.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ObjModel.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="UserInputInterpreter.h" />
