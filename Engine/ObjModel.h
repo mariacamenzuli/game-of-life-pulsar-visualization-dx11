@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <regex>
 
 class ObjModel : public Model {
 public:
@@ -22,5 +23,6 @@ private:
     std::vector<unsigned long> indices;
 
     static bool lineStartsWith(std::string text, std::string prefix);
+    static Vertex something(std::string vertexDescriptor, std::vector<D3DXVECTOR3>& vertexPositions, std::vector<D3DXVECTOR3>& normals, std::vector<D3DXVECTOR2>& textureCoordinates);
 };
 

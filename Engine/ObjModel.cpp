@@ -3,6 +3,12 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <regex>
+
+const std::regex regexPositionOnly(R"((\d+(?:\.\d+)?))");
+const std::regex regexPositionAndTexture(R"((\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?))");
+const std::regex regexPositionAndNormal(R"((\d+(?:\.\d+)?)\/\/(\d+(?:\.\d+)?))");
+const std::regex regexPositionTextureNormal(R"((\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?))");
 
 ObjModel::ObjModel() {
 }
@@ -18,7 +24,7 @@ ObjModel ObjModel::loadFromFile(const std::string& filename) {
         throw std::runtime_error("Failed to open file [" + filename + "] to load .obj model");
     }
 
-    std::vector<D3DXVECTOR3> verticesPositions;
+    std::vector<D3DXVECTOR3> vertexPositions;
     std::vector<D3DXVECTOR3> normals;
     std::vector<D3DXVECTOR2> textureCoordinates;
 
@@ -39,7 +45,7 @@ ObjModel ObjModel::loadFromFile(const std::string& filename) {
             stringStream >> vertex.x >> vertex.y >> vertex.z;
             // Invert the Z vertex to change to left hand system.
             vertex.z = vertex.z * -1.0f;
-            verticesPositions.push_back(vertex);
+            vertexPositions.push_back(vertex);
         }
 
         if (lineStartsWith(line, "vn ")) {
@@ -70,26 +76,17 @@ ObjModel ObjModel::loadFromFile(const std::string& filename) {
             }
             
             for (int i = faceVertices.size() - 1; i > 1; i--) {
-                int vertexIndex1 = std::stoi(faceVertices.at(i).substr(0, faceVertices.at(i).find('/')));
-                Vertex vertex1;
-                vertex1.position = verticesPositions[vertexIndex1 - 1]; // - 1 because the indices are 1 based, not 0 based
-                vertex1.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+                auto vertex1 = something(faceVertices.at(i), vertexPositions, normals, textureCoordinates);
                 model.vertices.push_back(vertex1);
                 model.indices.push_back(indexCount);
                 indexCount++;
 
-                int vertexIndex2 = std::stoi(faceVertices.at(i - 1).substr(0, faceVertices.at(i - 1).find('/')));
-                Vertex vertex2;
-                vertex2.position = verticesPositions[vertexIndex2 - 1];
-                vertex2.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+                auto vertex2 = something(faceVertices.at(i - 1), vertexPositions, normals, textureCoordinates);
                 model.vertices.push_back(vertex2);
                 model.indices.push_back(indexCount);
                 indexCount++;
 
-                int vertexIndex3 = std::stoi(faceVertices.at(0).substr(0, faceVertices.at(0).find('/')));
-                Vertex vertex3;
-                vertex3.position = verticesPositions[vertexIndex3 - 1];
-                vertex3.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+                auto vertex3 = something(faceVertices.at(0), vertexPositions, normals, textureCoordinates);
                 model.vertices.push_back(vertex3);
                 model.indices.push_back(indexCount);
                 indexCount++;
@@ -120,4 +117,36 @@ unsigned long* ObjModel::getIndices() {
 
 bool ObjModel::lineStartsWith(std::string text, std::string prefix) {
     return text.find(prefix) == 0;
+}
+
+Model::Vertex ObjModel::something(std::string vertexDescriptor, std::vector<D3DXVECTOR3>& vertexPositions, std::vector<D3DXVECTOR3>& normals, std::vector<D3DXVECTOR2>& textureCoordinates) {
+    Vertex vertex;
+    std::smatch regexMatches;
+
+    if (std::regex_search(vertexDescriptor, regexMatches, regexPositionTextureNormal)) {
+        vertex.position = vertexPositions[std::stoi(regexMatches[1]) - 1];
+        vertex.texture = textureCoordinates[std::stoi(regexMatches[2]) - 1];
+        vertex.normal = normals[std::stoi(regexMatches[3]) - 1];
+        vertex.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f); //todo: remove
+    } else if (std::regex_search(vertexDescriptor, regexMatches, regexPositionAndNormal)) {
+        vertex.position = vertexPositions[std::stoi(regexMatches[1]) - 1];
+        vertex.texture.x = 0.0f;
+        vertex.texture.y = 0.0f;
+        vertex.normal = normals[std::stoi(regexMatches[2]) - 1];
+        vertex.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f); //todo: remove
+    } else if (std::regex_search(vertexDescriptor, regexMatches, regexPositionAndTexture)) {
+        vertex.position = vertexPositions[std::stoi(regexMatches[1]) - 1];
+        vertex.texture = textureCoordinates[std::stoi(regexMatches[2]) - 1];
+        vertex.normal.x = 0.0f;
+        vertex.normal.y = 0.0f;
+        vertex.normal.z = 0.0f;
+        vertex.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f); //todo: remove
+    } else {
+        vertex.position = vertexPositions[std::stoi(vertexDescriptor) - 1];
+        vertex.texture.x = 0.0f;
+        vertex.texture.y = 0.0f;
+        vertex.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f); //todo: remove
+    }
+
+    return vertex;
 }

@@ -7,8 +7,8 @@ public:
     struct Vertex {
         D3DXVECTOR3 position;
         D3DXVECTOR4 color;
-        // D3DXVECTOR3 normal;
-        // D3DXVECTOR2 texture;
+        D3DXVECTOR3 normal;
+        D3DXVECTOR2 texture;
     };
 
     virtual ~Model() = default;;
