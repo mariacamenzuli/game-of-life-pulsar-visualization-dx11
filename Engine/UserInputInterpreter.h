@@ -26,7 +26,7 @@ public:
     void getMouseLocation(int& mouseX, int& mouseY) const;
 
 private:
-    Microsoft::WRL::ComPtr< IDirectInput8> directInput;
+    Microsoft::WRL::ComPtr<IDirectInput8> directInput;
     Microsoft::WRL::ComPtr<IDirectInputDevice8> keyboard;
     Microsoft::WRL::ComPtr<IDirectInputDevice8> mouse;
 

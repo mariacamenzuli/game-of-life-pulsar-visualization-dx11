@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <d3dx10.h>
+#include <D3DX10.h>
 
 class Model {
 public:

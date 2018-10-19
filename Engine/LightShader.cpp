@@ -1,4 +1,4 @@
-#include <d3dx11async.h>
+#include <D3DX11async.h>
 #include <stdexcept>
 
 #include "LightShader.h"

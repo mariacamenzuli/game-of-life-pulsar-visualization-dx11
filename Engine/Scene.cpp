@@ -1,10 +1,6 @@
-#include <stdexcept>
-
 #include "Scene.h"
 
-Scene::Scene() {
-
-}
+Scene::Scene() = default;
 
 Scene::~Scene() = default;
 

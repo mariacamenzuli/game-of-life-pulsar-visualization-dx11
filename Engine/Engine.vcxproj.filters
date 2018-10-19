@@ -12,69 +12,72 @@
     <Filter Include="Shader Files">
       <UniqueIdentifier>{acebe109-b59a-4ab9-a79a-5dbe78fa680f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Models">
+    <Filter Include="Header Files\Util">
+      <UniqueIdentifier>{ad876616-bb5d-4e37-91b8-f0780475d74a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Util">
+      <UniqueIdentifier>{6f9ed0d1-1630-43fc-9697-7b0ac84a73c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering">
+      <UniqueIdentifier>{ccd184a4-d958-47cc-ae85-75a7074715b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering">
+      <UniqueIdentifier>{37d6bc96-5cc8-48bb-82b9-bcc81174f1c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering\Models">
+      <UniqueIdentifier>{5d24965d-e90d-41bc-bb8c-5face1ae8800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Rendering\Models">
       <UniqueIdentifier>{7d73ac9f-3cbc-4b38-aeab-2b940ae66979}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Models">
-      <UniqueIdentifier>{5d24965d-e90d-41bc-bb8c-5face1ae8800}</UniqueIdentifier>
+    <Filter Include="Header Files\Rendering\Shaders">
+      <UniqueIdentifier>{7c71f968-01c1-41c9-a952-d130f6b4a0dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering\Shaders">
+      <UniqueIdentifier>{3a6a9707-267e-4cef-b815-26434b8c911c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D3D11Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Win32RenderingWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SceneObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CubeModel.cpp">
-      <Filter>Source Files\Models</Filter>
-    </ClCompile>
-    <ClCompile Include="UserInputInterpreter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MetricsTracker.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rendering\Models</Filter>
     </ClCompile>
     <ClCompile Include="ObjModel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rendering\Models</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="MetricsTracker.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInputInterpreter.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32RenderingWindow.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Renderer.cpp">
+      <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="LightShader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Rendering\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Win32RenderingWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CubeModel.h">
-      <Filter>Header Files\Models</Filter>
-    </ClInclude>
-    <ClInclude Include="UserInputInterpreter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="D3D11Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rendering\Models</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files</Filter>
@@ -82,17 +85,32 @@
     <ClInclude Include="SceneObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MetricsTracker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ObjModel.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rendering\Models</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="MetricsTracker.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInputInterpreter.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32RenderingWindow.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Renderer.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="LightShader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Rendering\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Rendering\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

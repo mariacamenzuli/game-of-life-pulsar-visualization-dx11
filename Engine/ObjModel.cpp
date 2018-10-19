@@ -10,8 +10,7 @@ const std::regex regexPositionAndTexture(R"((\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?))");
 const std::regex regexPositionAndNormal(R"((\d+(?:\.\d+)?)\/\/(\d+(?:\.\d+)?))");
 const std::regex regexPositionTextureNormal(R"((\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?))");
 
-ObjModel::ObjModel() {
-}
+ObjModel::ObjModel() = default;
 
 ObjModel::~ObjModel() = default;
 
