@@ -38,8 +38,8 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle, const int screenWidth, const int
     // Create an orthographic projection matrix for 2D rendering.
     D3DXMatrixOrthoLH(&orthoMatrix, static_cast<float>(screenWidth), static_cast<float>(screenHeight), SCREEN_NEAR, SCREEN_DEPTH);
 
-    colorShader.compile(device.Get(), L"../Engine/color-vertex.hlsl", L"../Engine/color-pixel.hlsl");
-
+    lightShader.compile(device.Get());
+    
     setupVertexAndIndexBuffers();
 }
 
@@ -52,8 +52,8 @@ D3D11Renderer::~D3D11Renderer() {
 
 void D3D11Renderer::renderFrame() {
     // Clear buffers
-    float color[4] = {0.5f, 0.5f, 0.5f, 1.0f};
-    deviceContext->ClearRenderTargetView(renderTargetView.Get(), color);
+    float backBufferStartingColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f};
+    deviceContext->ClearRenderTargetView(renderTargetView.Get(), backBufferStartingColor);
     deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     camera->calculateViewMatrix();
@@ -75,7 +75,7 @@ void D3D11Renderer::renderFrame() {
     int indexStartLocation = 0;
     auto sceneObjects = *scene->getSceneObjects();
     for (auto sceneObject : sceneObjects) {
-        colorShader.prepareShaderInput(deviceContext.Get(), *sceneObject->getWorldMatrix(), viewMatrix, projectionMatrix);
+        lightShader.prepareShaderInput(deviceContext.Get(), *sceneObject->getWorldMatrix(), viewMatrix, projectionMatrix, D3DXVECTOR4(0.2f, 0.2f, 0.2f, 1.0f));
         deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, 0);
         indexStartLocation = indexStartLocation + sceneObject->getModel()->getIndexCount();
     }

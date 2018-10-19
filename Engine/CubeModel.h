@@ -13,8 +13,8 @@ public:
     unsigned long* getIndices() override;
 
 private:
-    const int vertexCount = 8;
+    const int vertexCount = 36;
     const int indexCount = 36;
-    Vertex vertices[8];
+    Vertex vertices[36];
     unsigned long indices[36];
 };

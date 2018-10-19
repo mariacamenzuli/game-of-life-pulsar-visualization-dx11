@@ -32,9 +32,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ColorShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Win32RenderingWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,6 +50,12 @@
     <ClCompile Include="ObjModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Win32RenderingWindow.h">
@@ -65,9 +68,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D3D11Renderer.h">
@@ -88,13 +88,19 @@
     <ClInclude Include="ObjModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="color-pixel.hlsl">
+    <FxCompile Include="light-vertex.hlsl">
       <Filter>Shader Files</Filter>
-    </None>
-    <None Include="color-vertex.hlsl">
+    </FxCompile>
+    <FxCompile Include="light-pixel.hlsl">
       <Filter>Shader Files</Filter>
-    </None>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -81,10 +81,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ColorShader.cpp" />
     <ClCompile Include="CubeModel.cpp" />
     <ClCompile Include="D3D11Renderer.cpp" />
+    <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="MetricsTracker.cpp" />
     <ClCompile Include="ObjModel.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -94,9 +95,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="ColorShader.h" />
     <ClInclude Include="CubeModel.h" />
     <ClInclude Include="D3D11Renderer.h" />
+    <ClInclude Include="LightShader.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="MetricsTracker.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ObjModel.h" />
@@ -106,8 +108,14 @@
     <ClInclude Include="Win32RenderingWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="color-pixel.hlsl" />
-    <None Include="color-vertex.hlsl" />
+    <FxCompile Include="light-pixel.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">colorPixel</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="light-vertex.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">transformToScreenSpace</EntryPointName>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

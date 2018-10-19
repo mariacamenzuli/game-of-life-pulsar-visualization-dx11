@@ -14,7 +14,7 @@
 
 #include "Scene.h"
 #include "Camera.h"
-#include "ColorShader.h"
+#include "LightShader.h"
 
 class D3D11Renderer {
 public:
@@ -60,7 +60,7 @@ private:
 
     D3DXMATRIX projectionMatrix;
     D3DXMATRIX orthoMatrix;
-    ColorShader colorShader;
+    LightShader lightShader;
 
     PhysicalDeviceDescriptor queryPhysicalDeviceDescriptors();
     void createSwapChainAndDevice(HWND windowHandle);

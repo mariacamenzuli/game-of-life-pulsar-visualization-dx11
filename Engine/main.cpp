@@ -36,6 +36,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
         // CubeModel cubeModel;
         // SceneObject cube(&cubeModel);
         // scene.addSceneObject(&cube);
+        // cube.translate(4.0f, 0.0f, 0.0f);
 
         Camera camera;
         camera.moveStraight(-10.0f);
@@ -98,9 +99,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
             }
 
             renderingWindow.pollForMessage(&msg);
-            // cube.rotateY(0.01f);
-            
-            // cube.rotateX(0.01f);
 
             d3D11Renderer.renderFrame();
 

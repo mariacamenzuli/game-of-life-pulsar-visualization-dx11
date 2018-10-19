@@ -39,6 +39,10 @@ ObjModel ObjModel::loadFromFile(const std::string& filename) {
             continue;
         }
 
+        if (lineStartsWith(line, "mtllib ")) {
+            // todo handle material loading
+        }
+
         if (lineStartsWith(line, "v ")) {
             std::istringstream stringStream(line.substr(2));
             D3DXVECTOR3 vertex;
@@ -127,25 +131,21 @@ Model::Vertex ObjModel::something(std::string vertexDescriptor, std::vector<D3DX
         vertex.position = vertexPositions[std::stoi(regexMatches[1]) - 1];
         vertex.texture = textureCoordinates[std::stoi(regexMatches[2]) - 1];
         vertex.normal = normals[std::stoi(regexMatches[3]) - 1];
-        vertex.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f); //todo: remove
     } else if (std::regex_search(vertexDescriptor, regexMatches, regexPositionAndNormal)) {
         vertex.position = vertexPositions[std::stoi(regexMatches[1]) - 1];
         vertex.texture.x = 0.0f;
         vertex.texture.y = 0.0f;
         vertex.normal = normals[std::stoi(regexMatches[2]) - 1];
-        vertex.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f); //todo: remove
     } else if (std::regex_search(vertexDescriptor, regexMatches, regexPositionAndTexture)) {
         vertex.position = vertexPositions[std::stoi(regexMatches[1]) - 1];
         vertex.texture = textureCoordinates[std::stoi(regexMatches[2]) - 1];
         vertex.normal.x = 0.0f;
         vertex.normal.y = 0.0f;
         vertex.normal.z = 0.0f;
-        vertex.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f); //todo: remove
     } else {
         vertex.position = vertexPositions[std::stoi(vertexDescriptor) - 1];
         vertex.texture.x = 0.0f;
         vertex.texture.y = 0.0f;
-        vertex.color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f); //todo: remove
     }
 
     return vertex;
