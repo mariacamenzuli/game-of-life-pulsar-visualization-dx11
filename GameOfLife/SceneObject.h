@@ -1,6 +1,9 @@
 #pragma once
 
 #include <D3DX10.h>
+#include <memory>
+#include <vector>
+#include <map>
 
 #include "Model.h"
 
@@ -11,6 +14,11 @@ public:
 
     Model* getModel();
     D3DXMATRIX* getWorldMatrix();
+    D3DXMATRIX getCompositeWorldMatrix();
+    SceneObject* attachChild(std::unique_ptr<SceneObject> child);
+    SceneObject* attachChild(std::unique_ptr<SceneObject> child, std::string label);
+    SceneObject* getChild(std::string label);
+    std::vector<SceneObject*> getChildren();
 
     void translate(float x, float y, float z);
     void scale(float x, float y, float z);
@@ -21,4 +29,7 @@ public:
 private:
     Model* model;
     D3DXMATRIX worldMatrix;
+    SceneObject* parent = nullptr;
+    std::vector<std::unique_ptr<SceneObject>> children;
+    std::map<std::string, SceneObject*> labeledChildren;
 };

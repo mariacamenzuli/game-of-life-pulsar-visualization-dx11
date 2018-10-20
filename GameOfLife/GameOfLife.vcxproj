@@ -99,10 +99,10 @@
     <ClCompile Include="GameOfLife.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MetricsTracker.cpp" />
+    <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ObjModel.cpp" />
-    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneObject.cpp" />
-    <ClCompile Include="UserInputInterpreter.cpp" />
+    <ClCompile Include="UserInputReader.cpp" />
     <ClCompile Include="Win32RenderingWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -116,10 +116,11 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="MetricsTracker.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ObjModel.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneObject.h" />
-    <ClInclude Include="UserInputInterpreter.h" />
+    <ClInclude Include="UserInputReader.h" />
     <ClInclude Include="Win32RenderingWindow.h" />
   </ItemGroup>
   <ItemGroup>

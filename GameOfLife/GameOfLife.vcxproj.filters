@@ -62,9 +62,6 @@
     <ClCompile Include="MetricsTracker.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
-    <ClCompile Include="UserInputInterpreter.cpp">
-      <Filter>Source Files\Util</Filter>
-    </ClCompile>
     <ClCompile Include="Win32RenderingWindow.cpp">
       <Filter>Source Files\Util</Filter>
     </ClCompile>
@@ -89,11 +86,14 @@
     <ClCompile Include="GameOfLifeSimulator.cpp">
       <Filter>Source Files\Simulation</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files\3D Components</Filter>
-    </ClCompile>
     <ClCompile Include="SceneObject.cpp">
       <Filter>Source Files\3D Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInputReader.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelLoader.cpp">
+      <Filter>Source Files\Simulation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -104,9 +104,6 @@
       <Filter>Header Files\3D Components\Models</Filter>
     </ClInclude>
     <ClInclude Include="MetricsTracker.h">
-      <Filter>Header Files\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="UserInputInterpreter.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
     <ClInclude Include="Win32RenderingWindow.h">
@@ -141,6 +138,12 @@
     </ClInclude>
     <ClInclude Include="SceneObject.h">
       <Filter>Header Files\3D Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInputReader.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoader.h">
+      <Filter>Header Files\Simulation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

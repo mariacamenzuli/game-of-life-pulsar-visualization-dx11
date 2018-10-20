@@ -1,17 +1,10 @@
 #pragma once
 
-#include <vector>
-
 #include "SceneObject.h"
 
 class Scene {
 public:
-    Scene();
-    ~Scene();
+    virtual ~Scene() = default;
 
-    void addSceneObject(SceneObject* sceneObject);
-    std::vector<SceneObject*>* getSceneObjects();
-
-private:
-    std::vector<SceneObject*> sceneObjects;
+    virtual SceneObject* getRootSceneObject() = 0;
 };

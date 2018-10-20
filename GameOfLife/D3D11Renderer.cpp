@@ -1,6 +1,7 @@
 #include <vector>
 
 #include "D3D11Renderer.h"
+#include <stack>
 
 D3D11Renderer::D3D11Renderer(HWND windowHandle,
                              bool fullscreenEnabled,
@@ -84,11 +85,24 @@ void D3D11Renderer::renderFrame() {
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     int indexStartLocation = 0;
-    auto sceneObjects = *scene->getSceneObjects();
-    for (auto sceneObject : sceneObjects) {
-        lightShader.prepareShaderInput(deviceContext.Get(), *sceneObject->getWorldMatrix(), viewMatrix, projectionMatrix, D3DXVECTOR4(0.2f, 0.2f, 0.2f, 1.0f));
-        deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, 0);
+    int vertexStartLocation = 0;
+
+    std::stack<SceneObject*> toVisit;
+    toVisit.push(scene->getRootSceneObject());
+
+    while (!toVisit.empty()) {
+        SceneObject* sceneObject = toVisit.top();
+        toVisit.pop();
+
+        lightShader.prepareShaderInput(deviceContext.Get(), sceneObject->getCompositeWorldMatrix(), viewMatrix, projectionMatrix, D3DXVECTOR4(0.2f, 0.2f, 0.2f, 1.0f));
+        deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
         indexStartLocation = indexStartLocation + sceneObject->getModel()->getIndexCount();
+        vertexStartLocation = vertexStartLocation + sceneObject->getModel()->getVertexCount();
+
+        auto children = sceneObject->getChildren();
+        for (auto child : children) {
+            toVisit.push(child);
+        }
     }
 
     // Present the back buffer to the screen since rendering is complete.
@@ -382,11 +396,22 @@ void D3D11Renderer::setupVertexAndIndexBuffers() {
 std::vector<Model::Vertex> D3D11Renderer::getAllVertices(Scene* scene) {
     std::vector<Model::Vertex> vertices;
 
-    for (auto sceneObject : *scene->getSceneObjects()) {
+    std::stack<SceneObject*> toVisit;
+    toVisit.push(scene->getRootSceneObject());
+
+    while (!toVisit.empty()) {
+        SceneObject* sceneObject = toVisit.top();
+        toVisit.pop();
+
         if (sceneObject->getModel() != nullptr) {
             for (auto i = 0; i < sceneObject->getModel()->getVertexCount(); i++) {
                 vertices.push_back(sceneObject->getModel()->getVertices()[i]);
             }
+        }
+
+        auto children = sceneObject->getChildren();
+        for (auto child : children) {
+            toVisit.push(child);
         }
     }
 
@@ -396,9 +421,22 @@ std::vector<Model::Vertex> D3D11Renderer::getAllVertices(Scene* scene) {
 std::vector<unsigned long> D3D11Renderer::getAllIndices(Scene* scene) {
     std::vector<unsigned long> indices;
 
-    for (auto sceneObject : *scene->getSceneObjects()) {
-        for (auto i = 0; i < sceneObject->getModel()->getIndexCount(); i++) {
-            indices.push_back(sceneObject->getModel()->getIndices()[i]);
+    std::stack<SceneObject*> toVisit;
+    toVisit.push(scene->getRootSceneObject());
+
+    while (!toVisit.empty()) {
+        SceneObject* sceneObject = toVisit.top();
+        toVisit.pop();
+
+        if (sceneObject->getModel() != nullptr) {
+            for (auto i = 0; i < sceneObject->getModel()->getIndexCount(); i++) {
+                indices.push_back(sceneObject->getModel()->getIndices()[i]);
+            }
+        }
+
+        auto children = sceneObject->getChildren();
+        for (auto child : children) {
+            toVisit.push(child);
         }
     }
 

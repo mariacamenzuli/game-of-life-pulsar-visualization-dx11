@@ -3,13 +3,11 @@
 
 #include "Win32RenderingWindow.h"
 #include "D3D11Renderer.h"
-#include "Scene.h"
 #include "Camera.h"
-#include "CubeModel.h"
-#include "UserInputInterpreter.h"
+#include "UserInputReader.h"
 #include "MetricsTracker.h"
-#include "ObjModel.h"
 #include "ApplicationConfig.h"
+#include "GameOfLifeSimulator.h"
 
 void logErrorAndNotifyUser(const std::string& log, const std::string& userNotification) {
     std::cerr << log << std::endl;
@@ -50,23 +48,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
                                     screenWidth,
                                     screenHeight);
 
-        Scene scene;
+        GameOfLifeSimulator simulation;
+        d3D11Renderer.setScene(&simulation);
 
-        ObjModel treeModel = ObjModel::loadFromFile("Resources/Models/lowpolytree.obj");
-        SceneObject tree(&treeModel);
-        scene.addSceneObject(&tree);
-
-        CubeModel cubeModel;
-        SceneObject cube(&cubeModel);
-        scene.addSceneObject(&cube);
-        cube.translate(4.0f, 0.0f, 0.0f);
-
-        Camera camera;
-        camera.moveStraight(-10.0f);
-        UserInputInterpreter userInput(screenWidth, screenHeight, hInstance, renderingWindow.getWindowHandle());
-
-        d3D11Renderer.setScene(&scene);
+        Camera camera; // todo: should this be in the scene? if so, also move movement of camera
         d3D11Renderer.setCamera(&camera);
+
+        camera.moveStraight(-55.0f);
+        UserInputReader userInput(screenWidth, screenHeight, hInstance, renderingWindow.getWindowHandle());
 
         renderingWindow.showWindow();
 
@@ -83,7 +72,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
                 fpsLogTracker = 0;
             }
 
-            userInput.detect();
+            userInput.read();
 
             if (userInput.isEscapePressed()) {
                 renderingWindow.postQuitMessage();
@@ -122,6 +111,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
             }
 
             renderingWindow.pollForMessage(&msg);
+
+            simulation.update(deltaTime);
 
             d3D11Renderer.renderFrame();
 

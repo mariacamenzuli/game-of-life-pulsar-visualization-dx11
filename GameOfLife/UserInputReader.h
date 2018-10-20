@@ -8,12 +8,12 @@
 #include <dinput.h>
 #include <wrl/client.h>
 
-class UserInputInterpreter {
+class UserInputReader {
 public:
-    UserInputInterpreter(int screenWidth, int screenHeight, HINSTANCE hinstance, HWND hwnd);
-    ~UserInputInterpreter();
+    UserInputReader(int screenWidth, int screenHeight, HINSTANCE hinstance, HWND hwnd);
+    ~UserInputReader();
 
-    void detect();
+    void read();
     bool isEscapePressed();
     bool isQPressed();
     bool isWPressed();

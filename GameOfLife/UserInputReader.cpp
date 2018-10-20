@@ -1,6 +1,6 @@
-#include "UserInputInterpreter.h"
+#include "UserInputReader.h"
 
-UserInputInterpreter::UserInputInterpreter(int screenWidth, int screenHeight, HINSTANCE hinstance, HWND hwnd): screenWidth(screenWidth), screenHeight(screenHeight), mouseX(0), mouseY(0) {
+UserInputReader::UserInputReader(int screenWidth, int screenHeight, HINSTANCE hinstance, HWND hwnd): screenWidth(screenWidth), screenHeight(screenHeight), mouseX(0), mouseY(0) {
     HRESULT result;
 
     result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, reinterpret_cast<void**>(directInput.GetAddressOf()), nullptr);
@@ -61,58 +61,58 @@ UserInputInterpreter::UserInputInterpreter(int screenWidth, int screenHeight, HI
 }
 
 
-UserInputInterpreter::~UserInputInterpreter() {
+UserInputReader::~UserInputReader() {
     mouse->Unacquire();
     keyboard->Unacquire();
 }
 
-void UserInputInterpreter::detect() {
+void UserInputReader::read() {
     readKeyboard();
     readMouse();
 }
 
-bool UserInputInterpreter::isEscapePressed() {
+bool UserInputReader::isEscapePressed() {
     return (keyboardState[DIK_ESCAPE] & 0x80) != 0;
 }
 
-bool UserInputInterpreter::isQPressed() {
+bool UserInputReader::isQPressed() {
     return (keyboardState[DIK_Q] & 0x80) != 0;
 }
 
-bool UserInputInterpreter::isWPressed() {
+bool UserInputReader::isWPressed() {
     return (keyboardState[DIK_W] & 0x80) != 0;
 }
 
-bool UserInputInterpreter::isEPressed() {
+bool UserInputReader::isEPressed() {
     return (keyboardState[DIK_E] & 0x80) != 0;
 }
 
-bool UserInputInterpreter::isAPressed() {
+bool UserInputReader::isAPressed() {
     return (keyboardState[DIK_A] & 0x80) != 0;
 }
 
-bool UserInputInterpreter::isSPressed() {
+bool UserInputReader::isSPressed() {
     return (keyboardState[DIK_S] & 0x80) != 0;
 }
 
-bool UserInputInterpreter::isDPressed() {
+bool UserInputReader::isDPressed() {
     return (keyboardState[DIK_D] & 0x80) != 0;
 }
 
-bool UserInputInterpreter::isZPressed() {
+bool UserInputReader::isZPressed() {
     return (keyboardState[DIK_Z] & 0x80) != 0;
 }
 
-bool UserInputInterpreter::isCPressed() {
+bool UserInputReader::isCPressed() {
     return (keyboardState[DIK_C] & 0x80) != 0;
 }
 
-void UserInputInterpreter::getMouseLocation(int& mouseX, int& mouseY) const {
+void UserInputReader::getMouseLocation(int& mouseX, int& mouseY) const {
     mouseX = this->mouseX;
     mouseY = this->mouseY;
 }
 
-void UserInputInterpreter::readKeyboard() {
+void UserInputReader::readKeyboard() {
     HRESULT result = keyboard->GetDeviceState(sizeof(keyboardState), static_cast<LPVOID>(&keyboardState));
     if (FAILED(result)) {
         // If the keyboard lost focus or was not acquired then try to get control back.
@@ -124,7 +124,7 @@ void UserInputInterpreter::readKeyboard() {
     }
 }
 
-void UserInputInterpreter::readMouse() {
+void UserInputReader::readMouse() {
     HRESULT result = mouse->GetDeviceState(sizeof(DIMOUSESTATE), static_cast<LPVOID>(&mouseState));
     if (FAILED(result)) {
         // If the mouse lost focus or was not acquired then try to get control back.
