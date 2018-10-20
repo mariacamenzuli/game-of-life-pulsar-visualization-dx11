@@ -7,7 +7,7 @@
 
 class Win32RenderingWindow {
 public:
-    Win32RenderingWindow(std::string applicationName, int screenWidth, int screenHeight, HINSTANCE& hInstance);
+    Win32RenderingWindow(std::string applicationName, bool fullscreenEnabled, int screenWidth, int screenHeight, HINSTANCE& hInstance);
     ~Win32RenderingWindow();
 
     void showWindow();

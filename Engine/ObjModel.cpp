@@ -79,17 +79,17 @@ ObjModel ObjModel::loadFromFile(const std::string& filename) {
             }
             
             for (int i = faceVertices.size() - 1; i > 1; i--) {
-                auto vertex1 = something(faceVertices.at(i), vertexPositions, normals, textureCoordinates);
+                auto vertex1 = createVertex(faceVertices.at(i), vertexPositions, normals, textureCoordinates);
                 model.vertices.push_back(vertex1);
                 model.indices.push_back(indexCount);
                 indexCount++;
 
-                auto vertex2 = something(faceVertices.at(i - 1), vertexPositions, normals, textureCoordinates);
+                auto vertex2 = createVertex(faceVertices.at(i - 1), vertexPositions, normals, textureCoordinates);
                 model.vertices.push_back(vertex2);
                 model.indices.push_back(indexCount);
                 indexCount++;
 
-                auto vertex3 = something(faceVertices.at(0), vertexPositions, normals, textureCoordinates);
+                auto vertex3 = createVertex(faceVertices.at(0), vertexPositions, normals, textureCoordinates);
                 model.vertices.push_back(vertex3);
                 model.indices.push_back(indexCount);
                 indexCount++;
@@ -122,7 +122,7 @@ bool ObjModel::lineStartsWith(std::string text, std::string prefix) {
     return text.find(prefix) == 0;
 }
 
-Model::Vertex ObjModel::something(std::string vertexDescriptor, std::vector<D3DXVECTOR3>& vertexPositions, std::vector<D3DXVECTOR3>& normals, std::vector<D3DXVECTOR2>& textureCoordinates) {
+Model::Vertex ObjModel::createVertex(std::string vertexDescriptor, std::vector<D3DXVECTOR3>& vertexPositions, std::vector<D3DXVECTOR3>& normals, std::vector<D3DXVECTOR2>& textureCoordinates) {
     Vertex vertex;
     std::smatch regexMatches;
 

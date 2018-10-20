@@ -1,0 +1,10 @@
+fullscreen_enabled: false
+
+# ignored if fullscreen_enabled is true
+screen_width: 800
+screen_height: 600
+
+vsync_enabled: true
+
+screen_depth: 1000.0
+screen_near: 0.1

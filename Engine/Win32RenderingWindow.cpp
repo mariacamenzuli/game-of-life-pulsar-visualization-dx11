@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-Win32RenderingWindow::Win32RenderingWindow(std::string applicationName, int screenWidth, int screenHeight, HINSTANCE& hInstance) {
+Win32RenderingWindow::Win32RenderingWindow(std::string applicationName, bool fullscreenEnabled, int screenWidth, int screenHeight, HINSTANCE& hInstance) {
     WNDCLASS windowClass;
     windowClass.lpszClassName = L"CMP502 Window Class";
     windowClass.lpfnWndProc = WindowProc;
@@ -17,6 +17,27 @@ Win32RenderingWindow::Win32RenderingWindow(std::string applicationName, int scre
 
     RegisterClass(&windowClass);
 
+    int positionX, positionY;
+    if (fullscreenEnabled) {
+        DEVMODE dmScreenSettings;
+        // If full screen set the screen to maximum size of the users desktop and 32bit.
+        memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
+        dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+        dmScreenSettings.dmPelsWidth = static_cast<unsigned long>(screenWidth);
+        dmScreenSettings.dmPelsHeight = static_cast<unsigned long>(screenHeight);
+        dmScreenSettings.dmBitsPerPel = 32;
+        dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+        // Change the display settings to full screen.
+        ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+
+        // Set the position of the window to the top left corner.
+        positionX = positionY = 0;
+    } else {
+        positionX = CW_USEDEFAULT;
+        positionY = CW_USEDEFAULT;
+    }
+
     windowHandle = CreateWindowEx(
         0, // Optional window styles.
         windowClass.lpszClassName, // Window class
@@ -24,7 +45,7 @@ Win32RenderingWindow::Win32RenderingWindow(std::string applicationName, int scre
         WS_OVERLAPPEDWINDOW, // Window style
 
         // Size and position
-        CW_USEDEFAULT, CW_USEDEFAULT,
+        positionX, positionY,
         screenWidth, screenHeight,
 
         nullptr, // Parent window
@@ -38,7 +59,9 @@ Win32RenderingWindow::Win32RenderingWindow(std::string applicationName, int scre
     }
 }
 
-Win32RenderingWindow::~Win32RenderingWindow() = default;
+Win32RenderingWindow::~Win32RenderingWindow() {
+    ChangeDisplaySettings(nullptr, 0);
+}
 
 void Win32RenderingWindow::showWindow() {
     ShowWindow(windowHandle, SW_SHOW);

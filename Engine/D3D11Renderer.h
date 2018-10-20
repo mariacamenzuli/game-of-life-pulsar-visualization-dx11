@@ -18,7 +18,7 @@
 
 class D3D11Renderer {
 public:
-    D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight, Scene* scene, Camera* camera);
+    D3D11Renderer(HWND windowHandle, bool fullscreenEnabled, bool vsyncEnabled, float screenNear, float screenDepth, const int screenWidth, const int screenHeight, Scene* scene, Camera* camera);
     ~D3D11Renderer();
 
     void renderFrame();
@@ -42,6 +42,10 @@ private:
 
     int screenWidth;
     int screenHeight;
+    bool fullscreenEnabled;
+    bool vsyncEnabled;
+    float screenNear;
+    float screenDepth;
     Scene* scene;
     Camera* camera;
 

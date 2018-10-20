@@ -2,6 +2,7 @@
 #include <stdexcept>
 
 #include "LightShader.h"
+#include "FileReader.h"
 
 LightShader::LightShader() = default;
 
@@ -10,39 +11,18 @@ LightShader::~LightShader() = default;
 void LightShader::compile(ID3D11Device* device) {
     HRESULT result;
     Microsoft::WRL::ComPtr<ID3D10Blob> errorMessage;
-    Microsoft::WRL::ComPtr<ID3D10Blob> vertexShaderBuffer;
-    Microsoft::WRL::ComPtr<ID3D10Blob> pixelShaderBuffer;
 
-    // Compile the vertex shader code.
-    result = D3DX11CompileFromFile(L"../Engine/light-vertex.hlsl", nullptr, nullptr, "transformToScreenSpace", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, nullptr,
-                                   vertexShaderBuffer.GetAddressOf(), errorMessage.GetAddressOf(), nullptr);
-    if (FAILED(result)) {
-        if (errorMessage) {
-            throw std::runtime_error(static_cast<char*>(errorMessage->GetBufferPointer()));
-        } else {
-            throw std::runtime_error("Failed to create light shader. Missing vertex shader file.");
-        }
-    }
-
-    // Compile the pixel shader code.
-    result = D3DX11CompileFromFile(L"../Engine/light-pixel.hlsl", nullptr, nullptr, "colorPixel", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, nullptr,
-                                   pixelShaderBuffer.GetAddressOf(), errorMessage.GetAddressOf(), nullptr);
-    if (FAILED(result)) {
-        if (errorMessage) {
-            throw std::runtime_error(static_cast<char*>(errorMessage->GetBufferPointer()));
-        } else {
-            throw std::runtime_error("Failed to create light shader. Missing pixel shader file.");
-        }
-    }
+    auto lightVertexBuffer = FileReader::readBinaryFile("Resources/Shaders/light-vertex.cso");
+    auto lightPixelBuffer = FileReader::readBinaryFile("Resources/Shaders/light-pixel.cso");
 
     // Create the vertex shader from the buffer.
-    result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), nullptr, vertexShader.GetAddressOf());
+    result = device->CreateVertexShader(lightVertexBuffer.data(), lightVertexBuffer.size(), nullptr, vertexShader.GetAddressOf());
     if (FAILED(result)) {
         throw std::runtime_error("Failed to create light shader. Creation of vertex shader failed.");
     }
 
     // Create the pixel shader from the buffer.
-    result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), nullptr, pixelShader.GetAddressOf());
+    result = device->CreatePixelShader(lightPixelBuffer.data(), lightPixelBuffer.size(), nullptr, pixelShader.GetAddressOf());
     if (FAILED(result)) {
         throw std::runtime_error("Failed to create light shader. Creation of pixel shader failed.");
     }
@@ -79,8 +59,8 @@ void LightShader::compile(ID3D11Device* device) {
     D3D11_BUFFER_DESC transformationMatricesBufferDesc;
 
     // Create the vertex input layout.
-    result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(),
-                                       vertexShaderBuffer->GetBufferSize(), layout.GetAddressOf());
+    result = device->CreateInputLayout(polygonLayout, numElements, lightVertexBuffer.data(),
+                                       lightVertexBuffer.size(), layout.GetAddressOf());
     if (FAILED(result)) {
         throw std::runtime_error("Failed to create light shader. Creation of input layout failed.");
     }

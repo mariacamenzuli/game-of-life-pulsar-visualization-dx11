@@ -9,6 +9,7 @@
 #include "UserInputInterpreter.h"
 #include "MetricsTracker.h"
 #include "ObjModel.h"
+#include "ApplicationConfig.h"
 
 void logErrorAndNotifyUser(const std::string& log, const std::string& userNotification) {
     std::cerr << log << std::endl;
@@ -24,12 +25,22 @@ void logErrorAndNotifyUser(const std::string& log, const std::string& userNotifi
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
     try {
-        const int screenWidth = 800;
-        const int screenHeight = 600;
+        ApplicationConfig config;
+
+        int screenWidth;
+        int screenHeight;
+
+        if (config.isFullscreenEnabled()) {
+            screenWidth = GetSystemMetrics(SM_CXSCREEN);
+            screenHeight = GetSystemMetrics(SM_CYSCREEN);
+        } else {
+            screenWidth = config.getScreenWidth();
+            screenHeight = config.getScreenHeight();
+        }
 
         Scene scene;
 
-        ObjModel treeModel = ObjModel::loadFromFile("../Engine/Resources/Models/lowpolytree.obj");
+        ObjModel treeModel = ObjModel::loadFromFile("Resources/Models/lowpolytree.obj");
         SceneObject tree(&treeModel);
         scene.addSceneObject(&tree);
 
@@ -41,8 +52,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
         Camera camera;
         camera.moveStraight(-10.0f);
 
-        Win32RenderingWindow renderingWindow("CMP502", screenWidth, screenHeight, hInstance);
-        D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(), screenWidth, screenHeight, &scene, &camera);
+        Win32RenderingWindow renderingWindow("CMP502", config.isFullscreenEnabled(), screenWidth, screenHeight, hInstance);
+        D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(),
+                                    config.isFullscreenEnabled(),
+                                    config.isVsyncEnabled(),
+                                    config.getScreenNear(),
+                                    config.getScreenHeight(),
+                                    screenWidth,
+                                    screenHeight,
+                                    &scene,
+                                    &camera);
         UserInputInterpreter userInput(screenWidth, screenHeight, hInstance, renderingWindow.getWindowHandle());
 
         renderingWindow.showWindow();

@@ -61,6 +61,16 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y "$(ProjectDir)config.yml"  "$(OutDir)" &amp; xcopy /Y /E "$(ProjectDir)Resources"  "$(OutDir)Resources"</Command>
+    </PostBuildEvent>
+    <FxCompile>
+      <ObjectFileOutput>$(OutDir)Resources/Shaders/%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -80,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ApplicationConfig.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeModel.cpp" />
     <ClCompile Include="D3D11Renderer.cpp" />
@@ -94,9 +105,11 @@
     <ClCompile Include="Win32RenderingWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ApplicationConfig.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CubeModel.h" />
     <ClInclude Include="D3D11Renderer.h" />
+    <ClInclude Include="FileReader.h" />
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MetricsTracker.h" />
@@ -116,6 +129,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">transformToScreenSpace</EntryPointName>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.yml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

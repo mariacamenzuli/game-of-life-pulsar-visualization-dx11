@@ -2,11 +2,22 @@
 
 #include "D3D11Renderer.h"
 
-const bool VSYNC_ENABLED = true;
-const float SCREEN_DEPTH = 1000.0f;
-const float SCREEN_NEAR = 0.1f;
-
-D3D11Renderer::D3D11Renderer(HWND windowHandle, const int screenWidth, const int screenHeight, Scene* scene, Camera* camera) : screenWidth(screenWidth), screenHeight(screenHeight), scene(scene), camera(camera) {
+D3D11Renderer::D3D11Renderer(HWND windowHandle,
+                             bool fullscreenEnabled,
+                             bool vsyncEnabled,
+                             float screenNear,
+                             float screenDepth,
+                             const int screenWidth,
+                             const int screenHeight,
+                             Scene* scene,
+                             Camera* camera) : fullscreenEnabled(fullscreenEnabled),
+                                               vsyncEnabled(vsyncEnabled),
+                                               screenNear(screenNear),
+                                               screenDepth(screenDepth),
+                                               screenWidth(screenWidth),
+                                               screenHeight(screenHeight),
+                                               scene(scene),
+                                               camera(camera) {
     hardwareInfo = queryPhysicalDeviceDescriptors();
     createSwapChainAndDevice(windowHandle);
 
@@ -33,13 +44,13 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle, const int screenWidth, const int
     float screenAspect = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
 
     // Create the projection matrix for 3D rendering.
-    D3DXMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
+    D3DXMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
 
     // Create an orthographic projection matrix for 2D rendering.
-    D3DXMatrixOrthoLH(&orthoMatrix, static_cast<float>(screenWidth), static_cast<float>(screenHeight), SCREEN_NEAR, SCREEN_DEPTH);
+    D3DXMatrixOrthoLH(&orthoMatrix, static_cast<float>(screenWidth), static_cast<float>(screenHeight), screenNear, screenDepth);
 
     lightShader.compile(device.Get());
-    
+
     setupVertexAndIndexBuffers();
 }
 
@@ -52,7 +63,7 @@ D3D11Renderer::~D3D11Renderer() {
 
 void D3D11Renderer::renderFrame() {
     // Clear buffers
-    float backBufferStartingColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f};
+    float backBufferStartingColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     deviceContext->ClearRenderTargetView(renderTargetView.Get(), backBufferStartingColor);
     deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
@@ -81,7 +92,7 @@ void D3D11Renderer::renderFrame() {
     }
 
     // Present the back buffer to the screen since rendering is complete.
-    if (VSYNC_ENABLED) {
+    if (vsyncEnabled) {
         // Lock to screen refresh rate.
         swapChain->Present(1, 0);
     } else {
@@ -173,7 +184,7 @@ void D3D11Renderer::createSwapChainAndDevice(HWND windowHandle) {
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
     // Set the refresh rate of the back buffer.
-    if (VSYNC_ENABLED) {
+    if (vsyncEnabled) {
         swapChainDesc.BufferDesc.RefreshRate.Numerator = hardwareInfo.monitor.refreshRateNumerator;
         swapChainDesc.BufferDesc.RefreshRate.Denominator = hardwareInfo.monitor.refreshRateDenominator;
     } else {
@@ -192,7 +203,7 @@ void D3D11Renderer::createSwapChainAndDevice(HWND windowHandle) {
     swapChainDesc.SampleDesc.Quality = 0;
 
     // Set to windowed mode.
-    swapChainDesc.Windowed = true; // would need to be false for full screen
+    swapChainDesc.Windowed = !fullscreenEnabled; // would need to be false for full screen
 
     // Set the scan line ordering and scaling to unspecified.
     swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;

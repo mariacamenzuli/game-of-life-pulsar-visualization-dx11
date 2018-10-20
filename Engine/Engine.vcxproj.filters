@@ -36,6 +36,9 @@
     <Filter Include="Source Files\Rendering\Shaders">
       <UniqueIdentifier>{3a6a9707-267e-4cef-b815-26434b8c911c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Config Files">
+      <UniqueIdentifier>{4ee8ca85-afa1-4b36-a3a7-7445d1fc035e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -73,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationConfig.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +118,12 @@
     <ClInclude Include="Material.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="FileReader.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="light-vertex.hlsl">
@@ -120,5 +132,10 @@
     <FxCompile Include="light-pixel.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.yml">
+      <Filter>Config Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

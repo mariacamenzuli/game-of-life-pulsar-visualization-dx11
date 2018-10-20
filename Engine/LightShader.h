@@ -6,7 +6,6 @@
 
 class LightShader {
 public:
-
     LightShader();
     ~LightShader();
 
