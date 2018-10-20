@@ -86,34 +86,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
             }
 
             if (userInput.isWPressed()) {
-                camera.moveStraight(0.5f);
+                camera.moveStraight(4.0f * deltaTime);
             }
 
             if (userInput.isSPressed()) {
-                camera.moveStraight(-0.5f);
+                camera.moveStraight(-4.0f * deltaTime);
             }
 
             if (userInput.isAPressed()) {
-                camera.moveSideways(-0.5f);
+                camera.moveSideways(-4.0f * deltaTime);
             }
 
             if (userInput.isDPressed()) {
-                camera.moveSideways(0.5f);
+                camera.moveSideways(4.0f * deltaTime);
             }
 
-            if (userInput.isQPressed()) {
+            if (userInput.isQPressed() * deltaTime) {
                 camera.yaw(-0.05f);
             }
 
-            if (userInput.isEPressed()) {
+            if (userInput.isEPressed() * deltaTime) {
                 camera.yaw(0.05f);
             }
 
-            if (userInput.isZPressed()) {
+            if (userInput.isZPressed() * deltaTime) {
                 camera.pitch(-0.05f);
             }
 
-            if (userInput.isCPressed()) {
+            if (userInput.isCPressed() * deltaTime) {
                 camera.pitch(0.05f);
             }
 
