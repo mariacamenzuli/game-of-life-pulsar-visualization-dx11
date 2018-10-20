@@ -8,16 +8,12 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle,
                              float screenNear,
                              float screenDepth,
                              const int screenWidth,
-                             const int screenHeight,
-                             Scene* scene,
-                             Camera* camera) : fullscreenEnabled(fullscreenEnabled),
-                                               vsyncEnabled(vsyncEnabled),
-                                               screenNear(screenNear),
-                                               screenDepth(screenDepth),
-                                               screenWidth(screenWidth),
-                                               screenHeight(screenHeight),
-                                               scene(scene),
-                                               camera(camera) {
+                             const int screenHeight) : screenWidth(screenWidth),
+                                                       screenHeight(screenHeight),
+                                                       fullscreenEnabled(fullscreenEnabled),
+                                                       vsyncEnabled(vsyncEnabled),
+                                                       screenNear(screenNear),
+                                                       screenDepth(screenDepth) {
     hardwareInfo = queryPhysicalDeviceDescriptors();
     createSwapChainAndDevice(windowHandle);
 
@@ -46,12 +42,7 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle,
     // Create the projection matrix for 3D rendering.
     D3DXMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
 
-    // Create an orthographic projection matrix for 2D rendering.
-    D3DXMatrixOrthoLH(&orthoMatrix, static_cast<float>(screenWidth), static_cast<float>(screenHeight), screenNear, screenDepth);
-
     lightShader.compile(device.Get());
-
-    setupVertexAndIndexBuffers();
 }
 
 D3D11Renderer::~D3D11Renderer() {
@@ -59,6 +50,15 @@ D3D11Renderer::~D3D11Renderer() {
     if (swapChain.Get()) {
         swapChain->SetFullscreenState(false, nullptr);
     }
+}
+
+void D3D11Renderer::setScene(Scene* scene) {
+    this->scene = scene;
+    setupVertexAndIndexBuffers();
+}
+
+void D3D11Renderer::setCamera(Camera* camera) {
+    this->camera = camera;
 }
 
 void D3D11Renderer::renderFrame() {
@@ -336,16 +336,18 @@ void D3D11Renderer::setupVertexAndIndexBuffers() {
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
     HRESULT result;
 
+    auto sceneVertices = getAllVertices(scene);
+
     // Set up the description of the static vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(Model::Vertex) * scene->getVertexCount();
+    vertexBufferDesc.ByteWidth = sizeof(Model::Vertex) * sceneVertices.size();
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
     vertexBufferDesc.StructureByteStride = 0;
 
     // Give the subresource structure a pointer to the vertex data.
-    vertexData.pSysMem = scene->getVertices();
+    vertexData.pSysMem = sceneVertices.data();
     vertexData.SysMemPitch = 0;
     vertexData.SysMemSlicePitch = 0;
 
@@ -355,16 +357,18 @@ void D3D11Renderer::setupVertexAndIndexBuffers() {
         throw std::runtime_error("Failed to create vertex buffer for scene.");
     }
 
+    auto sceneIndices = getAllIndices(scene);
+
     // Set up the description of the static index buffer.
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * scene->getIndexCount();
+    indexBufferDesc.ByteWidth = sizeof(unsigned long) * sceneIndices.size();
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
     indexBufferDesc.StructureByteStride = 0;
 
     // Give the subresource structure a pointer to the index data.
-    indexData.pSysMem = scene->getIndices();
+    indexData.pSysMem = sceneIndices.data();
     indexData.SysMemPitch = 0;
     indexData.SysMemSlicePitch = 0;
 
@@ -373,4 +377,30 @@ void D3D11Renderer::setupVertexAndIndexBuffers() {
     if (FAILED(result)) {
         throw std::runtime_error("Failed to create index buffer for scene.");
     }
+}
+
+std::vector<Model::Vertex> D3D11Renderer::getAllVertices(Scene* scene) {
+    std::vector<Model::Vertex> vertices;
+
+    for (auto sceneObject : *scene->getSceneObjects()) {
+        if (sceneObject->getModel() != nullptr) {
+            for (auto i = 0; i < sceneObject->getModel()->getVertexCount(); i++) {
+                vertices.push_back(sceneObject->getModel()->getVertices()[i]);
+            }
+        }
+    }
+
+    return vertices;
+}
+
+std::vector<unsigned long> D3D11Renderer::getAllIndices(Scene* scene) {
+    std::vector<unsigned long> indices;
+
+    for (auto sceneObject : *scene->getSceneObjects()) {
+        for (auto i = 0; i < sceneObject->getModel()->getIndexCount(); i++) {
+            indices.push_back(sceneObject->getModel()->getIndices()[i]);
+        }
+    }
+
+    return indices;
 }

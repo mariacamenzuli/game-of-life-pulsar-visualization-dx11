@@ -18,9 +18,11 @@
 
 class D3D11Renderer {
 public:
-    D3D11Renderer(HWND windowHandle, bool fullscreenEnabled, bool vsyncEnabled, float screenNear, float screenDepth, const int screenWidth, const int screenHeight, Scene* scene, Camera* camera);
+    D3D11Renderer(HWND windowHandle, bool fullscreenEnabled, bool vsyncEnabled, float screenNear, float screenDepth, const int screenWidth, const int screenHeight);
     ~D3D11Renderer();
 
+    void setScene(Scene* scene);
+    void setCamera(Camera* camera);
     void renderFrame();
     ID3D11Device* getDevice();
 
@@ -46,8 +48,9 @@ private:
     bool vsyncEnabled;
     float screenNear;
     float screenDepth;
-    Scene* scene;
-    Camera* camera;
+
+    Scene* scene = nullptr;
+    Camera* camera = nullptr;
 
     PhysicalDeviceDescriptor hardwareInfo;
     Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
@@ -63,7 +66,6 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
 
     D3DXMATRIX projectionMatrix;
-    D3DXMATRIX orthoMatrix;
     LightShader lightShader;
 
     PhysicalDeviceDescriptor queryPhysicalDeviceDescriptors();
@@ -72,6 +74,9 @@ private:
     void createRasterizerState();
     void setupViewport();
     void setupVertexAndIndexBuffers();
+
+    static std::vector<Model::Vertex> getAllVertices(Scene* scene);
+    static std::vector<unsigned long> getAllIndices(Scene* scene);
 };
 
 class D3D11RendererException : public std::exception {

@@ -1,5 +1,5 @@
 #include <iostream>
-#include <windows.h>
+#include <Windows.h>
 
 #include "Win32RenderingWindow.h"
 #include "D3D11Renderer.h"
@@ -15,7 +15,9 @@ void logErrorAndNotifyUser(const std::string& log, const std::string& userNotifi
     std::cerr << log << std::endl;
     std::cerr << userNotification << std::endl;
     OutputDebugString(std::wstring(log.begin(), log.end()).c_str());
+    OutputDebugString(L"\n");
     OutputDebugString(std::wstring(userNotification.begin(), userNotification.end()).c_str());
+    OutputDebugString(L"\n");
 
     MessageBox(nullptr,
                std::wstring(userNotification.begin(), userNotification.end()).c_str(),
@@ -29,8 +31,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
         int screenWidth;
         int screenHeight;
+        const bool isFullScreenEnabled = config.isFullscreenEnabled();
 
-        if (config.isFullscreenEnabled()) {
+        if (isFullScreenEnabled) {
             screenWidth = GetSystemMetrics(SM_CXSCREEN);
             screenHeight = GetSystemMetrics(SM_CYSCREEN);
         } else {
@@ -38,31 +41,32 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
             screenHeight = config.getScreenHeight();
         }
 
+        Win32RenderingWindow renderingWindow("CMP502", isFullScreenEnabled, screenWidth, screenHeight, hInstance);
+        D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(),
+                                    isFullScreenEnabled,
+                                    config.isVsyncEnabled(),
+                                    config.getScreenNear(),
+                                    config.getScreenHeight(),
+                                    screenWidth,
+                                    screenHeight);
+
         Scene scene;
 
         ObjModel treeModel = ObjModel::loadFromFile("Resources/Models/lowpolytree.obj");
         SceneObject tree(&treeModel);
         scene.addSceneObject(&tree);
 
-        // CubeModel cubeModel;
-        // SceneObject cube(&cubeModel);
-        // scene.addSceneObject(&cube);
-        // cube.translate(4.0f, 0.0f, 0.0f);
+        CubeModel cubeModel;
+        SceneObject cube(&cubeModel);
+        scene.addSceneObject(&cube);
+        cube.translate(4.0f, 0.0f, 0.0f);
 
         Camera camera;
         camera.moveStraight(-10.0f);
-
-        Win32RenderingWindow renderingWindow("CMP502", config.isFullscreenEnabled(), screenWidth, screenHeight, hInstance);
-        D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(),
-                                    config.isFullscreenEnabled(),
-                                    config.isVsyncEnabled(),
-                                    config.getScreenNear(),
-                                    config.getScreenHeight(),
-                                    screenWidth,
-                                    screenHeight,
-                                    &scene,
-                                    &camera);
         UserInputInterpreter userInput(screenWidth, screenHeight, hInstance, renderingWindow.getWindowHandle());
+
+        d3D11Renderer.setScene(&scene);
+        d3D11Renderer.setCamera(&camera);
 
         renderingWindow.showWindow();
 
@@ -73,7 +77,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
         MSG msg = {};
         while (msg.message != WM_QUIT) {
-            if (fpsLogTracker % 300 == 0) {
+            if (fpsLogTracker % 150 == 0) {
                 std::string log = "FPS: " + std::to_string(metricsTracker.framesPerSecond) + "\n";
                 OutputDebugStringW(std::wstring(log.begin(), log.end()).c_str());
                 fpsLogTracker = 0;

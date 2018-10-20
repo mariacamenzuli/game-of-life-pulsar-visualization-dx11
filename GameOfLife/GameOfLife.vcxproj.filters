@@ -24,12 +24,6 @@
     <Filter Include="Source Files\Rendering">
       <UniqueIdentifier>{37d6bc96-5cc8-48bb-82b9-bcc81174f1c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Rendering\Models">
-      <UniqueIdentifier>{5d24965d-e90d-41bc-bb8c-5face1ae8800}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Rendering\Models">
-      <UniqueIdentifier>{7d73ac9f-3cbc-4b38-aeab-2b940ae66979}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Rendering\Shaders">
       <UniqueIdentifier>{7c71f968-01c1-41c9-a952-d130f6b4a0dc}</UniqueIdentifier>
     </Filter>
@@ -39,19 +33,31 @@
     <Filter Include="Config Files">
       <UniqueIdentifier>{4ee8ca85-afa1-4b36-a3a7-7445d1fc035e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Simulation">
+      <UniqueIdentifier>{9c8e13b3-ac97-484f-ad58-6533bb485223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Simulation">
+      <UniqueIdentifier>{838e49b9-70bb-424d-b40f-4c459267e121}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3D Components">
+      <UniqueIdentifier>{caba16b6-19c2-4da7-9dd5-36b5e95f1792}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\3D Components">
+      <UniqueIdentifier>{3fbf9537-aa61-44fb-8b85-88b2ab9fcf6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\3D Components\Models">
+      <UniqueIdentifier>{5d24965d-e90d-41bc-bb8c-5face1ae8800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\3D Components\Models">
+      <UniqueIdentifier>{7d73ac9f-3cbc-4b38-aeab-2b940ae66979}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CubeModel.cpp">
-      <Filter>Source Files\Rendering\Models</Filter>
+      <Filter>Source Files\3D Components\Models</Filter>
     </ClCompile>
     <ClCompile Include="ObjModel.cpp">
-      <Filter>Source Files\Rendering\Models</Filter>
+      <Filter>Source Files\3D Components\Models</Filter>
     </ClCompile>
     <ClCompile Include="MetricsTracker.cpp">
       <Filter>Source Files\Util</Filter>
@@ -80,19 +86,22 @@
     <ClCompile Include="GameOfLife.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameOfLifeSimulator.cpp">
+      <Filter>Source Files\Simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\3D Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObject.cpp">
+      <Filter>Source Files\3D Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CubeModel.h">
-      <Filter>Header Files\Rendering\Models</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneObject.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\3D Components\Models</Filter>
     </ClInclude>
     <ClInclude Include="ObjModel.h">
-      <Filter>Header Files\Rendering\Models</Filter>
+      <Filter>Header Files\3D Components\Models</Filter>
     </ClInclude>
     <ClInclude Include="MetricsTracker.h">
       <Filter>Header Files\Util</Filter>
@@ -110,7 +119,7 @@
       <Filter>Header Files\Rendering\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>Header Files\Rendering\Models</Filter>
+      <Filter>Header Files\3D Components\Models</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Rendering</Filter>
@@ -123,6 +132,15 @@
     </ClInclude>
     <ClInclude Include="ApplicationConfig.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOfLifeSimulator.h">
+      <Filter>Header Files\Simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\3D Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObject.h">
+      <Filter>Header Files\3D Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
