@@ -21,7 +21,8 @@ D3DXMATRIX* SceneObject::getWorldMatrix() {
 D3DXMATRIX SceneObject::getCompositeWorldMatrix() {
     if (parent != nullptr) {
         D3DXMATRIX compositeWorldMatrix;
-        D3DXMatrixMultiply(&compositeWorldMatrix, &worldMatrix, parent->getWorldMatrix());
+        D3DXMATRIX parentCompositeWorldMatrix = parent->getCompositeWorldMatrix();
+        D3DXMatrixMultiply(&compositeWorldMatrix, &worldMatrix, &parentCompositeWorldMatrix);
         return compositeWorldMatrix;
     } else {
         return worldMatrix;

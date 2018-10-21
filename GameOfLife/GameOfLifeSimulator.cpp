@@ -5,9 +5,9 @@ GameOfLifeSimulator::GameOfLifeSimulator() {
 
     const auto cubeModel = modelLoader.getModel(ModelLoader::ModelId::CUBE);
     auto worldCube = rootSceneObject->attachChild(std::make_unique<SceneObject>(cubeModel), "world_cube");
-    auto cellCubes = rootSceneObject->attachChild(std::make_unique<SceneObject>(), "cell_cubes");
+    worldCube->scale(11.0f, 12.0f, 11.0f);
 
-    rootSceneObject->scale(11.0f, 12.0f, 11.0f);
+    auto cellCubes = rootSceneObject->attachChild(std::make_unique<SceneObject>(), "cell_cubes");
 
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
@@ -37,4 +37,6 @@ SceneObject* GameOfLifeSimulator::getRootSceneObject() {
 }
 
 void GameOfLifeSimulator::update(float deltaTime) {
+    rootSceneObject->rotateY(0.1f * deltaTime);
+    rootSceneObject->rotateX(0.1f * deltaTime);
 }
