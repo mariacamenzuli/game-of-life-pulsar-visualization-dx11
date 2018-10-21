@@ -25,7 +25,7 @@ GameOfLifeSimulator::GameOfLifeSimulator() {
         for (int j = 21; j < 31; j++) {
             auto cellCube = cellCubes->attachChild(std::make_unique<SceneObject>(cubeModel));
             cells[i][j] = { CellState::ALIVE, cellCube };
-            cellCube->translate((i * 2) - 9.0f, 12.0f - ((j - 21) * 2), -12.0f);
+            cellCube->translate((i * 2) - 9.0f, 12.0f - ((j - 21.0f) * 2.0f), -12.0f);
         }
     }
 }
@@ -34,6 +34,10 @@ GameOfLifeSimulator::~GameOfLifeSimulator() = default;
 
 SceneObject* GameOfLifeSimulator::getRootSceneObject() {
     return rootSceneObject.get();
+}
+
+D3DXVECTOR4 GameOfLifeSimulator::getAmbientLight() {
+    return D3DXVECTOR4(0.3f, 0.3f, 0.4f, 1.0f);
 }
 
 void GameOfLifeSimulator::update(float deltaTime) {

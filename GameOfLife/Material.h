@@ -8,8 +8,5 @@ public:
     ~Material();
 
 private:
-    float specularPower;
-    float transparency;
-    D3DXVECTOR3 diffuseColor;
-    D3DXVECTOR3 specularColor;
+    D3DXVECTOR4 diffuse;
 };

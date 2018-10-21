@@ -9,6 +9,7 @@ public:
     ~GameOfLifeSimulator();
 
     SceneObject* getRootSceneObject() override;
+    D3DXVECTOR4 getAmbientLight() override;
     void update(float deltaTime);
 private:
     enum class CellState {

@@ -21,7 +21,6 @@ private:
         D3DXVECTOR3 forward, up, right;
     };
 
-
     Orientation orientation;
     D3DXVECTOR3 position, rotation, lookAtPoint;
     D3DXMATRIX viewMatrix;

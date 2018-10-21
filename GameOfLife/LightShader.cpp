@@ -91,15 +91,28 @@ void LightShader::compile(ID3D11Device* device) {
     // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
     result = device->CreateBuffer(&ambientLightBufferDesc, nullptr, ambientLightBuffer.GetAddressOf());
     if (FAILED(result)) {
-        throw std::runtime_error("Failed to create light shader. Creation of transformation matrices constant buffer failed.");
+        throw std::runtime_error("Failed to create light shader. Creation of ambient light constant buffer failed.");
+    }
+
+    D3D11_BUFFER_DESC pointLightBufferDesc;
+
+    pointLightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    pointLightBufferDesc.ByteWidth = sizeof(PointLightBuffer);
+    pointLightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    pointLightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    pointLightBufferDesc.MiscFlags = 0;
+    pointLightBufferDesc.StructureByteStride = 0;
+
+    // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+    result = device->CreateBuffer(&pointLightBufferDesc, nullptr, pointLightBuffer.GetAddressOf());
+    if (FAILED(result)) {
+        throw std::runtime_error("Failed to create light shader. Creation of point light constant buffer failed.");
     }
 }
 
 void LightShader::prepareShaderInput(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, D3DXVECTOR4 ambientLightColor) {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    unsigned int bufferNumber;
-
 
     // Transpose the matrices to prepare them for the shader.
     D3DXMatrixTranspose(&worldMatrix, &worldMatrix);
@@ -109,7 +122,7 @@ void LightShader::prepareShaderInput(ID3D11DeviceContext* deviceContext, D3DXMAT
     // Lock the constant buffer so it can be written to.
     result = deviceContext->Map(transformationMatricesBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result)) {
-        throw std::runtime_error("Failed to prepare shader input to render frame.");
+        throw std::runtime_error("Failed to lock the transformation matrices buffer for the light shader input.");
     }
 
     // Get a pointer to the data in the constant buffer.
@@ -123,16 +136,13 @@ void LightShader::prepareShaderInput(ID3D11DeviceContext* deviceContext, D3DXMAT
     // Unlock the constant buffer.
     deviceContext->Unmap(transformationMatricesBuffer.Get(), 0);
 
-    // Set the position of the constant buffer in the vertex shader.
-    bufferNumber = 0;
-
     // Finanly set the constant buffer in the vertex shader with the updated values.
-    deviceContext->VSSetConstantBuffers(bufferNumber, 1, transformationMatricesBuffer.GetAddressOf());
+    deviceContext->VSSetConstantBuffers(0, 1, transformationMatricesBuffer.GetAddressOf());
 
     // Lock the light constant buffer so it can be written to.
     result = deviceContext->Map(ambientLightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result)) {
-        throw std::runtime_error("Failed to prepare shader input to render frame.");
+        throw std::runtime_error("Failed to lock the ambient light buffer for the light shader input.");
     }
 
     // Get a pointer to the data in the constant buffer.
@@ -144,11 +154,19 @@ void LightShader::prepareShaderInput(ID3D11DeviceContext* deviceContext, D3DXMAT
     // Unlock the constant buffer.
     deviceContext->Unmap(ambientLightBuffer.Get(), 0);
 
-    // Set the position of the light constant buffer in the pixel shader.
-    bufferNumber = 0;
-
     // Finally set the light constant buffer in the pixel shader with the updated values.
-    deviceContext->PSSetConstantBuffers(bufferNumber, 1, ambientLightBuffer.GetAddressOf());
+    deviceContext->PSSetConstantBuffers(0, 1, ambientLightBuffer.GetAddressOf());
+
+    result = deviceContext->Map(pointLightBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (FAILED(result)) {
+        throw std::runtime_error("Failed to lock the point light buffer for the light shader input.");
+    }
+
+    PointLightBuffer* pointLightData = static_cast<PointLightBuffer*>(mappedResource.pData);
+    pointLightData->position = D3DXVECTOR4(0.0f, 0.0f, -10.0f, 1.0f);
+    pointLightData->diffuse = D3DXVECTOR4(0.0f, 0.0f, 0.4f, 1.0f);
+    deviceContext->Unmap(pointLightBuffer.Get(), 0);
+    deviceContext->PSSetConstantBuffers(1, 1, pointLightBuffer.GetAddressOf());
 
     deviceContext->IASetInputLayout(layout.Get());
     deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);

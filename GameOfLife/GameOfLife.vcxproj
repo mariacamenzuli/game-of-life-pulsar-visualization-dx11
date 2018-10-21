@@ -101,6 +101,7 @@
     <ClCompile Include="MetricsTracker.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ObjModel.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="UserInputReader.cpp" />
     <ClCompile Include="Win32RenderingWindow.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ObjModel.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="UserInputReader.h" />

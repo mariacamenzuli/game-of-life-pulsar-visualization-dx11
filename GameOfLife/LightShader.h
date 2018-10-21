@@ -23,9 +23,15 @@ private:
         D3DXVECTOR4 ambientLightColor;
     };
 
+    struct PointLightBuffer {
+        D3DXVECTOR4 position;
+        D3DXVECTOR4 diffuse;
+    };
+
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
     Microsoft::WRL::ComPtr<ID3D11InputLayout> layout;
     Microsoft::WRL::ComPtr<ID3D11Buffer> transformationMatricesBuffer;
     Microsoft::WRL::ComPtr<ID3D11Buffer> ambientLightBuffer;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> pointLightBuffer;
 };

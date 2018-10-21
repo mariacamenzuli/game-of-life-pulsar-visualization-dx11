@@ -3,6 +3,4 @@
 Material::Material() {
 }
 
-
-Material::~Material() {
-}
+Material::~Material() = default;

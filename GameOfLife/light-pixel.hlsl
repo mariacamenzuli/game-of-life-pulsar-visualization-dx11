@@ -1,7 +1,11 @@
 // Global Variables
 cbuffer AmbientLightBuffer {
     float4 ambientLightColor;
-    float padding;
+};
+
+cbuffer PointLightBuffer {
+    float4 position;
+    float4 diffuse;
 };
 
 // Type Definitions
