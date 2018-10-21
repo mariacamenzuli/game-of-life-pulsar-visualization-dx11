@@ -95,7 +95,7 @@ void D3D11Renderer::renderFrame() {
         toVisit.pop();
 
         if (sceneObject->getModel() != nullptr) {
-            lightShader.prepareShaderInput(deviceContext.Get(), sceneObject->getCompositeWorldMatrix(), viewMatrix, projectionMatrix, scene->getAmbientLight());
+            lightShader.prepareShaderInput(deviceContext.Get(), sceneObject->getCompositeWorldMatrix(), viewMatrix, projectionMatrix, scene->getAmbientLight(), scene->getPointLight());
             deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
             indexStartLocation = indexStartLocation + sceneObject->getModel()->getIndexCount();
             vertexStartLocation = vertexStartLocation + sceneObject->getModel()->getVertexCount();

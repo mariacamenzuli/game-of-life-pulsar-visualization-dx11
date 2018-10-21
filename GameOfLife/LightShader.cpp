@@ -110,7 +110,12 @@ void LightShader::compile(ID3D11Device* device) {
     }
 }
 
-void LightShader::prepareShaderInput(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, D3DXVECTOR4 ambientLightColor) {
+void LightShader::prepareShaderInput(ID3D11DeviceContext* deviceContext,
+                                     D3DXMATRIX worldMatrix,
+                                     D3DXMATRIX viewMatrix,
+                                     D3DXMATRIX projectionMatrix,
+                                     D3DXVECTOR4 ambientLightColor,
+                                     PointLight* pointLight) {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
 
@@ -163,8 +168,11 @@ void LightShader::prepareShaderInput(ID3D11DeviceContext* deviceContext, D3DXMAT
     }
 
     PointLightBuffer* pointLightData = static_cast<PointLightBuffer*>(mappedResource.pData);
-    pointLightData->position = D3DXVECTOR4(0.0f, 0.0f, -10.0f, 1.0f);
-    pointLightData->diffuse = D3DXVECTOR4(0.0f, 0.0f, 0.4f, 1.0f);
+    D3DXVECTOR4 pointLightPosition;
+    auto origin = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVec3Transform(&pointLightPosition, &origin, pointLight->getWorldMatrix());
+    pointLightData->pointLightPosition = pointLightPosition;
+    pointLightData->pointLightDiffuse = pointLight->getDiffuse();
     deviceContext->Unmap(pointLightBuffer.Get(), 0);
     deviceContext->PSSetConstantBuffers(1, 1, pointLightBuffer.GetAddressOf());
 

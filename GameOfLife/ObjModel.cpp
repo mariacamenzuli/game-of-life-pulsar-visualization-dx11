@@ -14,7 +14,7 @@ ObjModel::ObjModel() = default;
 
 ObjModel::~ObjModel() = default;
 
-ObjModel ObjModel::loadFromFile(const std::string& filename) {
+ObjModel ObjModel::loadFromFile(const std::string& filename, float vertexCorrectionX, float vertexCorrectionY, float vertexCorrectionZ) {
     std::ifstream inputStream;
 
     inputStream.open(filename);
@@ -48,6 +48,9 @@ ObjModel ObjModel::loadFromFile(const std::string& filename) {
             stringStream >> vertex.x >> vertex.y >> vertex.z;
             // Invert the Z vertex to change to left hand system.
             vertex.z = vertex.z * -1.0f;
+            vertex.x += vertexCorrectionX;
+            vertex.y += vertexCorrectionY;
+            vertex.z += vertexCorrectionZ;
             vertexPositions.push_back(vertex);
         }
 

@@ -4,13 +4,20 @@
 #include <D3D11.h>
 #include <wrl/client.h>
 
+#include "PointLight.h"
+
 class LightShader {
 public:
     LightShader();
     ~LightShader();
 
     void compile(ID3D11Device* device);
-    void prepareShaderInput(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix, D3DXVECTOR4 ambientLightColor);
+    void prepareShaderInput(ID3D11DeviceContext* deviceContext,
+                            D3DXMATRIX worldMatrix,
+                            D3DXMATRIX viewMatrix,
+                            D3DXMATRIX projectionMatrix,
+                            D3DXVECTOR4 ambientLightColor,
+                            PointLight* pointLight);
 
 private:
     struct TransformationMatricesBuffer {
@@ -24,8 +31,8 @@ private:
     };
 
     struct PointLightBuffer {
-        D3DXVECTOR4 position;
-        D3DXVECTOR4 diffuse;
+        D3DXVECTOR4 pointLightPosition;
+        D3DXVECTOR4 pointLightDiffuse;
     };
 
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;

@@ -12,6 +12,7 @@ public:
 
     enum class ModelId {
         CUBE,
+        SUN,
         TREE
     };
 

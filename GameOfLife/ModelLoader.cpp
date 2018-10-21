@@ -14,6 +14,8 @@ Model* ModelLoader::getModel(ModelId modelId) {
         switch (modelId) {
         case ModelId::CUBE:
             return modelMap.insert(std::make_pair(modelId, std::make_unique<CubeModel>(CubeModel()))).first->second.get();
+        case ModelId::SUN:
+            return modelMap.insert(std::make_pair(modelId, std::make_unique<ObjModel>(ObjModel::loadFromFile("Resources/Models/sun.obj", 0.0f, -40.0f, 17.0f)))).first->second.get();
         case ModelId::TREE:
             return modelMap.insert(std::make_pair(modelId, std::make_unique<ObjModel>(ObjModel::loadFromFile("Resources/Models/lowpolytree.obj")))).first->second.get();
         default:

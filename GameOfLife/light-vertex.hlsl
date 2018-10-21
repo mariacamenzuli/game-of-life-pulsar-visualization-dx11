@@ -15,7 +15,8 @@ struct VertexDescriptor {
 
 // - Output
 struct PixelDescriptor {
-    float4 position : SV_POSITION;
+    float4 screenSpacePosition : SV_POSITION;
+    float4 worldSpacePosition : POSITION;
     float3 normal : NORMAL;
     float2 tex : TEXCOORD0;
 };
@@ -27,9 +28,9 @@ PixelDescriptor transformToScreenSpace(VertexDescriptor vertex) {
     vertex.position.w = 1.0f;
 
     // Calculate the screen space position of the vertex against the world, view, and projection matrices
-    pixel.position = mul(vertex.position, worldMatrix);
-    pixel.position = mul(pixel.position, viewMatrix);
-    pixel.position = mul(pixel.position, projectionMatrix);
+    pixel.worldSpacePosition = mul(vertex.position, worldMatrix);
+    pixel.screenSpacePosition = mul(pixel.worldSpacePosition, viewMatrix);
+    pixel.screenSpacePosition = mul(pixel.screenSpacePosition, projectionMatrix);
 
     // Store the texture coordinates for the pixel shader.
     pixel.tex = vertex.tex;

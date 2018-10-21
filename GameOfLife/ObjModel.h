@@ -11,7 +11,7 @@ public:
     ObjModel();
     ~ObjModel();
 
-    static ObjModel loadFromFile(const std::string& filename);
+    static ObjModel loadFromFile(const std::string& filename, float vertexCorrectionX = 0.0f, float vertexCorrectionY = 0.0f, float vertexCorrectionZ = 0.0f);
 
     int getVertexCount() override;
     int getIndexCount() override;
