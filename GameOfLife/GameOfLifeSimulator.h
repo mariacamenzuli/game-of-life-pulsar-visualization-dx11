@@ -11,11 +11,16 @@ public:
     SceneObject* getRootSceneObject() override;
     void update(float deltaTime);
 private:
-    enum class Cell {
+    enum class CellState {
         ALIVE, DEAD
+    };
+
+    struct Cell {
+        CellState state;
+        SceneObject* sceneObject;
     };
 
     ModelLoader modelLoader;
     std::unique_ptr<SceneObject> rootSceneObject;
-    Cell cells[10][3];
+    Cell cells[10][31];
 };

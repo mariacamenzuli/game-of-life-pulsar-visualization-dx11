@@ -9,6 +9,7 @@
 
 class SceneObject {
 public:
+    SceneObject();
     SceneObject(Model* model);
     ~SceneObject();
 
@@ -27,7 +28,7 @@ public:
     void rotateZ(float angleInRadians);
 
 private:
-    Model* model;
+    Model* model = nullptr;
     D3DXMATRIX worldMatrix;
     SceneObject* parent = nullptr;
     std::vector<std::unique_ptr<SceneObject>> children;

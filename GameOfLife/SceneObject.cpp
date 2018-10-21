@@ -1,5 +1,9 @@
 #include "SceneObject.h"
 
+SceneObject::SceneObject() {
+    D3DXMatrixIdentity(&worldMatrix);
+}
+
 SceneObject::SceneObject(Model* model): model(model) {
     D3DXMatrixIdentity(&worldMatrix);
 }
