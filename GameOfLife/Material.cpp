@@ -3,6 +3,9 @@
 Material::Material() {
 }
 
+Material::Material(D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor, D3DXVECTOR4 specularColor): ambientColor(ambientColor), diffuseColor(diffuseColor), specularColor(specularColor) {
+}
+
 Material::~Material() = default;
 
 D3DXVECTOR4 Material::getAmbientColor() const {

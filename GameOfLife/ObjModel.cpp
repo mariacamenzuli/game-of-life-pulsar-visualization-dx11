@@ -30,6 +30,10 @@ ObjModel ObjModel::loadFromFile(const std::string& filename, float vertexCorrect
     ObjModel model;
 
     int indexCount = 0;
+    std::map<std::string, Material> materialMap;
+    std::vector<MaterialIndexRange> materialIndexRanges;
+    std::string lastUsedMaterial;
+    std::string currentMaterial;
     while (!inputStream.eof()) {
         std::string line;
         std::getline(inputStream, line);
@@ -39,7 +43,14 @@ ObjModel ObjModel::loadFromFile(const std::string& filename, float vertexCorrect
         }
 
         if (lineStartsWith(line, "mtllib ")) {
-            // todo handle material loading
+            auto materialFileName = line.substr(7);
+            size_t filePathEnd = filename.find_last_of("/\\");
+            materialMap = loadMaterialFile(filename.substr(0, filePathEnd) + "/" + materialFileName);
+        }
+
+        if (lineStartsWith(line, "usemtl ")) {
+            auto materialName = line.substr(7);
+            currentMaterial = materialName;
         }
 
         if (lineStartsWith(line, "v ")) {
@@ -80,7 +91,13 @@ ObjModel ObjModel::loadFromFile(const std::string& filename, float vertexCorrect
                 stringStream >> faceVertex;
                 faceVertices.push_back(faceVertex);
             }
-            
+
+            int startIndex;
+            if (indexCount == 0) {
+                startIndex = 0;
+            } else {
+                startIndex = indexCount;
+            }
             for (int i = faceVertices.size() - 1; i > 1; i--) {
                 auto vertex1 = createVertex(faceVertices.at(i), vertexPositions, normals, textureCoordinates);
                 model.vertices.push_back(vertex1);
@@ -97,12 +114,21 @@ ObjModel ObjModel::loadFromFile(const std::string& filename, float vertexCorrect
                 model.indices.push_back(indexCount);
                 indexCount++;
             }
+
+            if (!currentMaterial.empty()) {
+                if (currentMaterial == lastUsedMaterial) {
+                    materialIndexRanges.at(materialIndexRanges.size() - 1).endInclusive = indexCount - 1;
+                } else {
+                    materialIndexRanges.push_back(MaterialIndexRange(startIndex, indexCount, materialMap.find(currentMaterial)->second));
+                    lastUsedMaterial = currentMaterial;
+                }
+            }
         }
     }
 
     inputStream.close();
 
-    model.getMaterial()->setDiffuseColor(D3DXVECTOR4(0.0f, 0.5f, 0.0f, 1.0f));
+    model.materialIndexRanges = materialIndexRanges;
 
     return model;
 }
@@ -123,8 +149,8 @@ unsigned long* ObjModel::getIndices() {
     return indices.data();
 }
 
-Material* ObjModel::getMaterial() {
-    return &material;
+std::vector<Model::MaterialIndexRange> ObjModel::getMaterialIndexRanges() {
+    return materialIndexRanges;
 }
 
 bool ObjModel::lineStartsWith(std::string text, std::string prefix) {
@@ -157,4 +183,65 @@ Model::Vertex ObjModel::createVertex(std::string vertexDescriptor, std::vector<D
     }
 
     return vertex;
+}
+
+std::map<std::string, Material> ObjModel::loadMaterialFile(const std::string& filename) {
+    std::ifstream inputStream;
+
+    inputStream.open(filename);
+
+    if (inputStream.fail()) {
+        throw std::runtime_error("Failed to open file [" + filename + "] to load .mtl material file");
+    }
+
+    std::vector<D3DXVECTOR3> vertexPositions;
+    std::vector<D3DXVECTOR3> normals;
+    std::vector<D3DXVECTOR2> textureCoordinates;
+
+    std::map<std::string, Material> materials;
+
+    std::string currentMaterialName;
+    D3DXVECTOR4 currentAmbientColor;
+    D3DXVECTOR4 currentDiffuseColor;
+    D3DXVECTOR4 currentSpecularColor;
+    while (!inputStream.eof()) {
+        std::string line;
+        std::getline(inputStream, line);
+
+        if (line.empty()) {
+            continue;
+        }
+
+        if (lineStartsWith(line, "newmtl ")) {
+            if (!currentMaterialName.empty()) {
+                materials.insert(std::make_pair(currentMaterialName, Material(currentAmbientColor, currentDiffuseColor, currentSpecularColor)));
+            }
+
+            currentMaterialName = line.substr(7);
+        }
+
+        if (lineStartsWith(line, "Ka ")) {
+            std::istringstream stringStream(line.substr(3));
+            stringStream >> currentAmbientColor.x >> currentAmbientColor.y >> currentAmbientColor.z;
+            currentAmbientColor.w = 1.0f;
+        }
+
+        if (lineStartsWith(line, "Kd ")) {
+            std::istringstream stringStream(line.substr(3));
+            stringStream >> currentDiffuseColor.x >> currentDiffuseColor.y >> currentDiffuseColor.z;
+            currentDiffuseColor.w = 1.0f;
+        }
+
+        if (lineStartsWith(line, "Ks ")) {
+            std::istringstream stringStream(line.substr(3));
+            stringStream >> currentSpecularColor.x >> currentSpecularColor.y >> currentSpecularColor.z;
+            currentSpecularColor.w = 1.0f;
+        }
+    }
+
+    materials.insert(std::make_pair(currentMaterialName, Material(currentAmbientColor, currentDiffuseColor, currentSpecularColor)));
+
+    inputStream.close();
+
+    return materials;
 }

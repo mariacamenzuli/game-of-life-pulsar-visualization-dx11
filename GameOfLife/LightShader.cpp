@@ -79,7 +79,7 @@ void LightShader::updatePointLightBuffer(ID3D11DeviceContext* deviceContext, D3D
     deviceContext->PSSetConstantBuffers(1, 1, pointLightBuffer.GetAddressOf());
 }
 
-void LightShader::updateMaterialBuffer(ID3D11DeviceContext* deviceContext) {
+void LightShader::updateMaterialBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR4 materialAmbientColor, D3DXVECTOR4 materialDiffuseColor, D3DXVECTOR4 materialSpecularColor) {
     D3D11_MAPPED_SUBRESOURCE mappedResource;
 
     HRESULT result = deviceContext->Map(materialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -88,9 +88,9 @@ void LightShader::updateMaterialBuffer(ID3D11DeviceContext* deviceContext) {
     }
 
     auto materialData = static_cast<MaterialBuffer*>(mappedResource.pData);
-    materialData->materialAmbientColor = D3DXVECTOR4(0.9922f, 0.2588f, 0.0f, 1.0f);
-    materialData->materialDiffuseColor = D3DXVECTOR4(0.9922f, 0.2588f, 0.0f, 1.0f);
-    materialData->materialSpecularColor = D3DXVECTOR4(0.9922f, 0.2588f, 0.0f, 1.0f);
+    materialData->materialAmbientColor = materialAmbientColor;
+    materialData->materialDiffuseColor = materialDiffuseColor;
+    materialData->materialSpecularColor = materialSpecularColor;
     deviceContext->Unmap(materialBuffer.Get(), 0);
     deviceContext->PSSetConstantBuffers(2, 1, materialBuffer.GetAddressOf());
 }

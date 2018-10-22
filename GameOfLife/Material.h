@@ -5,6 +5,7 @@
 class Material {
 public:
     Material();
+    Material(D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor, D3DXVECTOR4 specularColor);
     ~Material();
 
     D3DXVECTOR4 getAmbientColor() const;

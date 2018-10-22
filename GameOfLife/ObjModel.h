@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include <map>
 
 class ObjModel : public Model {
 public:
@@ -17,14 +18,15 @@ public:
     int getIndexCount() override;
     Vertex* getVertices() override;
     unsigned long* getIndices() override;
-    Material* getMaterial() override;
+    std::vector<MaterialIndexRange> getMaterialIndexRanges() override;
 
 private:
     std::vector<Vertex> vertices;
     std::vector<unsigned long> indices;
-    Material material;
+    std::vector<MaterialIndexRange> materialIndexRanges;
 
     static bool lineStartsWith(std::string text, std::string prefix);
     static Vertex createVertex(std::string vertexDescriptor, std::vector<D3DXVECTOR3>& vertexPositions, std::vector<D3DXVECTOR3>& normals, std::vector<D3DXVECTOR2>& textureCoordinates);
+    static std::map<std::string, Material> loadMaterialFile(const std::string& filename);
 };
 

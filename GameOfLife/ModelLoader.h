@@ -11,7 +11,8 @@ public:
     ~ModelLoader();
 
     enum class ModelId {
-        CUBE,
+        CELL_CUBE,
+        WORLD_CUBE,
         SUN,
         TREE
     };

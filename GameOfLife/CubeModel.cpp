@@ -1,6 +1,6 @@
 #include "CubeModel.h"
 
-CubeModel::CubeModel() {
+CubeModel::CubeModel(Material material) {
     // face 1
     vertices[0].position = D3DXVECTOR3(-1.0f, 1.0f, -1.0f);
     vertices[0].normal = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
@@ -152,7 +152,7 @@ CubeModel::CubeModel() {
     indices[34] = 34;
     indices[35] = 35;
 
-    material.setDiffuseColor(D3DXVECTOR4(0.5f, 0.0f, 0.0f, 1.0f));
+    materialIndexRanges.push_back(MaterialIndexRange(0, 35, material));
 }
 
 CubeModel::~CubeModel() = default;
@@ -173,6 +173,6 @@ unsigned long* CubeModel::getIndices() {
     return indices;
 }
 
-Material* CubeModel::getMaterial() {
-    return &material;
+std::vector<Model::MaterialIndexRange> CubeModel::getMaterialIndexRanges() {
+    return materialIndexRanges;
 }

@@ -20,7 +20,7 @@ public:
     void updatePointLightBuffer(ID3D11DeviceContext* deviceContext,
                                 D3DXVECTOR4 diffuse,
                                 D3DXMATRIX worldMatrix);
-    void updateMaterialBuffer(ID3D11DeviceContext* deviceContext);
+    void updateMaterialBuffer(ID3D11DeviceContext* deviceContext,D3DXVECTOR4 materialAmbientColor, D3DXVECTOR4 materialDiffuseColor, D3DXVECTOR4 materialSpecularColor);
 
 private:
     struct TransformationMatricesBuffer {

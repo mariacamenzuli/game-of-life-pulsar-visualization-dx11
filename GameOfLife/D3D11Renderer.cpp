@@ -87,11 +87,15 @@ void D3D11Renderer::renderFrame() {
         if (sceneObject->getModel() != nullptr) {
             lightShader.updateTransformationMatricesBuffer(deviceContext.Get(), sceneObject->getCompositeWorldMatrix(), viewMatrix, projectionMatrix);
 
-            // todo: loop through each material
-            lightShader.updateMaterialBuffer(deviceContext.Get());
+            for (auto const& materialIndexRanges : sceneObject->getModel()->getMaterialIndexRanges()) {
+                lightShader.updateMaterialBuffer(deviceContext.Get(), materialIndexRanges.material.getAmbientColor(), materialIndexRanges.material.getDiffuseColor(), materialIndexRanges.material.getSpecularColor());
 
-            deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
-            indexStartLocation = indexStartLocation + sceneObject->getModel()->getIndexCount();
+                const auto indicesToDrawCount = (materialIndexRanges.endInclusive + 1) - materialIndexRanges.startInclusive;
+                deviceContext->DrawIndexed(indicesToDrawCount, indexStartLocation, vertexStartLocation);
+
+                indexStartLocation = indexStartLocation + indicesToDrawCount;
+            }
+
             vertexStartLocation = vertexStartLocation + sceneObject->getModel()->getVertexCount();
         }
 
