@@ -69,20 +69,8 @@ void D3D11Renderer::renderFrame() {
     deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     camera->calculateViewMatrix();
-
     D3DXMATRIX viewMatrix;
     camera->getViewMatrix(viewMatrix);
-
-    // Bind the vertex buffer to the input-assembler stage.
-    unsigned int stride = sizeof(Model::Vertex);
-    unsigned int offset = 0;
-    deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-
-    // Bind the index buffer to the input-assembler stage.
-    deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-    // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     int indexStartLocation = 0;
     int vertexStartLocation = 0;
@@ -393,6 +381,17 @@ void D3D11Renderer::setupVertexAndIndexBuffers() {
     if (FAILED(result)) {
         throw std::runtime_error("Failed to create index buffer for scene.");
     }
+
+    // Bind the vertex buffer to the input-assembler stage.
+    unsigned int stride = sizeof(Model::Vertex);
+    unsigned int offset = 0;
+    deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+
+    // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    // Bind the index buffer to the input-assembler stage.
+    deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 }
 
 std::vector<Model::Vertex> D3D11Renderer::getAllVertices(Scene* scene) {
