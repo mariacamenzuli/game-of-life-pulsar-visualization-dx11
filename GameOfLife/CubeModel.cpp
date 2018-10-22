@@ -151,6 +151,8 @@ CubeModel::CubeModel() {
     indices[33] = 33;
     indices[34] = 34;
     indices[35] = 35;
+
+    material.setDiffuseColor(D3DXVECTOR4(0.5f, 0.0f, 0.0f, 1.0f));
 }
 
 CubeModel::~CubeModel() = default;
@@ -169,4 +171,8 @@ Model::Vertex* CubeModel::getVertices() {
 
 unsigned long* CubeModel::getIndices() {
     return indices;
+}
+
+Material* CubeModel::getMaterial() {
+    return &material;
 }

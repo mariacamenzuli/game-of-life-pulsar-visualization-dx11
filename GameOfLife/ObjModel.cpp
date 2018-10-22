@@ -102,6 +102,8 @@ ObjModel ObjModel::loadFromFile(const std::string& filename, float vertexCorrect
 
     inputStream.close();
 
+    model.getMaterial()->setDiffuseColor(D3DXVECTOR4(0.0f, 0.5f, 0.0f, 1.0f));
+
     return model;
 }
 
@@ -119,6 +121,10 @@ Model::Vertex* ObjModel::getVertices() {
 
 unsigned long* ObjModel::getIndices() {
     return indices.data();
+}
+
+Material* ObjModel::getMaterial() {
+    return &material;
 }
 
 bool ObjModel::lineStartsWith(std::string text, std::string prefix) {

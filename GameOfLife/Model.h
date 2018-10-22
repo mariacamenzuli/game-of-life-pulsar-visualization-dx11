@@ -2,6 +2,8 @@
 
 #include <D3DX10.h>
 
+#include "Material.h"
+
 class Model {
 public:
     struct Vertex {
@@ -16,4 +18,5 @@ public:
     virtual int getIndexCount() = 0;
     virtual Vertex* getVertices() = 0;
     virtual unsigned long* getIndices() = 0;
+    virtual Material* getMaterial() = 0;
 };

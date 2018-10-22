@@ -11,13 +11,16 @@ public:
     LightShader();
     ~LightShader();
 
-    void compile(ID3D11Device* device);
-    void prepareShaderInput(ID3D11DeviceContext* deviceContext,
-                            D3DXMATRIX worldMatrix,
-                            D3DXMATRIX viewMatrix,
-                            D3DXMATRIX projectionMatrix,
-                            D3DXVECTOR4 ambientLightColor,
-                            PointLight* pointLight);
+    void initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+    void updateTransformationMatricesBuffer(ID3D11DeviceContext* deviceContext,
+                                            D3DXMATRIX worldMatrix,
+                                            D3DXMATRIX viewMatrix,
+                                            D3DXMATRIX projectionMatrix);
+    void updateAmbientLightBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR4 ambientLightColor);
+    void updatePointLightBuffer(ID3D11DeviceContext* deviceContext,
+                                D3DXVECTOR4 diffuse,
+                                D3DXMATRIX worldMatrix);
+    void updateMaterialBuffer(ID3D11DeviceContext* deviceContext);
 
 private:
     struct TransformationMatricesBuffer {
@@ -27,12 +30,18 @@ private:
     };
 
     struct AmbientLightBuffer {
-        D3DXVECTOR4 ambientLightColor;
+        D3DXVECTOR4 sceneAmbientColor;
     };
 
     struct PointLightBuffer {
         D3DXVECTOR4 pointLightPosition;
         D3DXVECTOR4 pointLightDiffuse;
+    };
+
+    struct MaterialBuffer {
+        D3DXVECTOR4 materialAmbientColor;
+        D3DXVECTOR4 materialDiffuseColor;
+        D3DXVECTOR4 materialSpecularColor;
     };
 
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
@@ -41,4 +50,8 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> transformationMatricesBuffer;
     Microsoft::WRL::ComPtr<ID3D11Buffer> ambientLightBuffer;
     Microsoft::WRL::ComPtr<ID3D11Buffer> pointLightBuffer;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> materialBuffer;
+
+    void setupVertexShader(ID3D11Device* device);
+    void setupPixelShader(ID3D11Device* device);
 };

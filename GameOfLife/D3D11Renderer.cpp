@@ -43,7 +43,7 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle,
     // Create the projection matrix for 3D rendering.
     D3DXMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
 
-    lightShader.compile(device.Get());
+    lightShader.initialize(device.Get(), deviceContext.Get());
 }
 
 D3D11Renderer::~D3D11Renderer() {
@@ -63,7 +63,6 @@ void D3D11Renderer::setCamera(Camera* camera) {
 }
 
 void D3D11Renderer::renderFrame() {
-    // Clear buffers
     float backBufferStartingColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     deviceContext->ClearRenderTargetView(renderTargetView.Get(), backBufferStartingColor);
     deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -82,8 +81,15 @@ void D3D11Renderer::renderFrame() {
         SceneObject* sceneObject = toVisit.top();
         toVisit.pop();
 
+        lightShader.updateAmbientLightBuffer(deviceContext.Get(), scene->getAmbientLight());
+        lightShader.updatePointLightBuffer(deviceContext.Get(), scene->getPointLight()->getDiffuse(), *scene->getPointLight()->getWorldMatrix());
+
         if (sceneObject->getModel() != nullptr) {
-            lightShader.prepareShaderInput(deviceContext.Get(), sceneObject->getCompositeWorldMatrix(), viewMatrix, projectionMatrix, scene->getAmbientLight(), scene->getPointLight());
+            lightShader.updateTransformationMatricesBuffer(deviceContext.Get(), sceneObject->getCompositeWorldMatrix(), viewMatrix, projectionMatrix);
+
+            // todo: loop through each material
+            lightShader.updateMaterialBuffer(deviceContext.Get());
+
             deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
             indexStartLocation = indexStartLocation + sceneObject->getModel()->getIndexCount();
             vertexStartLocation = vertexStartLocation + sceneObject->getModel()->getVertexCount();

@@ -42,7 +42,7 @@ SceneObject* GameOfLifeSimulator::getRootSceneObject() {
 }
 
 D3DXVECTOR4 GameOfLifeSimulator::getAmbientLight() {
-    return D3DXVECTOR4(0.3f, 0.3f, 0.4f, 1.0f);
+    return D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 PointLight* GameOfLifeSimulator::getPointLight() {
