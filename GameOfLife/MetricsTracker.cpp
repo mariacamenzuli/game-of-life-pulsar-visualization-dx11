@@ -11,9 +11,9 @@ MetricsTracker::~MetricsTracker() = default;
 
 void MetricsTracker::newFrameRendered() {
     const auto timeNow = std::chrono::system_clock::now();
-    const auto timeElapsedInMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - fpsCountStartTime).count();
+    const auto timeElapsedInMicroseconds = std::chrono::duration_cast<std::chrono::microseconds>(timeNow - fpsCountStartTime).count();
 
-    if (toSeconds(timeElapsedInMilliseconds) >= 1.0f) {
+    if (toSeconds(timeElapsedInMicroseconds) >= 1.0f) {
         framesPerSecond = frameCounter;
         frameCounter = 0;
         fpsCountStartTime = timeNow;
@@ -24,9 +24,9 @@ void MetricsTracker::newFrameRendered() {
 
 void MetricsTracker::newSimulationUpdate() {
     const auto timeNow = std::chrono::system_clock::now();
-    const auto timeElapsedInMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - simulationUpdateCountStartTime).count();
+    const auto timeElapsedInMicroseconds = std::chrono::duration_cast<std::chrono::microseconds>(timeNow - simulationUpdateCountStartTime).count();
 
-    if (toSeconds(timeElapsedInMilliseconds) >= 1.0f) {
+    if (toSeconds(timeElapsedInMicroseconds) >= 1.0f) {
         simulationUpdatesPerSecond = simulationUpdateCounter;
         simulationUpdateCounter = 0;
         simulationUpdateCountStartTime = timeNow;
@@ -37,10 +37,10 @@ void MetricsTracker::newSimulationUpdate() {
 
 void MetricsTracker::incrementTimeSinceLastSimulationUpdate() {
     const auto timeNow = std::chrono::system_clock::now();
-    timeSinceLastSimulationUpdate += toSeconds(std::chrono::duration_cast<std::chrono::milliseconds>(timeNow - simulationSynchTimer).count());
+    timeSinceLastSimulationUpdate += toSeconds(std::chrono::duration_cast<std::chrono::microseconds>(timeNow - simulationSynchTimer).count());
     simulationSynchTimer = timeNow;
 }
 
-float MetricsTracker::toSeconds(long milliseconds) {
-    return milliseconds / 1000.0f;
+float MetricsTracker::toSeconds(long microseconds) {
+    return microseconds / 1000000.0f;
 }
