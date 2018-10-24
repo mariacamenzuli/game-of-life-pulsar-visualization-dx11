@@ -1,6 +1,6 @@
 #include "UserInputReader.h"
 
-UserInputReader::UserInputReader(int screenWidth, int screenHeight, HINSTANCE hinstance, HWND hwnd): screenWidth(screenWidth), screenHeight(screenHeight), mouseX(0), mouseY(0) {
+UserInputReader::UserInputReader(HINSTANCE hinstance, HWND hwnd) {
     HRESULT result;
 
     result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, reinterpret_cast<void**>(directInput.GetAddressOf()), nullptr);
@@ -58,6 +58,10 @@ UserInputReader::UserInputReader(int screenWidth, int screenHeight, HINSTANCE hi
     for (unsigned char& keyState : keyboardState) {
         keyState = '\0';
     }
+
+    mouseState.lX = 0;
+    mouseState.lY = 0;
+    mouseState.lZ = 0;
 }
 
 
@@ -107,9 +111,9 @@ bool UserInputReader::isCPressed() {
     return (keyboardState[DIK_C] & 0x80) != 0;
 }
 
-void UserInputReader::getMouseLocation(int& mouseX, int& mouseY) const {
-    mouseX = this->mouseX;
-    mouseY = this->mouseY;
+void UserInputReader::getMouseLocationChange(int& mouseX, int& mouseY) const {
+    mouseX = this->mouseState.lX;
+    mouseY = this->mouseState.lY;
 }
 
 void UserInputReader::readKeyboard() {
@@ -134,15 +138,4 @@ void UserInputReader::readMouse() {
             // todo: handle error
         }
     }
-
-    // Update the location of the mouse cursor based on the change of the mouse location during the frame.
-    mouseX += mouseState.lX;
-    mouseY += mouseState.lY;
-
-    // Ensure the mouse location doesn't exceed the screen width or height.
-    if (mouseX < 0) { mouseX = 0; }
-    if (mouseY < 0) { mouseY = 0; }
-
-    if (mouseX > screenWidth) { mouseX = screenWidth; }
-    if (mouseY > screenHeight) { mouseY = screenHeight; }
 }

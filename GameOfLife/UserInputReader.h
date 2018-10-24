@@ -10,7 +10,7 @@
 
 class UserInputReader {
 public:
-    UserInputReader(int screenWidth, int screenHeight, HINSTANCE hinstance, HWND hwnd);
+    UserInputReader(HINSTANCE hinstance, HWND hwnd);
     ~UserInputReader();
 
     void read();
@@ -23,7 +23,7 @@ public:
     bool isDPressed();
     bool isZPressed();
     bool isCPressed();
-    void getMouseLocation(int& mouseX, int& mouseY) const;
+    void getMouseLocationChange(int& mouseX, int& mouseY) const;
 
 private:
     Microsoft::WRL::ComPtr<IDirectInput8> directInput;
@@ -32,9 +32,6 @@ private:
 
     unsigned char keyboardState[256];
     DIMOUSESTATE mouseState;
-
-    int screenWidth, screenHeight;
-    int mouseX, mouseY;
 
     void readKeyboard();
     void readMouse();

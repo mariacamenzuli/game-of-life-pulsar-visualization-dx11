@@ -46,21 +46,28 @@ void readUserInput(UserInputReader& userInput, Win32RenderingWindow& renderingWi
         camera.moveSideways(12.0f * deltaTime);
     }
 
-    if (userInput.isQPressed() * deltaTime) {
-        camera.yaw(-0.05f);
+    if (userInput.isQPressed()) {
+        camera.yaw(-0.5f * deltaTime);
     }
 
-    if (userInput.isEPressed() * deltaTime) {
-        camera.yaw(0.05f);
+    if (userInput.isEPressed()) {
+        camera.yaw(0.5f * deltaTime);
     }
 
-    if (userInput.isZPressed() * deltaTime) {
-        camera.pitch(-0.05f);
+    if (userInput.isZPressed()) {
+        camera.pitch(-0.5f * deltaTime);
     }
 
-    if (userInput.isCPressed() * deltaTime) {
-        camera.pitch(0.05f);
+    if (userInput.isCPressed()) {
+        camera.pitch(0.5f * deltaTime);
     }
+
+    int mouseChangeX;
+    int mouseChangeY;
+    userInput.getMouseLocationChange(mouseChangeX, mouseChangeY);
+
+    camera.yaw(mouseChangeX * 0.15f * deltaTime);
+    camera.pitch(mouseChangeY * 0.15f * deltaTime);
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
@@ -96,7 +103,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
         camera.moveStraight(-55.0f);
         camera.moveVertical(20.0f);
-        UserInputReader userInput(screenWidth, screenHeight, hInstance, renderingWindow.getWindowHandle());
+        UserInputReader userInput(hInstance, renderingWindow.getWindowHandle());
 
         renderingWindow.showWindow();
 
