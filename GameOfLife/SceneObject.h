@@ -20,7 +20,10 @@ public:
     SceneObject* attachChild(std::unique_ptr<SceneObject> child, std::string label);
     SceneObject* getChild(std::string label);
     std::vector<SceneObject*> getChildren();
-
+    bool isVisible();
+    
+    void hide();
+    void show();
     void translate(float x, float y, float z);
     void scale(float x, float y, float z);
     void rotateX(float angleInRadians);
@@ -28,6 +31,7 @@ public:
     void rotateZ(float angleInRadians);
 
 private:
+    bool visible = true;
     Model* model = nullptr;
     D3DXMATRIX worldMatrix;
     SceneObject* parent = nullptr;

@@ -59,6 +59,18 @@ std::vector<SceneObject*> SceneObject::getChildren() {
     return childPointers;
 }
 
+bool SceneObject::isVisible() {
+    return visible;
+}
+
+void SceneObject::hide() {
+    visible = false;
+}
+
+void SceneObject::show() {
+    visible = true;
+}
+
 void SceneObject::translate(float x, float y, float z) {
     //todo: apply transformation to currentChildren
     D3DXMATRIX translationMatrix;

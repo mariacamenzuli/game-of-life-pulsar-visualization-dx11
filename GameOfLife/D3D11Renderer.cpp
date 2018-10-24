@@ -86,15 +86,19 @@ void D3D11Renderer::renderFrame() {
         lightShader.updatePointLightBuffer(deviceContext.Get(), scene->getPointLight()->getDiffuse(), scene->getPointLight()->getSpecular(), *scene->getPointLight()->getWorldMatrix());
 
         if (sceneObject->getModel() != nullptr) {
-            lightShader.updateTransformationMatricesBuffer(deviceContext.Get(), sceneObject->getCompositeWorldMatrix(), viewMatrix, projectionMatrix);
+            if (sceneObject->isVisible()) {
+                lightShader.updateTransformationMatricesBuffer(deviceContext.Get(), sceneObject->getCompositeWorldMatrix(), viewMatrix, projectionMatrix);
 
-            for (auto const& materialIndexRanges : sceneObject->getModel()->getMaterialIndexRanges()) {
-                lightShader.updateMaterialBuffer(deviceContext.Get(), materialIndexRanges.material.getAmbientColor(), materialIndexRanges.material.getDiffuseColor(), materialIndexRanges.material.getSpecularColor());
+                for (auto const& materialIndexRanges : sceneObject->getModel()->getMaterialIndexRanges()) {
+                    lightShader.updateMaterialBuffer(deviceContext.Get(), materialIndexRanges.material.getAmbientColor(), materialIndexRanges.material.getDiffuseColor(), materialIndexRanges.material.getSpecularColor());
 
-                const auto indicesToDrawCount = (materialIndexRanges.endInclusive + 1) - materialIndexRanges.startInclusive;
-                deviceContext->DrawIndexed(indicesToDrawCount, indexStartLocation, vertexStartLocation);
+                    const auto indicesToDrawCount = (materialIndexRanges.endInclusive + 1) - materialIndexRanges.startInclusive;
+                    deviceContext->DrawIndexed(indicesToDrawCount, indexStartLocation, vertexStartLocation);
 
-                indexStartLocation = indexStartLocation + indicesToDrawCount;
+                    indexStartLocation = indexStartLocation + indicesToDrawCount;
+                }
+            } else {
+                indexStartLocation = indexStartLocation + sceneObject->getModel()->getIndexCount();
             }
 
             vertexStartLocation = vertexStartLocation + sceneObject->getModel()->getVertexCount();
