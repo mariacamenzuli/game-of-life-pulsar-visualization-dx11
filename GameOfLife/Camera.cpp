@@ -30,6 +30,11 @@ void Camera::moveSideways(float motion) {
     lookAtPoint = position + orientation.forward;
 }
 
+void Camera::moveVertical(float motion) {
+    position += motion * orientation.up;
+    lookAtPoint = position + orientation.forward;
+}
+
 void Camera::pitch(float rotationX) {
     this->rotation.x += rotationX;
     initOrientation();

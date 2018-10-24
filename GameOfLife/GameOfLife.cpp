@@ -95,6 +95,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
         d3D11Renderer.setCamera(&camera);
 
         camera.moveStraight(-55.0f);
+        camera.moveVertical(20.0f);
         UserInputReader userInput(screenWidth, screenHeight, hInstance, renderingWindow.getWindowHandle());
 
         renderingWindow.showWindow();
@@ -106,7 +107,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
         MSG msg = {};
         while (msg.message != WM_QUIT) {
             if (fpsLogTracker % 150 == 0) {
-                std::string log = "FPS: " + std::to_string(metricsTracker.framesPerSecond) + ", SPS: " + std::to_string(metricsTracker.simulationUpdatesPerSecond) + "\n";
+                std::string log = "FPS: " + std::to_string(metricsTracker.framesPerSecond) + ", SUPS: " + std::to_string(metricsTracker.simulationUpdatesPerSecond) + "\n";
                 OutputDebugStringW(std::wstring(log.begin(), log.end()).c_str());
                 fpsLogTracker = 0;
             }

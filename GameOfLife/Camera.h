@@ -11,6 +11,7 @@ public:
 
     void moveStraight(float motion);
     void moveSideways(float motion);
+    void moveVertical(float motion);
 
     void pitch(float rotationX);
     void yaw(float rotationY);
