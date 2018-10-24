@@ -371,6 +371,11 @@ void D3D11Renderer::setupVertexAndIndexBuffers() {
         throw std::runtime_error("Failed to create vertex buffer for scene.");
     }
 
+    // Bind the vertex buffer to the input-assembler stage.
+    unsigned int stride = sizeof(Model::Vertex);
+    unsigned int offset = 0;
+    deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+
     auto sceneIndices = getAllIndices(scene);
 
     // Set up the description of the static index buffer.
@@ -392,16 +397,11 @@ void D3D11Renderer::setupVertexAndIndexBuffers() {
         throw std::runtime_error("Failed to create index buffer for scene.");
     }
 
-    // Bind the vertex buffer to the input-assembler stage.
-    unsigned int stride = sizeof(Model::Vertex);
-    unsigned int offset = 0;
-    deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+    // Bind the index buffer to the input-assembler stage.
+    deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    // Bind the index buffer to the input-assembler stage.
-    deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 }
 
 std::vector<Model::Vertex> D3D11Renderer::getAllVertices(Scene* scene) {
