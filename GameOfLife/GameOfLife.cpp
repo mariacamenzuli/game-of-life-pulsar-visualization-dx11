@@ -23,6 +23,46 @@ void logErrorAndNotifyUser(const std::string& log, const std::string& userNotifi
                MB_OK);
 }
 
+void readUserInput(UserInputReader& userInput, Win32RenderingWindow& renderingWindow, Camera& camera, float deltaTime) {
+    userInput.read();
+
+    if (userInput.isEscapePressed()) {
+        renderingWindow.postQuitMessage();
+    }
+
+    if (userInput.isWPressed()) {
+        camera.moveStraight(12.0f * deltaTime);
+    }
+
+    if (userInput.isSPressed()) {
+        camera.moveStraight(-12.0f * deltaTime);
+    }
+
+    if (userInput.isAPressed()) {
+        camera.moveSideways(-12.0f * deltaTime);
+    }
+
+    if (userInput.isDPressed()) {
+        camera.moveSideways(12.0f * deltaTime);
+    }
+
+    if (userInput.isQPressed() * deltaTime) {
+        camera.yaw(-0.05f);
+    }
+
+    if (userInput.isEPressed() * deltaTime) {
+        camera.yaw(0.05f);
+    }
+
+    if (userInput.isZPressed() * deltaTime) {
+        camera.pitch(-0.05f);
+    }
+
+    if (userInput.isCPressed() * deltaTime) {
+        camera.pitch(0.05f);
+    }
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) {
     try {
         ApplicationConfig config;
@@ -59,60 +99,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
         renderingWindow.showWindow();
 
-        const float deltaTime = 1.0f / 60.0f; //todo: https://gafferongames.com/post/fix_your_timestep/
-
         MetricsTracker metricsTracker;
+        const float timePerFrame = 1.0f / 60.0f;
         int fpsLogTracker = 0;
 
         MSG msg = {};
         while (msg.message != WM_QUIT) {
             if (fpsLogTracker % 150 == 0) {
-                std::string log = "FPS: " + std::to_string(metricsTracker.framesPerSecond) + "\n";
+                std::string log = "FPS: " + std::to_string(metricsTracker.framesPerSecond) + ", SPS: " + std::to_string(metricsTracker.simulationUpdatesPerSecond) + "\n";
                 OutputDebugStringW(std::wstring(log.begin(), log.end()).c_str());
                 fpsLogTracker = 0;
             }
 
-            userInput.read();
-
-            if (userInput.isEscapePressed()) {
-                renderingWindow.postQuitMessage();
-            }
-
-            if (userInput.isWPressed()) {
-                camera.moveStraight(12.0f * deltaTime);
-            }
-
-            if (userInput.isSPressed()) {
-                camera.moveStraight(-12.0f * deltaTime);
-            }
-
-            if (userInput.isAPressed()) {
-                camera.moveSideways(-12.0f * deltaTime);
-            }
-
-            if (userInput.isDPressed()) {
-                camera.moveSideways(12.0f * deltaTime);
-            }
-
-            if (userInput.isQPressed() * deltaTime) {
-                camera.yaw(-0.05f);
-            }
-
-            if (userInput.isEPressed() * deltaTime) {
-                camera.yaw(0.05f);
-            }
-
-            if (userInput.isZPressed() * deltaTime) {
-                camera.pitch(-0.05f);
-            }
-
-            if (userInput.isCPressed() * deltaTime) {
-                camera.pitch(0.05f);
-            }
-
+            metricsTracker.incrementTimeSinceLastSimulationUpdate();
             renderingWindow.pollForMessage(&msg);
 
-            simulation.update(deltaTime);
+            while (metricsTracker.timeSinceLastSimulationUpdate > timePerFrame) {
+                metricsTracker.timeSinceLastSimulationUpdate -= timePerFrame;
+                readUserInput(userInput, renderingWindow, camera, timePerFrame);
+                simulation.update(timePerFrame);
+                metricsTracker.newSimulationUpdate();
+            }
 
             d3D11Renderer.renderFrame();
 
