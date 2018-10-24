@@ -7,6 +7,8 @@ public:
     Camera();
     ~Camera();
 
+    D3DXVECTOR3 getPosition();
+
     void moveStraight(float motion);
     void moveSideways(float motion);
 

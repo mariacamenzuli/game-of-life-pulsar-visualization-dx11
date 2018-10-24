@@ -1,6 +1,6 @@
 #include "PointLight.h"
 
-PointLight::PointLight(const D3DXVECTOR4 diffuse) : diffuse(diffuse) {
+PointLight::PointLight(const D3DXVECTOR4 diffuse, const D3DXVECTOR4 specular) : diffuse(diffuse), specular(specular) {
     D3DXMatrixIdentity(&worldMatrix);
 };
 
@@ -8,6 +8,10 @@ PointLight::~PointLight() = default;
 
 D3DXVECTOR4 PointLight::getDiffuse() {
     return diffuse;
+}
+
+D3DXVECTOR4 PointLight::getSpecular() {
+    return specular;
 }
 
 D3DXMATRIX* PointLight::getWorldMatrix() {

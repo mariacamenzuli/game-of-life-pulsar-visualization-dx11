@@ -1,6 +1,6 @@
 #include "GameOfLifeSimulator.h"
 
-GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 0.9f, 1.0f)) {
+GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 0.9f, 1.0f), D3DXVECTOR4(0.5f, 0.5f, 0.4f, 1.0f)) {
     rootSceneObject.reset(new SceneObject());
 
     const auto worldCubeModel = modelLoader.getModel(ModelLoader::ModelId::WORLD_CUBE);

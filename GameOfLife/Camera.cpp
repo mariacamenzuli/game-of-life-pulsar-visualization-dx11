@@ -16,6 +16,10 @@ Camera::Camera() {
 
 Camera::~Camera() = default;
 
+D3DXVECTOR3 Camera::getPosition() {
+    return position;
+}
+
 void Camera::moveStraight(float motion) {
     position += motion * orientation.forward;
     lookAtPoint = position + orientation.forward;

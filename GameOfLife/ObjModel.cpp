@@ -235,7 +235,11 @@ std::map<std::string, Material> ObjModel::loadMaterialFile(const std::string& fi
         if (lineStartsWith(line, "Ks ")) {
             std::istringstream stringStream(line.substr(3));
             stringStream >> currentSpecularColor.x >> currentSpecularColor.y >> currentSpecularColor.z;
-            currentSpecularColor.w = 1.0f;
+        }
+
+        if (lineStartsWith(line, "Ns ")) {
+            std::istringstream stringStream(line.substr(3));
+            stringStream >> currentSpecularColor.w;
         }
     }
 

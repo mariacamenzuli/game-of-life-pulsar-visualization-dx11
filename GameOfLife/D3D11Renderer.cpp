@@ -81,8 +81,9 @@ void D3D11Renderer::renderFrame() {
         SceneObject* sceneObject = toVisit.top();
         toVisit.pop();
 
+        lightShader.updateCameraBuffer(deviceContext.Get(), camera->getPosition());
         lightShader.updateAmbientLightBuffer(deviceContext.Get(), scene->getAmbientLight());
-        lightShader.updatePointLightBuffer(deviceContext.Get(), scene->getPointLight()->getDiffuse(), *scene->getPointLight()->getWorldMatrix());
+        lightShader.updatePointLightBuffer(deviceContext.Get(), scene->getPointLight()->getDiffuse(), scene->getPointLight()->getSpecular(), *scene->getPointLight()->getWorldMatrix());
 
         if (sceneObject->getModel() != nullptr) {
             lightShader.updateTransformationMatricesBuffer(deviceContext.Get(), sceneObject->getCompositeWorldMatrix(), viewMatrix, projectionMatrix);

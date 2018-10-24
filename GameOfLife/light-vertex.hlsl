@@ -5,6 +5,10 @@ cbuffer TransformationMatricesBuffer {
     float4x4 projectionMatrix;
 };
 
+cbuffer CameraBuffer {
+    float4 cameraPosition;
+};
+
 // Type Definitions
 // - Input
 struct VertexDescriptor {
@@ -19,6 +23,7 @@ struct PixelDescriptor {
     float4 worldSpacePosition : POSITION;
     float3 normal : NORMAL;
     float2 tex : TEXCOORD0;
+    float3 viewDirection : VIEWDIR;
 };
 
 PixelDescriptor transformToScreenSpace(VertexDescriptor vertex) {
@@ -40,6 +45,12 @@ PixelDescriptor transformToScreenSpace(VertexDescriptor vertex) {
 
     // Normalize the normal vector.
     pixel.normal = normalize(pixel.normal);
+
+    // Calculate the viewing direction vector.
+    pixel.viewDirection = cameraPosition.xyz - pixel.worldSpacePosition.xyz;
+
+    // Normalize the viewing direction vector.
+    pixel.viewDirection = normalize(pixel.viewDirection);
 
     return pixel;
 }

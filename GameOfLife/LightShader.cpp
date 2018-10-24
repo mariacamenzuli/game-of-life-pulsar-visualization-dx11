@@ -46,6 +46,20 @@ void LightShader::updateTransformationMatricesBuffer(ID3D11DeviceContext* device
     deviceContext->VSSetConstantBuffers(0, 1, transformationMatricesBuffer.GetAddressOf());
 }
 
+void LightShader::updateCameraBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR3 cameraPosition) {
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+    HRESULT result = deviceContext->Map(cameraBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (FAILED(result)) {
+        throw std::runtime_error("Failed to lock the camera buffer for the light shader input.");
+    }
+
+    auto cameraData = static_cast<CameraBuffer*>(mappedResource.pData);
+    cameraData->cameraPosition = D3DXVECTOR4(cameraPosition.x, cameraPosition.y, cameraPosition.z, 1.0f);
+    deviceContext->Unmap(cameraBuffer.Get(), 0);
+    deviceContext->VSSetConstantBuffers(1, 1, cameraBuffer.GetAddressOf());
+}
+
 void LightShader::updateAmbientLightBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR4 ambientLightColor) {
     D3D11_MAPPED_SUBRESOURCE mappedResource;
 
@@ -60,7 +74,7 @@ void LightShader::updateAmbientLightBuffer(ID3D11DeviceContext* deviceContext, D
     deviceContext->PSSetConstantBuffers(0, 1, ambientLightBuffer.GetAddressOf());
 }
 
-void LightShader::updatePointLightBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR4 diffuse, D3DXMATRIX worldMatrix) {
+void LightShader::updatePointLightBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR4 diffuse, D3DXVECTOR4 specular, D3DXMATRIX worldMatrix) {
     auto origin = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     D3DXVECTOR4 pointLightPosition;
     D3DXVec3Transform(&pointLightPosition, &origin, &worldMatrix);
@@ -75,6 +89,7 @@ void LightShader::updatePointLightBuffer(ID3D11DeviceContext* deviceContext, D3D
     auto pointLightData = static_cast<PointLightBuffer*>(mappedResource.pData);
     pointLightData->pointLightPosition = pointLightPosition;
     pointLightData->pointLightDiffuse = diffuse;
+    pointLightData->pointLightSpecular = specular;
     deviceContext->Unmap(pointLightBuffer.Get(), 0);
     deviceContext->PSSetConstantBuffers(1, 1, pointLightBuffer.GetAddressOf());
 }
@@ -135,8 +150,6 @@ void LightShader::setupVertexShader(ID3D11Device* device) {
     // Get a count of the elements in the layout.
     unsigned int numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-    D3D11_BUFFER_DESC transformationMatricesBufferDesc;
-
     // Create the vertex input layout.
     result = device->CreateInputLayout(polygonLayout, numElements, lightVertexBuffer.data(),
                                        lightVertexBuffer.size(), layout.GetAddressOf());
@@ -144,7 +157,7 @@ void LightShader::setupVertexShader(ID3D11Device* device) {
         throw std::runtime_error("Failed to create light shader. Creation of input layout failed.");
     }
 
-    // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+    D3D11_BUFFER_DESC transformationMatricesBufferDesc;
     transformationMatricesBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     transformationMatricesBufferDesc.ByteWidth = sizeof(TransformationMatricesBuffer);
     transformationMatricesBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -155,6 +168,19 @@ void LightShader::setupVertexShader(ID3D11Device* device) {
     result = device->CreateBuffer(&transformationMatricesBufferDesc, nullptr, transformationMatricesBuffer.GetAddressOf());
     if (FAILED(result)) {
         throw std::runtime_error("Failed to create light shader. Creation of transformation matrices constant buffer failed.");
+    }
+
+    D3D11_BUFFER_DESC cameraBufferDesc;
+    cameraBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    cameraBufferDesc.ByteWidth = sizeof(CameraBuffer);
+    cameraBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    cameraBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    cameraBufferDesc.MiscFlags = 0;
+    cameraBufferDesc.StructureByteStride = 0;
+
+    result = device->CreateBuffer(&cameraBufferDesc, nullptr, cameraBuffer.GetAddressOf());
+    if (FAILED(result)) {
+        throw std::runtime_error("Failed to create light shader. Creation of camera constant buffer failed.");
     }
 }
 
@@ -170,7 +196,6 @@ void LightShader::setupPixelShader(ID3D11Device* device) {
     }
 
     D3D11_BUFFER_DESC ambientLightBufferDesc;
-
     ambientLightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     ambientLightBufferDesc.ByteWidth = sizeof(AmbientLightBuffer);
     ambientLightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -184,7 +209,6 @@ void LightShader::setupPixelShader(ID3D11Device* device) {
     }
 
     D3D11_BUFFER_DESC pointLightBufferDesc;
-
     pointLightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     pointLightBufferDesc.ByteWidth = sizeof(PointLightBuffer);
     pointLightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -198,7 +222,6 @@ void LightShader::setupPixelShader(ID3D11Device* device) {
     }
 
     D3D11_BUFFER_DESC materialBufferDesc;
-
     materialBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     materialBufferDesc.ByteWidth = sizeof(MaterialBuffer);
     materialBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
