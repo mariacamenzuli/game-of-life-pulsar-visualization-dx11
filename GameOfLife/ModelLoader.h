@@ -12,7 +12,7 @@ public:
 
     enum class ModelId {
         CELL_CUBE,
-        WORLD_CUBE,
+        WORLD_BOARD,
         SUN,
         TREE
     };

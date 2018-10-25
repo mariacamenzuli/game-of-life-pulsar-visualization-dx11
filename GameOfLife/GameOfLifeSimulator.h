@@ -35,6 +35,6 @@ private:
     ModelLoader modelLoader;
     std::unique_ptr<SceneObject> rootSceneObject;
     PointLight pointLight;
-    Cell cells[10][31];
+    Cell cells[17][17];
     int updateCount = 0;
 };

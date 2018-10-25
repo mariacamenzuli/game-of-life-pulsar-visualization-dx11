@@ -3,50 +3,90 @@
 GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 0.9f, 1.0f), D3DXVECTOR4(0.5f, 0.5f, 0.4f, 1.0f)) {
     rootSceneObject.reset(new SceneObject());
 
-    const auto worldCubeModel = modelLoader.getModel(ModelLoader::ModelId::WORLD_CUBE);
-    auto worldCube = rootSceneObject->attachChild(std::make_unique<SceneObject>(worldCubeModel), "world_cube");
-    worldCube->scale(11.0f, 12.0f, 11.0f);
+    const auto worldBoardModel = modelLoader.getModel(ModelLoader::ModelId::WORLD_BOARD);
+    auto worldCube = rootSceneObject->attachChild(std::make_unique<SceneObject>(worldBoardModel), "world_board");
+    worldCube->scale(30.0f, 1.0f, 30.0f);
+    worldCube->translate(0.0f, -2.0f, 0.0f);
+
+    const auto treeModel = modelLoader.getModel(ModelLoader::ModelId::TREE);
+    auto tree = rootSceneObject->attachChild(std::make_unique<SceneObject>(treeModel), "tree");
+    tree->scale(6.0f, 6.0f, 6.0f);
+    tree->translate(20.0f, 10.0f, 20.0f);
 
     const auto cellCubeModel = modelLoader.getModel(ModelLoader::ModelId::CELL_CUBE);
     auto cellCubes = rootSceneObject->attachChild(std::make_unique<SceneObject>(), "cell_cubes");
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < 17; i++) {
+        for (int j = 0; j < 17; j++) {
             auto cellCube = cellCubes->attachChild(std::make_unique<SceneObject>(cellCubeModel));
             cells[i][j] = { CellState::DEAD, cellCube };
             cells[i][j].kill();
-            cellCube->translate((i * 2) - 9.0f, (j * 2) - 6, 12.0f);
-        }
-    
-        for (int j = 10; j < 21; j++) {
-            auto cellCube = cellCubes->attachChild(std::make_unique<SceneObject>(cellCubeModel));
-            cells[i][j] = { CellState::DEAD, cellCube };
-            cells[i][j].kill();
-            cellCube->translate((i * 2) - 9.0f, 14.0f, (j * 2) - 30.0f);
-        }
-    
-        for (int j = 21; j < 31; j++) {
-            auto cellCube = cellCubes->attachChild(std::make_unique<SceneObject>(cellCubeModel));
-            cells[i][j] = { CellState::DEAD, cellCube };
-            cells[i][j].kill();
-            cellCube->translate((i * 2) - 9.0f, 12.0f - ((j - 21.0f) * 2.0f), -12.0f);
+            cellCube->translate((i * 2) - 16.0f, 0.0f, (j * 2) - 16.0f);
         }
     }
 
+    // todo: fix scene graph so only one rotation is needed
     cellCubes->rotateY(0.785398);
     worldCube->rotateY(0.785398);
+    tree->rotateY(0.785398);
 
-    cells[4][12].spawn();
-    cells[4][17].spawn();
-    cells[5][10].spawn();
-    cells[5][11].spawn();
-    cells[5][13].spawn();
+    // Create a pulsar pattern
+    cells[2][4].spawn();
+    cells[2][5].spawn();
+    cells[2][6].spawn();
+    cells[2][10].spawn();
+    cells[2][11].spawn();
+    cells[2][12].spawn();
+
+    cells[4][2].spawn();
+    cells[4][7].spawn();
+    cells[4][9].spawn();
+    cells[4][14].spawn();
+
+    cells[5][2].spawn();
+    cells[5][7].spawn();
+    cells[5][9].spawn();
     cells[5][14].spawn();
-    cells[5][15].spawn();
-    cells[5][16].spawn();
-    cells[5][18].spawn();
-    cells[5][19].spawn();
-    cells[6][12].spawn();
-    cells[6][17].spawn();
+
+    cells[6][2].spawn();
+    cells[6][7].spawn();
+    cells[6][9].spawn();
+    cells[6][14].spawn();
+
+    cells[7][4].spawn();
+    cells[7][5].spawn();
+    cells[7][6].spawn();
+    cells[7][10].spawn();
+    cells[7][11].spawn();
+    cells[7][12].spawn();
+
+    cells[9][4].spawn();
+    cells[9][5].spawn();
+    cells[9][6].spawn();
+    cells[9][10].spawn();
+    cells[9][11].spawn();
+    cells[9][12].spawn();
+
+    cells[10][2].spawn();
+    cells[10][7].spawn();
+    cells[10][9].spawn();
+    cells[10][14].spawn();
+
+    cells[11][2].spawn();
+    cells[11][7].spawn();
+    cells[11][9].spawn();
+    cells[11][14].spawn();
+
+    cells[12][2].spawn();
+    cells[12][7].spawn();
+    cells[12][9].spawn();
+    cells[12][14].spawn();
+
+    cells[14][4].spawn();
+    cells[14][5].spawn();
+    cells[14][6].spawn();
+    cells[14][10].spawn();
+    cells[14][11].spawn();
+    cells[14][12].spawn();
 
     const auto sunModel = modelLoader.getModel(ModelLoader::ModelId::SUN);
     auto sun = rootSceneObject->attachChild(std::make_unique<SceneObject>(sunModel), "sun");
@@ -78,59 +118,59 @@ void GameOfLifeSimulator::update(float deltaTime) {
     std::vector<Cell*> toKill;
     std::vector<Cell*> toSpawn;
 
-    if (updateCount % 120 == 0) {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 31; j++) {
+    if (updateCount % 50 == 0) {
+        for (int i = 0; i < 17; i++) {
+            for (int j = 0; j < 17; j++) {
                 int liveNeighbors = 0;
-
+    
                 if (i > 0) {
                     if (cells[i - 1][j].state == CellState::ALIVE) {
                         liveNeighbors++;
                     }
-
+    
                     if (j > 0) {
                         if (cells[i - 1][j - 1].state == CellState::ALIVE) {
                             liveNeighbors++;
                         }
                     }
                     
-                    if (j < 30) {
+                    if (j < 16) {
                         if (cells[i - 1][j + 1].state == CellState::ALIVE) {
                             liveNeighbors++;
                         }
                     }
                 }
-
-                if (i < 9) {
+    
+                if (i < 16) {
                     if (cells[i + 1][j].state == CellState::ALIVE) {
                         liveNeighbors++;
                     }
-
+    
                     if (j > 0) {
                         if (cells[i + 1][j - 1].state == CellState::ALIVE) {
                             liveNeighbors++;
                         }
                     }
                     
-                    if (j < 30) {
+                    if (j < 16) {
                         if (cells[i + 1][j + 1].state == CellState::ALIVE) {
                             liveNeighbors++;
                         }
                     }
                 }
-
+    
                 if (j > 0) {
                     if (cells[i][j - 1].state == CellState::ALIVE) {
                         liveNeighbors++;
                     }
                 }
                 
-                if (j < 30) {
+                if (j < 16) {
                     if (cells[i][j + 1].state == CellState::ALIVE) {
                         liveNeighbors++;
                     }
                 }
-
+    
                 if (cells[i][j].state == CellState::ALIVE) {
                     if (liveNeighbors < 2 || liveNeighbors > 3) {
                         toKill.push_back(&cells[i][j]);
@@ -140,11 +180,11 @@ void GameOfLifeSimulator::update(float deltaTime) {
                 }
             }
         }
-
+    
         for (auto cell : toKill) {
             cell->kill();
         }
-
+    
         for (auto cell : toSpawn) {
             cell->spawn();
         }
