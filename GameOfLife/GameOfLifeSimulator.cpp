@@ -3,18 +3,24 @@
 GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 0.9f, 1.0f), D3DXVECTOR4(0.5f, 0.5f, 0.4f, 1.0f)) {
     rootSceneObject.reset(new SceneObject());
 
-    const auto worldBoardModel = modelLoader.getModel(ModelLoader::ModelId::WORLD_BOARD);
-    auto worldCube = rootSceneObject->attachChild(std::make_unique<SceneObject>(worldBoardModel), "world_board");
-    worldCube->scale(30.0f, 1.0f, 30.0f);
-    worldCube->translate(0.0f, -2.0f, 0.0f);
+    auto world = rootSceneObject->attachChild(std::make_unique<SceneObject>(), "world");
 
+    const auto worldBoardModel = modelLoader.getModel(ModelLoader::ModelId::WORLD_BOARD);
+    auto worldBoard = world->attachChild(std::make_unique<SceneObject>(worldBoardModel), "world_board");
+    worldBoard->scale(30.0f, 1.0f, 30.0f);
+    worldBoard->translate(0.0f, -2.0f, 0.0f);
+
+    auto trees = world->attachChild(std::make_unique<SceneObject>(), "trees");
     const auto treeModel = modelLoader.getModel(ModelLoader::ModelId::TREE);
-    auto tree = rootSceneObject->attachChild(std::make_unique<SceneObject>(treeModel), "tree");
-    tree->scale(6.0f, 6.0f, 6.0f);
-    tree->translate(20.0f, 10.0f, 20.0f);
+    auto tree1 = trees->attachChild(std::make_unique<SceneObject>(treeModel), "tree1");
+    tree1->scale(6.0f, 6.0f, 6.0f);
+    tree1->translate(20.0f, 10.0f, 20.0f);
+    auto tree2 = trees->attachChild(std::make_unique<SceneObject>(treeModel), "tree2");
+    tree2->scale(3.0f, 3.0f, 3.0f);
+    tree2->translate(10.0f, 5.0f, 20.5f);
 
     const auto cellCubeModel = modelLoader.getModel(ModelLoader::ModelId::CELL_CUBE);
-    auto cellCubes = rootSceneObject->attachChild(std::make_unique<SceneObject>(), "cell_cubes");
+    auto cellCubes = world->attachChild(std::make_unique<SceneObject>(), "cell_cubes");
     for (int i = 0; i < 17; i++) {
         for (int j = 0; j < 17; j++) {
             auto cellCube = cellCubes->attachChild(std::make_unique<SceneObject>(cellCubeModel));
@@ -24,10 +30,7 @@ GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 
         }
     }
 
-    // todo: fix scene graph so only one rotation is needed
-    cellCubes->rotateY(0.785398);
-    worldCube->rotateY(0.785398);
-    tree->rotateY(0.785398);
+    world->rotateY(0.785398);
 
     // Create a pulsar pattern
     cells[2][4].spawn();
@@ -111,6 +114,8 @@ PointLight* GameOfLifeSimulator::getPointLight() {
 
 void GameOfLifeSimulator::update(float deltaTime) {
     updateCount++;
+
+    rootSceneObject->getChild("world")->rotateY(0.01f * deltaTime);
 
     rootSceneObject->getChild("sun")->rotateX(-0.1f * deltaTime);
     pointLight.rotateX(-0.1f * deltaTime);

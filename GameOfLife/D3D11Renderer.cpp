@@ -87,7 +87,7 @@ void D3D11Renderer::renderFrame() {
 
         if (sceneObject->getModel() != nullptr) {
             if (sceneObject->isVisible()) {
-                lightShader.updateTransformationMatricesBuffer(deviceContext.Get(), sceneObject->getCompositeWorldMatrix(), viewMatrix, projectionMatrix);
+                lightShader.updateTransformationMatricesBuffer(deviceContext.Get(), *sceneObject->getWorldMatrix(), viewMatrix, projectionMatrix);
 
                 for (auto const& materialIndexRanges : sceneObject->getModel()->getMaterialIndexRanges()) {
                     lightShader.updateMaterialBuffer(deviceContext.Get(), materialIndexRanges.material.getAmbientColor(), materialIndexRanges.material.getDiffuseColor(), materialIndexRanges.material.getSpecularColor());
