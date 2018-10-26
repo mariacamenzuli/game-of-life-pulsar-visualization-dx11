@@ -71,6 +71,10 @@ void D3D11Renderer::renderFrame() {
     D3DXMATRIX viewMatrix;
     camera->getViewMatrix(viewMatrix);
 
+    lightShader.updateCameraBuffer(deviceContext.Get(), camera->getPosition());
+    lightShader.updateAmbientLightBuffer(deviceContext.Get(), scene->getAmbientLight());
+    lightShader.updatePointLightBuffer(deviceContext.Get(), scene->getPointLight()->getDiffuse(), scene->getPointLight()->getSpecular(), *scene->getPointLight()->getWorldMatrix());
+
     int indexStartLocation = 0;
     int vertexStartLocation = 0;
 
@@ -80,10 +84,6 @@ void D3D11Renderer::renderFrame() {
     while (!toVisit.empty()) {
         SceneObject* sceneObject = toVisit.top();
         toVisit.pop();
-
-        lightShader.updateCameraBuffer(deviceContext.Get(), camera->getPosition());
-        lightShader.updateAmbientLightBuffer(deviceContext.Get(), scene->getAmbientLight());
-        lightShader.updatePointLightBuffer(deviceContext.Get(), scene->getPointLight()->getDiffuse(), scene->getPointLight()->getSpecular(), *scene->getPointLight()->getWorldMatrix());
 
         if (sceneObject->getModel() != nullptr) {
             if (sceneObject->isVisible()) {
