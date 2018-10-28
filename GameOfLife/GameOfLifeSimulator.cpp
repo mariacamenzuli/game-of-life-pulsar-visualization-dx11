@@ -23,7 +23,8 @@ GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 
             auto cellBush = cellCubes->attachChild(std::make_unique<SceneObject>(cellModel));
             cells[i][j] = { CellState::DEAD, cellBush };
             cells[i][j].kill();
-            cellBush->rotateY(i + j / 10);
+            const auto random = rand() % 10 + 1;
+            cellBush->rotateY(random / 10.0f);
             cellBush->scale(0.04f, 0.04f, 0.04f);
             cellBush->translate((i * 4.5) - 36.0f, 0.0f, (j * 4.5) - 36.0f);
         }
@@ -104,7 +105,7 @@ SceneObject* GameOfLifeSimulator::getRootSceneObject() {
 }
 
 D3DXVECTOR4 GameOfLifeSimulator::getAmbientLight() {
-    return D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f);
+    return D3DXVECTOR4(0.3f, 0.3f, 0.3f, 1.0f);
 }
 
 PointLight* GameOfLifeSimulator::getPointLight() {
