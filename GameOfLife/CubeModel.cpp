@@ -33,19 +33,19 @@ CubeModel::CubeModel(Material material) {
 
     vertices[7].position = D3DXVECTOR3(1.0f, 1.0f, -1.0f);
     vertices[7].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    vertices[7].texture = D3DXVECTOR2(1.0f, 1.0f);
+    vertices[7].texture = D3DXVECTOR2(3.0f, 3.0f);
 
     vertices[8].position = D3DXVECTOR3(-1.0f, 1.0f, -1.0f);
     vertices[8].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    vertices[8].texture = D3DXVECTOR2(0.0f, 1.0f);
+    vertices[8].texture = D3DXVECTOR2(0.0f, 3.0f);
 
     vertices[9].position = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
     vertices[9].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    vertices[9].texture = D3DXVECTOR2(1.0f, 0.0f);
+    vertices[9].texture = D3DXVECTOR2(3.0f, 0.0f);
 
     vertices[10].position = D3DXVECTOR3(1.0f, 1.0f, -1.0f);
     vertices[10].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    vertices[10].texture = D3DXVECTOR2(1.0f, 1.0f);
+    vertices[10].texture = D3DXVECTOR2(3.0f, 3.0f);
 
     vertices[11].position = D3DXVECTOR3(-1.0f, 1.0f, 1.0f);
     vertices[11].normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
