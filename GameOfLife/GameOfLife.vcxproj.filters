@@ -98,6 +98,9 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Source Files\3D Components</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CubeModel.h">
@@ -150,6 +153,9 @@
     </ClInclude>
     <ClInclude Include="PointLight.h">
       <Filter>Header Files\3D Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

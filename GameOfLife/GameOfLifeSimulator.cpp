@@ -117,8 +117,8 @@ void GameOfLifeSimulator::update(float deltaTime) {
 
     rootSceneObject->getChild("world")->rotateY(0.01f * deltaTime);
 
-    rootSceneObject->getChild("sun")->rotateX(-0.1f * deltaTime);
-    pointLight.rotateX(-0.1f * deltaTime);
+    rootSceneObject->getChild("sun")->rotateX(-0.6f * deltaTime);
+    pointLight.rotateX(-0.6f * deltaTime);
 
     std::vector<Cell*> toKill;
     std::vector<Cell*> toSpawn;

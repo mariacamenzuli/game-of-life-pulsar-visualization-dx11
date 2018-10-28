@@ -94,7 +94,7 @@ void LightShader::updatePointLightBuffer(ID3D11DeviceContext* deviceContext, D3D
     deviceContext->PSSetConstantBuffers(1, 1, pointLightBuffer.GetAddressOf());
 }
 
-void LightShader::updateMaterialBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR4 materialAmbientColor, D3DXVECTOR4 materialDiffuseColor, D3DXVECTOR4 materialSpecularColor) {
+void LightShader::updateMaterialBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR4 materialAmbientColor, D3DXVECTOR4 materialDiffuseColor, D3DXVECTOR4 materialSpecularColor, bool isTextured) {
     D3D11_MAPPED_SUBRESOURCE mappedResource;
 
     HRESULT result = deviceContext->Map(materialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -106,8 +106,18 @@ void LightShader::updateMaterialBuffer(ID3D11DeviceContext* deviceContext, D3DXV
     materialData->materialAmbientColor = materialAmbientColor;
     materialData->materialDiffuseColor = materialDiffuseColor;
     materialData->materialSpecularColor = materialSpecularColor;
+    if (isTextured) {
+        materialData->materialIsTextured = 1;
+    } else {
+        materialData->materialIsTextured = -1;
+    }
     deviceContext->Unmap(materialBuffer.Get(), 0);
     deviceContext->PSSetConstantBuffers(2, 1, materialBuffer.GetAddressOf());
+}
+
+void LightShader::updateTexture(ID3D11DeviceContext* deviceContext, Texture* texture) {
+    deviceContext->PSSetShaderResources(0, 1, texture->getTextureResource());
+    deviceContext->PSSetSamplers(0, 1, samplerState.GetAddressOf());
 }
 
 void LightShader::setupVertexShader(ID3D11Device* device) {
@@ -232,5 +242,25 @@ void LightShader::setupPixelShader(ID3D11Device* device) {
     result = device->CreateBuffer(&materialBufferDesc, nullptr, materialBuffer.GetAddressOf());
     if (FAILED(result)) {
         throw std::runtime_error("Failed to create light shader. Creation of material constant buffer failed.");
+    }
+
+    D3D11_SAMPLER_DESC samplerDesc;
+    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerDesc.MipLODBias = 0.0f;
+    samplerDesc.MaxAnisotropy = 1;
+    samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    samplerDesc.BorderColor[0] = 0;
+    samplerDesc.BorderColor[1] = 0;
+    samplerDesc.BorderColor[2] = 0;
+    samplerDesc.BorderColor[3] = 0;
+    samplerDesc.MinLOD = 0;
+    samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    result = device->CreateSamplerState(&samplerDesc, samplerState.GetAddressOf());
+    if (FAILED(result)) {
+        throw std::runtime_error("Failed to create light shader. Creation of texture sample state failed.");
     }
 }

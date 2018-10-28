@@ -1,3 +1,6 @@
+Texture2D materialTexture;
+SamplerState textureSampler;
+
 cbuffer AmbientLightBuffer {
     float4 sceneAmbientColor;
 };
@@ -12,6 +15,7 @@ cbuffer MaterialBuffer {
     float4 materialAmbientColor;
     float4 materialDiffuseColor;
     float4 materialSpecularColor; // w component is specular power
+    int materialIsTextured; // -ve if not textured, +ve if textured
 };
 
 // Type Definitions
@@ -24,8 +28,13 @@ struct PixelDescriptor {
     float3 viewDirection : VIEWDIR;
 };
 
-float4 sceneAmbience() {
-    return materialAmbientColor * sceneAmbientColor;
+float4 sceneAmbience(PixelDescriptor pixel) {
+    if (materialIsTextured >= 0) {
+        float4 textureColor = materialTexture.Sample(textureSampler, pixel.tex);
+        return  textureColor * sceneAmbientColor;
+    } else {
+        return materialAmbientColor * sceneAmbientColor;
+    }
 }
 
 float4 pointLight(PixelDescriptor pixel) {
@@ -40,7 +49,12 @@ float4 pointLight(PixelDescriptor pixel) {
 
     lightIntensity = saturate(dot(pixel.normal, pointToLightVector)); //todo: to saturate or not to saturate? when should we saturate?
     if (lightIntensity > 0.0f) {
-        color += (lightIntensity * materialDiffuseColor * pointLightDiffuse);
+        if (materialIsTextured >= 0) {
+            float4 textureColor = materialTexture.Sample(textureSampler, pixel.tex);
+            color += (lightIntensity * textureColor * pointLightDiffuse);
+        } else {
+            color += (lightIntensity * materialDiffuseColor * pointLightDiffuse);
+        }
 
         float3 reflection = normalize(2 * lightIntensity * pixel.normal - pointToLightVector);
         float specularFactor = pow(saturate(dot(reflection, pixel.viewDirection)), materialSpecularColor.w);;
@@ -55,7 +69,7 @@ float4 colorPixel(PixelDescriptor pixel) : SV_TARGET {
     float4 pixelColor = 0;
 
     // start out with the ambient color
-    pixelColor += sceneAmbience();
+    pixelColor += sceneAmbience(pixel);
 
     // add any diffuse light from point light
     pixelColor += pointLight(pixel);

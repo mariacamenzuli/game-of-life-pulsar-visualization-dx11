@@ -103,6 +103,7 @@
     <ClCompile Include="ObjModel.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="SceneObject.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UserInputReader.cpp" />
     <ClCompile Include="Win32RenderingWindow.cpp" />
   </ItemGroup>
@@ -122,6 +123,7 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneObject.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="UserInputReader.h" />
     <ClInclude Include="Win32RenderingWindow.h" />
   </ItemGroup>

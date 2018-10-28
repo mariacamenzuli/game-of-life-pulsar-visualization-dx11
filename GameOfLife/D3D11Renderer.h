@@ -15,6 +15,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "LightShader.h"
+#include "Texture.h"
 
 class D3D11Renderer {
 public:
@@ -51,6 +52,8 @@ private:
 
     Scene* scene = nullptr;
     Camera* camera = nullptr;
+
+    std::map<std::string, std::unique_ptr<Texture>> textureMap;
 
     PhysicalDeviceDescriptor hardwareInfo;
     Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;

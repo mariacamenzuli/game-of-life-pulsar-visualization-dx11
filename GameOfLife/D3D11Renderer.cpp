@@ -56,6 +56,31 @@ D3D11Renderer::~D3D11Renderer() {
 void D3D11Renderer::setScene(Scene* scene) {
     this->scene = scene;
     setupVertexAndIndexBuffers();
+    
+    std::stack<SceneObject*> toVisit;
+    toVisit.push(scene->getRootSceneObject());
+
+    while (!toVisit.empty()) {
+        SceneObject* sceneObject = toVisit.top();
+        toVisit.pop();
+
+        if (sceneObject->getModel() != nullptr) {
+            for (auto const& materialIndexRange : sceneObject->getModel()->getMaterialIndexRanges()) {
+                if (materialIndexRange.material.isTextured()) {
+                    auto textureFilename = materialIndexRange.material.getTextureFileName();
+                    const auto found = textureMap.find(textureFilename);
+                    if (found == textureMap.end()) {
+                        textureMap.insert(std::make_pair(textureFilename, std::make_unique<Texture>(Texture(device.Get(), textureFilename))));
+                    }
+                }
+            }
+        }
+
+        auto children = sceneObject->getChildren();
+        for (auto child : children) {
+            toVisit.push(child);
+        }
+    }
 }
 
 void D3D11Renderer::setCamera(Camera* camera) {
@@ -89,10 +114,20 @@ void D3D11Renderer::renderFrame() {
             if (sceneObject->isVisible()) {
                 lightShader.updateTransformationMatricesBuffer(deviceContext.Get(), *sceneObject->getWorldMatrix(), viewMatrix, projectionMatrix);
 
-                for (auto const& materialIndexRanges : sceneObject->getModel()->getMaterialIndexRanges()) {
-                    lightShader.updateMaterialBuffer(deviceContext.Get(), materialIndexRanges.material.getAmbientColor(), materialIndexRanges.material.getDiffuseColor(), materialIndexRanges.material.getSpecularColor());
+                for (auto const& materialIndexRange : sceneObject->getModel()->getMaterialIndexRanges()) {
+                    bool isTextured = false;
+                    if (materialIndexRange.material.isTextured()) {
+                        isTextured = true;
+                        lightShader.updateTexture(deviceContext.Get(), textureMap.find(materialIndexRange.material.getTextureFileName())->second.get());
+                    }
 
-                    const auto indicesToDrawCount = (materialIndexRanges.endInclusive + 1) - materialIndexRanges.startInclusive;
+                    lightShader.updateMaterialBuffer(deviceContext.Get(),
+                                                     materialIndexRange.material.getAmbientColor(),
+                                                     materialIndexRange.material.getDiffuseColor(),
+                                                     materialIndexRange.material.getSpecularColor(),
+                                                     isTextured);
+
+                    const auto indicesToDrawCount = (materialIndexRange.endInclusive + 1) - materialIndexRange.startInclusive;
                     deviceContext->DrawIndexed(indicesToDrawCount, indexStartLocation, vertexStartLocation);
 
                     indexStartLocation = indexStartLocation + indicesToDrawCount;

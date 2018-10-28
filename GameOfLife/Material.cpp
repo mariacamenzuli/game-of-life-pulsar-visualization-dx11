@@ -1,9 +1,20 @@
 #include "Material.h"
 
-Material::Material() {
+Material::Material(D3DXVECTOR4 ambientColor,
+                   D3DXVECTOR4 diffuseColor,
+                   D3DXVECTOR4 specularColor) : ambientColor(ambientColor),
+                                                diffuseColor(diffuseColor),
+                                                specularColor(specularColor),
+                                                textureFileName("") {
 }
 
-Material::Material(D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor, D3DXVECTOR4 specularColor): ambientColor(ambientColor), diffuseColor(diffuseColor), specularColor(specularColor) {
+Material::Material(D3DXVECTOR4 ambientColor,
+                   D3DXVECTOR4 diffuseColor,
+                   D3DXVECTOR4 specularColor,
+                   std::string textureFileName) : ambientColor(ambientColor),
+                                                  diffuseColor(diffuseColor),
+                                                  specularColor(specularColor),
+                                                  textureFileName(textureFileName) {
 }
 
 Material::~Material() = default;
@@ -20,14 +31,10 @@ D3DXVECTOR4 Material::getSpecularColor() const {
     return specularColor;
 }
 
-void Material::setAmbientColor(D3DXVECTOR4 ambientColor) {
-    this->ambientColor = ambientColor;
+std::string Material::getTextureFileName() const {
+    return textureFileName;
 }
 
-void Material::setDiffuseColor(D3DXVECTOR4 diffuseColor) {
-    this->diffuseColor = diffuseColor;
-}
-
-void Material::setSpecularColor(D3DXVECTOR4 specularColor) {
-    this->specularColor = specularColor;
+bool Material::isTextured() const {
+    return textureFileName != "";
 }

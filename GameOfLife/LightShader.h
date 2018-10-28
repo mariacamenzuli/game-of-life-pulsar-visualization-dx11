@@ -5,6 +5,7 @@
 #include <wrl/client.h>
 
 #include "PointLight.h"
+#include "Texture.h"
 
 class LightShader {
 public:
@@ -19,7 +20,8 @@ public:
     void updateCameraBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR3 cameraPosition);
     void updateAmbientLightBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR4 ambientLightColor);
     void updatePointLightBuffer(ID3D11DeviceContext* deviceContext,  D3DXVECTOR4 diffuse, D3DXVECTOR4 specular, D3DXMATRIX worldMatrix);
-    void updateMaterialBuffer(ID3D11DeviceContext* deviceContext,D3DXVECTOR4 materialAmbientColor, D3DXVECTOR4 materialDiffuseColor, D3DXVECTOR4 materialSpecularColor);
+    void updateMaterialBuffer(ID3D11DeviceContext* deviceContext,D3DXVECTOR4 materialAmbientColor, D3DXVECTOR4 materialDiffuseColor, D3DXVECTOR4 materialSpecularColor, bool isTextured);
+    void updateTexture(ID3D11DeviceContext* deviceContext, Texture* texture);
 
 private:
     struct TransformationMatricesBuffer {
@@ -46,6 +48,8 @@ private:
         D3DXVECTOR4 materialAmbientColor;
         D3DXVECTOR4 materialDiffuseColor;
         D3DXVECTOR4 materialSpecularColor;
+        int materialIsTextured = -1;
+        D3DXVECTOR3 padding;
     };
 
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;
@@ -56,6 +60,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> ambientLightBuffer;
     Microsoft::WRL::ComPtr<ID3D11Buffer> pointLightBuffer;
     Microsoft::WRL::ComPtr<ID3D11Buffer> materialBuffer;
+    Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 
     void setupVertexShader(ID3D11Device* device);
     void setupPixelShader(ID3D11Device* device);
