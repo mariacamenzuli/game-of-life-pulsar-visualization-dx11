@@ -7,26 +7,25 @@ GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 
 
     const auto worldBoardModel = modelLoader.getModel(ModelLoader::ModelId::WORLD_BOARD);
     auto worldBoard = world->attachChild(std::make_unique<SceneObject>(worldBoardModel), "world_board");
-    worldBoard->scale(30.0f, 1.0f, 30.0f);
+    worldBoard->scale(40.0f, 1.0f, 40.0f);
     worldBoard->translate(0.0f, -2.0f, 0.0f);
 
     auto trees = world->attachChild(std::make_unique<SceneObject>(), "trees");
     const auto treeModel = modelLoader.getModel(ModelLoader::ModelId::TREE);
-    auto tree1 = trees->attachChild(std::make_unique<SceneObject>(treeModel), "tree1");
+    auto tree1 = trees->attachChild(std::make_unique<SceneObject>(treeModel));
     tree1->scale(6.0f, 6.0f, 6.0f);
-    tree1->translate(20.0f, 10.0f, 20.0f);
-    auto tree2 = trees->attachChild(std::make_unique<SceneObject>(treeModel), "tree2");
-    tree2->scale(3.0f, 3.0f, 3.0f);
-    tree2->translate(10.0f, 5.0f, 20.5f);
+    tree1->translate(0.0f, 10.0f, 0.0f);
 
-    const auto cellCubeModel = modelLoader.getModel(ModelLoader::ModelId::CELL_CUBE);
-    auto cellCubes = world->attachChild(std::make_unique<SceneObject>(), "cell_cubes");
+    const auto cellModel = modelLoader.getModel(ModelLoader::ModelId::BUSH);
+    auto cellCubes = world->attachChild(std::make_unique<SceneObject>(), "cells");
     for (int i = 0; i < 17; i++) {
         for (int j = 0; j < 17; j++) {
-            auto cellCube = cellCubes->attachChild(std::make_unique<SceneObject>(cellCubeModel));
-            cells[i][j] = { CellState::DEAD, cellCube };
+            auto cellBush = cellCubes->attachChild(std::make_unique<SceneObject>(cellModel));
+            cells[i][j] = { CellState::DEAD, cellBush };
             cells[i][j].kill();
-            cellCube->translate((i * 2) - 16.0f, 0.0f, (j * 2) - 16.0f);
+            cellBush->rotateY(i + j / 10);
+            cellBush->scale(0.04f, 0.04f, 0.04f);
+            cellBush->translate((i * 4.5) - 36.0f, 0.0f, (j * 4.5) - 36.0f);
         }
     }
 
@@ -123,7 +122,7 @@ void GameOfLifeSimulator::update(float deltaTime) {
     std::vector<Cell*> toKill;
     std::vector<Cell*> toSpawn;
 
-    if (updateCount % 50 == 0) {
+    if (updateCount % 150 == 0) {
         for (int i = 0; i < 17; i++) {
             for (int j = 0; j < 17; j++) {
                 int liveNeighbors = 0;

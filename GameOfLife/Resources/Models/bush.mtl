@@ -1,0 +1,27 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.1.187496374)
+
+newmtl Stick
+Kd 0.125947 0.0801828 0.00781129
+Ka 0.125947 0.0801828 0.00781129
+Ks 0.25 0.25 0.25
+Ke 0 0 0
+Ns 9.60784
+illum 2
+
+newmtl Bush
+Kd 0.029850 0.506291 0.017666
+Ka 0.0229594 0.125947 0.011976
+Ks 0.25 0.25 0.25
+Ke 0 0 0
+Ns 9.60784
+illum 2
+
+newmtl Flowers
+Kd 0.64 0.0700081 0.03597
+Ka 0.64 0.0700081 0.03597
+Ks 0.25 0.25 0.25
+Ke 0 0 0
+Ns 9.60784
+illum 2
+
