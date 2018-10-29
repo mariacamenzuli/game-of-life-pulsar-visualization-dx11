@@ -35,9 +35,9 @@ void LightShader::updateTransformationMatricesBuffer(ID3D11DeviceContext* device
     auto transformationMatrixData = static_cast<TransformationMatricesBuffer*>(mappedResource.pData);
 
     // Copy the matrices into the constant buffer.
-    transformationMatrixData->world = worldMatrix;
-    transformationMatrixData->view = viewMatrix;
-    transformationMatrixData->projection = projectionMatrix;
+    transformationMatrixData->objectWorldMatrix = worldMatrix;
+    transformationMatrixData->cameraViewMatrix = viewMatrix;
+    transformationMatrixData->cameraProjectionMatrix = projectionMatrix;
 
     // Unlock the constant buffer.
     deviceContext->Unmap(transformationMatricesBuffer.Get(), 0);

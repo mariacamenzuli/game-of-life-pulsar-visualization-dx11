@@ -93,7 +93,7 @@ GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 
 
     const auto sunModel = modelLoader.getModel(ModelLoader::ModelId::SUN);
     auto sun = rootSceneObject->attachChild(std::make_unique<SceneObject>(sunModel), "sun");
-    sun->translate(0.0f, 0.0f, 100.0f);
+    sun->translate(0.0f, 0.0f, 150.0f);
 
     pointLight.translate(0.0f, 0.0f, 75.0f);
 }
@@ -117,8 +117,8 @@ void GameOfLifeSimulator::update(float deltaTime) {
 
     rootSceneObject->getChild("world")->rotateY(0.01f * deltaTime);
 
-    rootSceneObject->getChild("sun")->rotateX(-0.6f * deltaTime);
-    pointLight.rotateX(-0.6f * deltaTime);
+    rootSceneObject->getChild("sun")->rotateX(-0.3f * deltaTime);
+    pointLight.rotateX(-0.3f * deltaTime);
 
     std::vector<Cell*> toKill;
     std::vector<Cell*> toSpawn;

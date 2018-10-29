@@ -1,8 +1,8 @@
 // Global Variables
 cbuffer TransformationMatricesBuffer {
-    float4x4 worldMatrix;
-    float4x4 viewMatrix;
-    float4x4 projectionMatrix;
+    float4x4 objectWorldMatrix;
+    float4x4 cameraViewMatrix;
+    float4x4 cameraProjectionMatrix;
 };
 
 cbuffer CameraBuffer {
@@ -33,15 +33,15 @@ PixelDescriptor transformToScreenSpace(VertexDescriptor vertex) {
     vertex.position.w = 1.0f;
 
     // Calculate the screen space position of the vertex against the world, view, and projection matrices
-    pixel.worldSpacePosition = mul(vertex.position, worldMatrix);
-    pixel.screenSpacePosition = mul(pixel.worldSpacePosition, viewMatrix);
-    pixel.screenSpacePosition = mul(pixel.screenSpacePosition, projectionMatrix);
+    pixel.worldSpacePosition = mul(vertex.position, objectWorldMatrix);
+    pixel.screenSpacePosition = mul(pixel.worldSpacePosition, cameraViewMatrix);
+    pixel.screenSpacePosition = mul(pixel.screenSpacePosition, cameraProjectionMatrix);
 
     // Store the texture coordinates for the pixel shader.
     pixel.tex = vertex.tex;
 
     // Calculate the normal vector against the world matrix only
-    pixel.normal = mul(vertex.normal, (float3x3) worldMatrix);
+    pixel.normal = mul(vertex.normal, (float3x3) objectWorldMatrix);
 
     // Normalize the normal vector.
     pixel.normal = normalize(pixel.normal);

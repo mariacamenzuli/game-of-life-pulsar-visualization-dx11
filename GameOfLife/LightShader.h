@@ -25,9 +25,9 @@ public:
 
 private:
     struct TransformationMatricesBuffer {
-        D3DXMATRIX world;
-        D3DXMATRIX view;
-        D3DXMATRIX projection;
+        D3DXMATRIX objectWorldMatrix;
+        D3DXMATRIX cameraViewMatrix;
+        D3DXMATRIX cameraProjectionMatrix;
     };
 
     struct CameraBuffer {
