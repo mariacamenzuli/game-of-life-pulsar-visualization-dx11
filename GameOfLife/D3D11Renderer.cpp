@@ -44,6 +44,11 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle,
     D3DXMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
 
     lightShader.initialize(device.Get(), deviceContext.Get());
+    depthShader.initialize(device.Get(), deviceContext.Get());
+
+    const int shadowMapWidth = 1024;
+    const int shadowMapHeight = 1024;
+    shadowMap.initialize(device.Get(), shadowMapWidth, shadowMapHeight);
 }
 
 D3D11Renderer::~D3D11Renderer() {
@@ -88,17 +93,26 @@ void D3D11Renderer::setCamera(Camera* camera) {
 }
 
 void D3D11Renderer::renderFrame() {
-    float backBufferStartingColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    deviceContext->ClearRenderTargetView(renderTargetView.Get(), backBufferStartingColor);
-    deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
     camera->calculateViewMatrix();
     D3DXMATRIX viewMatrix;
     camera->getViewMatrix(viewMatrix);
 
+    D3DXMATRIX pointLightViewMatrix;
+    scene->getPointLight()->getViewMatrix(pointLightViewMatrix);
+    D3DXMATRIX pointLightProjectionMatrix;
+    scene->getPointLight()->getProjectionMatrix(pointLightProjectionMatrix, screenDepth, screenNear);
+
     lightShader.updateCameraBuffer(deviceContext.Get(), camera->getPosition());
     lightShader.updateAmbientLightBuffer(deviceContext.Get(), scene->getAmbientLight());
     lightShader.updatePointLightBuffer(deviceContext.Get(), scene->getPointLight()->getDiffuse(), scene->getPointLight()->getSpecular(), *scene->getPointLight()->getWorldMatrix());
+
+    depthShader.setActive(deviceContext.Get());
+    shadowMap.setAsRenderTargetAndClear(deviceContext.Get());
+    renderShadowMap(&shadowMap, pointLightViewMatrix, pointLightProjectionMatrix);
+    setBackbufferAsRenderTargetAndClear();
+
+    lightShader.setActive(deviceContext.Get());
+    lightShader.updateDepthMapTexture(deviceContext.Get(), &shadowMap);
 
     int indexStartLocation = 0;
     int vertexStartLocation = 0;
@@ -112,7 +126,12 @@ void D3D11Renderer::renderFrame() {
 
         if (sceneObject->getModel() != nullptr) {
             if (sceneObject->isVisible()) {
-                lightShader.updateTransformationMatricesBuffer(deviceContext.Get(), *sceneObject->getWorldMatrix(), viewMatrix, projectionMatrix);
+                lightShader.updateTransformationMatricesBuffer(deviceContext.Get(),
+                                                               *sceneObject->getWorldMatrix(),
+                                                               viewMatrix,
+                                                               projectionMatrix,
+                                                               pointLightViewMatrix,
+                                                               pointLightProjectionMatrix);
 
                 for (auto const& materialIndexRange : sceneObject->getModel()->getMaterialIndexRanges()) {
                     bool isTextured = false;
@@ -375,14 +394,12 @@ void D3D11Renderer::createRasterizerState() {
 }
 
 void D3D11Renderer::setupViewport() {
-    D3D11_VIEWPORT viewport;
     viewport.Width = static_cast<float>(screenWidth);
     viewport.Height = static_cast<float>(screenHeight);
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     viewport.TopLeftX = 0.0f;
     viewport.TopLeftY = 0.0f;
-    deviceContext->RSSetViewports(1, &viewport);
 }
 
 void D3D11Renderer::setupVertexAndIndexBuffers() {
@@ -442,6 +459,47 @@ void D3D11Renderer::setupVertexAndIndexBuffers() {
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void D3D11Renderer::renderShadowMap(RenderTargetTexture* targetTexture, D3DXMATRIX pointLightViewMatrix, D3DXMATRIX pointLightProjectionMatrix) {
+    int indexStartLocation = 0;
+    int vertexStartLocation = 0;
+    
+    std::stack<SceneObject*> toVisit;
+    toVisit.push(scene->getRootSceneObject());
+    
+    while (!toVisit.empty()) {
+        SceneObject* sceneObject = toVisit.top();
+        toVisit.pop();
+    
+        if (sceneObject->getModel() != nullptr) {
+            if (sceneObject->isVisible()) {
+                depthShader.updateTransformationMatricesBuffer(deviceContext.Get(),
+                                                               *sceneObject->getWorldMatrix(),
+                                                               pointLightViewMatrix,
+                                                               pointLightProjectionMatrix);
+    
+                deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
+            }
+    
+            indexStartLocation = indexStartLocation + sceneObject->getModel()->getIndexCount();
+            vertexStartLocation = vertexStartLocation + sceneObject->getModel()->getVertexCount();
+        }
+    
+        auto children = sceneObject->getChildren();
+        for (auto child : children) {
+            toVisit.push(child);
+        }
+    }
+}
+
+void D3D11Renderer::setBackbufferAsRenderTargetAndClear() {
+    deviceContext->OMSetRenderTargets(1, renderTargetView.GetAddressOf(), depthStencilView.Get());
+    deviceContext->RSSetViewports(1, &viewport);
+
+    float backBufferStartingColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    deviceContext->ClearRenderTargetView(renderTargetView.Get(), backBufferStartingColor);
+    deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 std::vector<Model::Vertex> D3D11Renderer::getAllVertices(Scene* scene) {

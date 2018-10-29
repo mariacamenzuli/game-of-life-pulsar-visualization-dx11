@@ -6,6 +6,7 @@
 
 #include "PointLight.h"
 #include "Texture.h"
+#include "RenderTargetTexture.h"
 
 class LightShader {
 public:
@@ -13,21 +14,27 @@ public:
     ~LightShader();
 
     void initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+    void setActive(ID3D11DeviceContext* deviceContext);
     void updateTransformationMatricesBuffer(ID3D11DeviceContext* deviceContext,
-                                            D3DXMATRIX worldMatrix,
-                                            D3DXMATRIX viewMatrix,
-                                            D3DXMATRIX projectionMatrix);
+                                            D3DXMATRIX objectWorldMatrix,
+                                            D3DXMATRIX cameraViewMatrix,
+                                            D3DXMATRIX cameraProjectionMatrix,
+                                            D3DXMATRIX pointLightViewMatrix,
+                                            D3DXMATRIX pointLightProjectionMatrix);
     void updateCameraBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR3 cameraPosition);
     void updateAmbientLightBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR4 ambientLightColor);
     void updatePointLightBuffer(ID3D11DeviceContext* deviceContext,  D3DXVECTOR4 diffuse, D3DXVECTOR4 specular, D3DXMATRIX worldMatrix);
     void updateMaterialBuffer(ID3D11DeviceContext* deviceContext,D3DXVECTOR4 materialAmbientColor, D3DXVECTOR4 materialDiffuseColor, D3DXVECTOR4 materialSpecularColor, bool isTextured);
     void updateTexture(ID3D11DeviceContext* deviceContext, Texture* texture);
+    void updateDepthMapTexture(ID3D11DeviceContext* deviceContext, RenderTargetTexture* depthMapTexture);
 
 private:
     struct TransformationMatricesBuffer {
         D3DXMATRIX objectWorldMatrix;
         D3DXMATRIX cameraViewMatrix;
         D3DXMATRIX cameraProjectionMatrix;
+        D3DXMATRIX pointLightViewMatrix;
+        D3DXMATRIX pointLightProjectionMatrix;
     };
 
     struct CameraBuffer {
@@ -60,7 +67,8 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> ambientLightBuffer;
     Microsoft::WRL::ComPtr<ID3D11Buffer> pointLightBuffer;
     Microsoft::WRL::ComPtr<ID3D11Buffer> materialBuffer;
-    Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
+    Microsoft::WRL::ComPtr<ID3D11SamplerState> materialTextureSampler;
+    Microsoft::WRL::ComPtr<ID3D11SamplerState> depthMapTextureSampler;
 
     void setupVertexShader(ID3D11Device* device);
     void setupPixelShader(ID3D11Device* device);

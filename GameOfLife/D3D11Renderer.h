@@ -16,6 +16,8 @@
 #include "Camera.h"
 #include "LightShader.h"
 #include "Texture.h"
+#include "RenderTargetTexture.h"
+#include "DepthShader.h"
 
 class D3D11Renderer {
 public:
@@ -64,12 +66,15 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
     Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterState;
+    D3D11_VIEWPORT viewport;
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
     Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
 
     D3DXMATRIX projectionMatrix;
     LightShader lightShader;
+    DepthShader depthShader;
+    RenderTargetTexture shadowMap;
 
     PhysicalDeviceDescriptor queryPhysicalDeviceDescriptors();
     void createSwapChainAndDevice(HWND windowHandle);
@@ -77,6 +82,8 @@ private:
     void createRasterizerState();
     void setupViewport();
     void setupVertexAndIndexBuffers();
+    void renderShadowMap(RenderTargetTexture* targetTexture, D3DXMATRIX pointLightViewMatrix, D3DXMATRIX pointLightProjectionMatrix);
+    void setBackbufferAsRenderTargetAndClear();
 
     static std::vector<Model::Vertex> getAllVertices(Scene* scene);
     static std::vector<unsigned long> getAllIndices(Scene* scene);

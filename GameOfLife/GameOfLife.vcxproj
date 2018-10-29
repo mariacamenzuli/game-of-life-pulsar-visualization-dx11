@@ -94,6 +94,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeModel.cpp" />
     <ClCompile Include="D3D11Renderer.cpp" />
+    <ClCompile Include="DepthShader.cpp" />
     <ClCompile Include="GameOfLifeSimulator.cpp" />
     <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="GameOfLife.cpp" />
@@ -102,6 +103,7 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ObjModel.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="RenderTargetTexture.cpp" />
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UserInputReader.cpp" />
@@ -112,6 +114,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CubeModel.h" />
     <ClInclude Include="D3D11Renderer.h" />
+    <ClInclude Include="DepthShader.h" />
     <ClInclude Include="FileReader.h" />
     <ClInclude Include="GameOfLifeSimulator.h" />
     <ClInclude Include="LightShader.h" />
@@ -121,6 +124,7 @@
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ObjModel.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="RenderTargetTexture.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="Texture.h" />
@@ -128,6 +132,14 @@
     <ClInclude Include="Win32RenderingWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="depth-pixel.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">calculateDepth</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="depth-vertex.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">transformToScreenSpace</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="light-pixel.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">colorPixel</EntryPointName>

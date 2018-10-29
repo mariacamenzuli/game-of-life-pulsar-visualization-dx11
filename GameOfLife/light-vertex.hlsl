@@ -3,6 +3,8 @@ cbuffer TransformationMatricesBuffer {
     float4x4 objectWorldMatrix;
     float4x4 cameraViewMatrix;
     float4x4 cameraProjectionMatrix;
+    float4x4 pointLightViewMatrix;
+    float4x4 pointLightProjectionMatrix;
 };
 
 cbuffer CameraBuffer {
@@ -24,6 +26,7 @@ struct PixelDescriptor {
     float3 normal : NORMAL;
     float2 tex : TEXCOORD0;
     float3 viewDirection : VIEWDIR;
+    float4 lightViewPosition : TEXCOORD1;
 };
 
 PixelDescriptor transformToScreenSpace(VertexDescriptor vertex) {
@@ -51,6 +54,11 @@ PixelDescriptor transformToScreenSpace(VertexDescriptor vertex) {
 
     // Normalize the viewing direction vector.
     pixel.viewDirection = normalize(pixel.viewDirection);
+
+    // Calculate the position of the vertex as viewed by the light source.
+    pixel.lightViewPosition = mul(vertex.position, objectWorldMatrix);
+    pixel.lightViewPosition = mul(pixel.lightViewPosition, pointLightViewMatrix);
+    pixel.lightViewPosition = mul(pixel.lightViewPosition, pointLightProjectionMatrix);
 
     return pixel;
 }

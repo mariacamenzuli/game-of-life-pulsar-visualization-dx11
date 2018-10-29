@@ -41,3 +41,22 @@ void PointLight::rotateZ(float angleInRadians) {
     D3DXMatrixRotationZ(&rotationMatrix, angleInRadians);
     D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &rotationMatrix);
 }
+
+void PointLight::getViewMatrix(D3DXMATRIX& viewMatrix) {
+    D3DXVECTOR3 up(0.0f, 0.1f, 0.0f);
+    D3DXVECTOR3 position3 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    D3DXVECTOR4 position4;
+    D3DXVec3Transform(&position4, &position3, &worldMatrix);
+    position3.x = position4.x / position4.w;
+    position3.y = position4.y / position4.w;
+    position3.z = position4.z / position4.w;
+    D3DXMatrixLookAtLH(&viewMatrix, &position3, &lookAtPoint, &up);
+}
+
+void PointLight::getProjectionMatrix(D3DXMATRIX& projectionMatrix, float screenDepth, float screenNear) {
+    // Setup field of view and screen aspect for a square light source.
+    float fieldOfView = static_cast<float>(D3DX_PI) / 2.0f;
+    float screenAspect = 1.0f;
+
+    D3DXMatrixPerspectiveFovLH(&projectionMatrix, fieldOfView, screenAspect, screenNear, screenDepth);
+}

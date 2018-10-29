@@ -11,17 +11,26 @@ LightShader::~LightShader() = default;
 void LightShader::initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext) {
     setupVertexShader(device);
     setupPixelShader(device);
+}
 
+void LightShader::setActive(ID3D11DeviceContext* deviceContext) {
     deviceContext->IASetInputLayout(layout.Get());
     deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
     deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
 }
 
-void LightShader::updateTransformationMatricesBuffer(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projectionMatrix) {
+void LightShader::updateTransformationMatricesBuffer(ID3D11DeviceContext* deviceContext,
+                                                     D3DXMATRIX objectWorldMatrix,
+                                                     D3DXMATRIX cameraViewMatrix,
+                                                     D3DXMATRIX cameraProjectionMatrix,
+                                                     D3DXMATRIX pointLightViewMatrix,
+                                                     D3DXMATRIX pointLightProjectionMatrix) {
     // Transpose the matrices to prepare them for the shader.
-    D3DXMatrixTranspose(&worldMatrix, &worldMatrix);
-    D3DXMatrixTranspose(&viewMatrix, &viewMatrix);
-    D3DXMatrixTranspose(&projectionMatrix, &projectionMatrix);
+    D3DXMatrixTranspose(&objectWorldMatrix, &objectWorldMatrix);
+    D3DXMatrixTranspose(&cameraViewMatrix, &cameraViewMatrix);
+    D3DXMatrixTranspose(&cameraProjectionMatrix, &cameraProjectionMatrix);
+    D3DXMatrixTranspose(&pointLightViewMatrix, &pointLightViewMatrix);
+    D3DXMatrixTranspose(&pointLightProjectionMatrix, &pointLightProjectionMatrix);
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
 
@@ -35,9 +44,11 @@ void LightShader::updateTransformationMatricesBuffer(ID3D11DeviceContext* device
     auto transformationMatrixData = static_cast<TransformationMatricesBuffer*>(mappedResource.pData);
 
     // Copy the matrices into the constant buffer.
-    transformationMatrixData->objectWorldMatrix = worldMatrix;
-    transformationMatrixData->cameraViewMatrix = viewMatrix;
-    transformationMatrixData->cameraProjectionMatrix = projectionMatrix;
+    transformationMatrixData->objectWorldMatrix = objectWorldMatrix;
+    transformationMatrixData->cameraViewMatrix = cameraViewMatrix;
+    transformationMatrixData->cameraProjectionMatrix = cameraProjectionMatrix;
+    transformationMatrixData->pointLightViewMatrix = pointLightViewMatrix;
+    transformationMatrixData->pointLightProjectionMatrix = pointLightProjectionMatrix;
 
     // Unlock the constant buffer.
     deviceContext->Unmap(transformationMatricesBuffer.Get(), 0);
@@ -117,7 +128,12 @@ void LightShader::updateMaterialBuffer(ID3D11DeviceContext* deviceContext, D3DXV
 
 void LightShader::updateTexture(ID3D11DeviceContext* deviceContext, Texture* texture) {
     deviceContext->PSSetShaderResources(0, 1, texture->getTextureResource());
-    deviceContext->PSSetSamplers(0, 1, samplerState.GetAddressOf());
+    deviceContext->PSSetSamplers(0, 1, materialTextureSampler.GetAddressOf());
+}
+
+void LightShader::updateDepthMapTexture(ID3D11DeviceContext* deviceContext, RenderTargetTexture* depthMapTexture) {
+    deviceContext->PSSetShaderResources(1, 1, depthMapTexture->getTextureResource());
+    deviceContext->PSSetSamplers(1, 1, depthMapTextureSampler.GetAddressOf());
 }
 
 void LightShader::setupVertexShader(ID3D11Device* device) {
@@ -244,23 +260,43 @@ void LightShader::setupPixelShader(ID3D11Device* device) {
         throw std::runtime_error("Failed to create light shader. Creation of material constant buffer failed.");
     }
 
-    D3D11_SAMPLER_DESC samplerDesc;
-    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-    samplerDesc.MipLODBias = 0.0f;
-    samplerDesc.MaxAnisotropy = 1;
-    samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-    samplerDesc.BorderColor[0] = 0;
-    samplerDesc.BorderColor[1] = 0;
-    samplerDesc.BorderColor[2] = 0;
-    samplerDesc.BorderColor[3] = 0;
-    samplerDesc.MinLOD = 0;
-    samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+    D3D11_SAMPLER_DESC materialSamplerDesc;
+    materialSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    materialSamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    materialSamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    materialSamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    materialSamplerDesc.MipLODBias = 0.0f;
+    materialSamplerDesc.MaxAnisotropy = 1;
+    materialSamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    materialSamplerDesc.BorderColor[0] = 0;
+    materialSamplerDesc.BorderColor[1] = 0;
+    materialSamplerDesc.BorderColor[2] = 0;
+    materialSamplerDesc.BorderColor[3] = 0;
+    materialSamplerDesc.MinLOD = 0;
+    materialSamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-    result = device->CreateSamplerState(&samplerDesc, samplerState.GetAddressOf());
+    result = device->CreateSamplerState(&materialSamplerDesc, materialTextureSampler.GetAddressOf());
     if (FAILED(result)) {
         throw std::runtime_error("Failed to create light shader. Creation of texture sample state failed.");
+    }
+
+    D3D11_SAMPLER_DESC depthMapSamplerDesc;
+    depthMapSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    depthMapSamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    depthMapSamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    depthMapSamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    depthMapSamplerDesc.MipLODBias = 0.0f;
+    depthMapSamplerDesc.MaxAnisotropy = 1;
+    depthMapSamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    depthMapSamplerDesc.BorderColor[0] = 0;
+    depthMapSamplerDesc.BorderColor[1] = 0;
+    depthMapSamplerDesc.BorderColor[2] = 0;
+    depthMapSamplerDesc.BorderColor[3] = 0;
+    depthMapSamplerDesc.MinLOD = 0;
+    depthMapSamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    result = device->CreateSamplerState(&depthMapSamplerDesc, depthMapTextureSampler.GetAddressOf());
+    if (FAILED(result)) {
+        throw std::runtime_error("Failed to create light shader. Creation of depth map sample state failed.");
     }
 }
