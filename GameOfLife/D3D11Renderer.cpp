@@ -96,8 +96,7 @@ void D3D11Renderer::renderFrame() {
     D3DXMATRIX viewMatrix;
     camera->getViewMatrix(viewMatrix);
 
-    D3DXMATRIX pointLightProjectionMatrix;
-    scene->getPointLight()->getProjectionMatrix(pointLightProjectionMatrix, screenDepth, screenNear);
+    D3DXMATRIX* pointLightProjectionMatrix = scene->getPointLight()->getProjectionMatrix();
 
     lightShader.updateCameraBuffer(deviceContext.Get(), camera->getPosition());
     lightShader.updateAmbientLightBuffer(deviceContext.Get(), scene->getAmbientLight());
@@ -455,7 +454,7 @@ void D3D11Renderer::setupVertexAndIndexBuffers() {
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void D3D11Renderer::renderShadowMap(D3DXMATRIX pointLightProjectionMatrix) {
+void D3D11Renderer::renderShadowMap(D3DXMATRIX* pointLightProjectionMatrix) {
     shadowMap.clearRenderTarget(deviceContext.Get(), 0);
     shadowMap.clearRenderTarget(deviceContext.Get(), 1);
     shadowMap.clearRenderTarget(deviceContext.Get(), 2);
@@ -481,7 +480,7 @@ void D3D11Renderer::renderShadowMap(D3DXMATRIX pointLightProjectionMatrix) {
                 depthShader.updateTransformationMatricesBuffer(deviceContext.Get(), //todo: extract method
                                                                *sceneObject->getWorldMatrix(),
                                                                pointLightViewMatrix,
-                                                               pointLightProjectionMatrix);
+                                                               *pointLightProjectionMatrix);
                 deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
                 
                 scene->getPointLight()->getViewMatrixNegativeX(pointLightViewMatrix);
@@ -489,7 +488,7 @@ void D3D11Renderer::renderShadowMap(D3DXMATRIX pointLightProjectionMatrix) {
                 depthShader.updateTransformationMatricesBuffer(deviceContext.Get(),
                                                                *sceneObject->getWorldMatrix(),
                                                                pointLightViewMatrix,
-                                                               pointLightProjectionMatrix);
+                                                               *pointLightProjectionMatrix);
                 deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
                 
                 scene->getPointLight()->getViewMatrixPositiveY(pointLightViewMatrix);
@@ -497,7 +496,7 @@ void D3D11Renderer::renderShadowMap(D3DXMATRIX pointLightProjectionMatrix) {
                 depthShader.updateTransformationMatricesBuffer(deviceContext.Get(),
                                                                *sceneObject->getWorldMatrix(),
                                                                pointLightViewMatrix,
-                                                               pointLightProjectionMatrix);
+                                                               *pointLightProjectionMatrix);
                 deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
 
                 scene->getPointLight()->getViewMatrixNegativeY(pointLightViewMatrix);
@@ -505,7 +504,7 @@ void D3D11Renderer::renderShadowMap(D3DXMATRIX pointLightProjectionMatrix) {
                 depthShader.updateTransformationMatricesBuffer(deviceContext.Get(),
                                                                *sceneObject->getWorldMatrix(),
                                                                pointLightViewMatrix,
-                                                               pointLightProjectionMatrix);
+                                                               *pointLightProjectionMatrix);
                 deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
 
                 scene->getPointLight()->getViewMatrixPositiveZ(pointLightViewMatrix);
@@ -513,7 +512,7 @@ void D3D11Renderer::renderShadowMap(D3DXMATRIX pointLightProjectionMatrix) {
                 depthShader.updateTransformationMatricesBuffer(deviceContext.Get(),
                                                                *sceneObject->getWorldMatrix(),
                                                                pointLightViewMatrix,
-                                                               pointLightProjectionMatrix);
+                                                               *pointLightProjectionMatrix);
                 deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
                 
                 scene->getPointLight()->getViewMatrixNegativeZ(pointLightViewMatrix);
@@ -521,7 +520,7 @@ void D3D11Renderer::renderShadowMap(D3DXMATRIX pointLightProjectionMatrix) {
                 depthShader.updateTransformationMatricesBuffer(deviceContext.Get(),
                                                                *sceneObject->getWorldMatrix(),
                                                                pointLightViewMatrix,
-                                                               pointLightProjectionMatrix);
+                                                               *pointLightProjectionMatrix);
                 deviceContext->DrawIndexed(sceneObject->getModel()->getIndexCount(), indexStartLocation, vertexStartLocation);
             }
     

@@ -10,6 +10,7 @@ public:
     D3DXVECTOR4 getDiffuse();
     D3DXVECTOR4 getSpecular();
     D3DXMATRIX* getWorldMatrix();
+    D3DXMATRIX* getProjectionMatrix();
 
     void translate(float x, float y, float z);
     void rotateX(float angleInRadians);
@@ -22,10 +23,10 @@ public:
     void getViewMatrixPositiveX(D3DXMATRIX& viewMatrix);
     void getViewMatrixNegativeZ(D3DXMATRIX& viewMatrix);
     void getViewMatrixPositiveZ(D3DXMATRIX& viewMatrix);
-    void getProjectionMatrix(D3DXMATRIX& projectionMatrix, float screenDepth, float screenNear);
 
 private:
     D3DXVECTOR4 diffuse;
     D3DXVECTOR4 specular;
     D3DXMATRIX worldMatrix;
+    D3DXMATRIX projectionMatrix;
 };

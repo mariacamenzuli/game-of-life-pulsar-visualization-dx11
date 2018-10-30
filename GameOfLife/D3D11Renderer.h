@@ -82,7 +82,7 @@ private:
     void createRasterizerState();
     void setupViewport();
     void setupVertexAndIndexBuffers();
-    void renderShadowMap(D3DXMATRIX pointLightProjectionMatrix);
+    void renderShadowMap(D3DXMATRIX* pointLightProjectionMatrix);
     void setBackbufferAsRenderTargetAndClear();
 
     static std::vector<Model::Vertex> getAllVertices(Scene* scene);

@@ -43,10 +43,6 @@ float4 sceneAmbience(PixelDescriptor pixel) {
 bool isInPointLightShadow(PixelDescriptor pixel) {
     float3 shadowMapSamplerVector = pixel.worldSpacePosition - pointLightPosition;
 
-    //float shadowMapSamplerVectorLength = length(shadowMapSamplerVector);
-    //shadowMapSamplerVector /= shadowMapSamplerVectorLength;
-    //float3 shadowMapSamplerVector = {0.0f, -1.0f, 0.0f};
-
     // Sample the shadow map depth value from the depth texture using the sampler at the projected texture coordinate location.
     float shadowMapDepthValue = depthMapTexture.Sample(depthMapSampler, shadowMapSamplerVector).r;
 

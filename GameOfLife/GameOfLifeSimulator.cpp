@@ -95,7 +95,7 @@ GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 
     auto sun = rootSceneObject->attachChild(std::make_unique<SceneObject>(sunModel), "sun");
     sun->translate(0.0f, 0.0f, 150.0f);
 
-    pointLight.translate(0.0f, 0.0f, 75.0f);
+    pointLight.translate(0.0f, 0.0f, 100.0f);
 }
 
 GameOfLifeSimulator::~GameOfLifeSimulator() = default;
