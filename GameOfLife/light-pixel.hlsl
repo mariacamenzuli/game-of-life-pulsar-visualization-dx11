@@ -1,5 +1,5 @@
 Texture2D materialTexture : register(t0);
-Texture2D depthMapTexture : register(t1);
+TextureCube depthMapTexture : register(t1);
 
 SamplerState materialSampler : register(s0);
 SamplerState depthMapSampler : register(s1);
@@ -29,7 +29,6 @@ struct PixelDescriptor {
     float3 normal : NORMAL;
     float2 tex : TEXCOORD0;
     float3 viewDirection : VIEWDIR;
-    float4 lightViewPosition : TEXCOORD1;
 };
 
 float4 sceneAmbience(PixelDescriptor pixel) {
@@ -42,32 +41,29 @@ float4 sceneAmbience(PixelDescriptor pixel) {
 }
 
 bool isInPointLightShadow(PixelDescriptor pixel) {
-    // Calculate the projected texture coordinates.
-    float2 projectTexCoord;
-    projectTexCoord.x = pixel.lightViewPosition.x / pixel.lightViewPosition.w / 2.0f + 0.5f;
-    projectTexCoord.y = -pixel.lightViewPosition.y / pixel.lightViewPosition.w / 2.0f + 0.5f;
+    float3 shadowMapSamplerVector = pixel.worldSpacePosition - pointLightPosition;
 
-    // Determine if the projected coordinates are in the 0 to 1 range.  If so then this pixel is in the view of the light.
-    if ((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y)) {
-        // Sample the shadow map depth value from the depth texture using the sampler at the projected texture coordinate location.
-        float shadowMapDepthValue = depthMapTexture.Sample(depthMapSampler, projectTexCoord).r;
+    //float shadowMapSamplerVectorLength = length(shadowMapSamplerVector);
+    //shadowMapSamplerVector /= shadowMapSamplerVectorLength;
+    //float3 shadowMapSamplerVector = {0.0f, -1.0f, 0.0f};
 
-        // Calculate the depth of the light.
-        float pixelDepthValue = pixel.lightViewPosition.z / pixel.lightViewPosition.w;
+    // Sample the shadow map depth value from the depth texture using the sampler at the projected texture coordinate location.
+    float shadowMapDepthValue = depthMapTexture.Sample(depthMapSampler, shadowMapSamplerVector).r;
 
-        // Set the bias value for fixing the floating point precision issues.
-        float bias = 0.000025f;
+    // Calculate the depth of the pixel.
+    //float pixelDepthValue = pixel.lightViewPosition.z / pixel.lightViewPosition.w;
+    float pixelDepthValue = length(shadowMapSamplerVector);
 
-        // Subtract the bias from the lightDepthValue.
-        pixelDepthValue = pixelDepthValue - bias;
+    // Set the bias value for fixing the floating point precision issues.
+    float bias = 0.000025f;
 
-        // Compare the depth of the shadow map value and the depth of the light to determine whether to shadow or to light this pixel.
-        // If the light is in front of the object then light the pixel, if not then shadow this pixel since an object (occluder) is casting a shadow on it.
-        if (pixelDepthValue < shadowMapDepthValue) {
-            return false;
-        } else {
-            return true;
-        }
+    // Subtract the bias from the lightDepthValue.
+    pixelDepthValue = pixelDepthValue - bias;
+
+    // Compare the depth of the shadow map value and the depth of the light to determine whether to shadow or to light this pixel.
+    // If the light is in front of the object then light the pixel, if not then shadow this pixel since an object (occluder) is casting a shadow on it.
+    if (pixelDepthValue < shadowMapDepthValue) {
+        return false;
     } else {
         return true;
     }

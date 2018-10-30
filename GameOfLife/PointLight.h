@@ -16,13 +16,16 @@ public:
     void rotateY(float angleInRadians);
     void rotateZ(float angleInRadians);
 
-    void getViewMatrix(D3DXMATRIX& viewMatrix);
+    void getViewMatrixNegativeY(D3DXMATRIX& viewMatrix);
+    void getViewMatrixPositiveY(D3DXMATRIX& viewMatrix);
+    void getViewMatrixNegativeX(D3DXMATRIX& viewMatrix);
+    void getViewMatrixPositiveX(D3DXMATRIX& viewMatrix);
+    void getViewMatrixNegativeZ(D3DXMATRIX& viewMatrix);
+    void getViewMatrixPositiveZ(D3DXMATRIX& viewMatrix);
     void getProjectionMatrix(D3DXMATRIX& projectionMatrix, float screenDepth, float screenNear);
 
 private:
     D3DXVECTOR4 diffuse;
     D3DXVECTOR4 specular;
     D3DXMATRIX worldMatrix;
-
-    D3DXVECTOR3 lookAtPoint = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 };

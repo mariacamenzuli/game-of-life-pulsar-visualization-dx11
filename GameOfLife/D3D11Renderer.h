@@ -16,7 +16,7 @@
 #include "Camera.h"
 #include "LightShader.h"
 #include "Texture.h"
-#include "RenderTargetTexture.h"
+#include "RenderTargetTextureCube.h"
 #include "DepthShader.h"
 
 class D3D11Renderer {
@@ -74,7 +74,7 @@ private:
     D3DXMATRIX projectionMatrix;
     LightShader lightShader;
     DepthShader depthShader;
-    RenderTargetTexture shadowMap;
+    RenderTargetTextureCube shadowMap;
 
     PhysicalDeviceDescriptor queryPhysicalDeviceDescriptors();
     void createSwapChainAndDevice(HWND windowHandle);
@@ -82,7 +82,7 @@ private:
     void createRasterizerState();
     void setupViewport();
     void setupVertexAndIndexBuffers();
-    void renderShadowMap(RenderTargetTexture* targetTexture, D3DXMATRIX pointLightViewMatrix, D3DXMATRIX pointLightProjectionMatrix);
+    void renderShadowMap(D3DXMATRIX pointLightProjectionMatrix);
     void setBackbufferAsRenderTargetAndClear();
 
     static std::vector<Model::Vertex> getAllVertices(Scene* scene);

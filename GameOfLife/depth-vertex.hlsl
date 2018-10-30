@@ -15,6 +15,7 @@ struct VertexDescriptor {
 struct PixelDescriptor {
     float4 position : SV_POSITION;
     float4 depthPosition : TEXTURE0;
+    float distanceFromPointToCamera : DIST;
 };
 
 PixelDescriptor transformToScreenSpace(VertexDescriptor vertex) {
@@ -26,6 +27,9 @@ PixelDescriptor transformToScreenSpace(VertexDescriptor vertex) {
     // Calculate the position of the vertex against the world, view, and projection matrices.
     pixel.position = mul(vertex.position, worldMatrix);
     pixel.position = mul(pixel.position, viewMatrix);
+
+    pixel.distanceFromPointToCamera = length(pixel.position);
+
     pixel.position = mul(pixel.position, projectionMatrix);
 
     // Store the position value in a second input value for depth value calculations.

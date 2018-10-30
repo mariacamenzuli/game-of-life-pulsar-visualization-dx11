@@ -103,7 +103,7 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ObjModel.cpp" />
     <ClCompile Include="PointLight.cpp" />
-    <ClCompile Include="RenderTargetTexture.cpp" />
+    <ClCompile Include="RenderTargetTextureCube.cpp" />
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UserInputReader.cpp" />
@@ -124,7 +124,7 @@
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ObjModel.h" />
     <ClInclude Include="PointLight.h" />
-    <ClInclude Include="RenderTargetTexture.h" />
+    <ClInclude Include="RenderTargetTextureCube.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="Texture.h" />

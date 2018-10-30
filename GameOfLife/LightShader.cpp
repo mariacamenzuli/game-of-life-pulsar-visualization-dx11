@@ -22,15 +22,11 @@ void LightShader::setActive(ID3D11DeviceContext* deviceContext) {
 void LightShader::updateTransformationMatricesBuffer(ID3D11DeviceContext* deviceContext,
                                                      D3DXMATRIX objectWorldMatrix,
                                                      D3DXMATRIX cameraViewMatrix,
-                                                     D3DXMATRIX cameraProjectionMatrix,
-                                                     D3DXMATRIX pointLightViewMatrix,
-                                                     D3DXMATRIX pointLightProjectionMatrix) {
+                                                     D3DXMATRIX cameraProjectionMatrix) {
     // Transpose the matrices to prepare them for the shader.
     D3DXMatrixTranspose(&objectWorldMatrix, &objectWorldMatrix);
     D3DXMatrixTranspose(&cameraViewMatrix, &cameraViewMatrix);
     D3DXMatrixTranspose(&cameraProjectionMatrix, &cameraProjectionMatrix);
-    D3DXMatrixTranspose(&pointLightViewMatrix, &pointLightViewMatrix);
-    D3DXMatrixTranspose(&pointLightProjectionMatrix, &pointLightProjectionMatrix);
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
 
@@ -47,8 +43,6 @@ void LightShader::updateTransformationMatricesBuffer(ID3D11DeviceContext* device
     transformationMatrixData->objectWorldMatrix = objectWorldMatrix;
     transformationMatrixData->cameraViewMatrix = cameraViewMatrix;
     transformationMatrixData->cameraProjectionMatrix = cameraProjectionMatrix;
-    transformationMatrixData->pointLightViewMatrix = pointLightViewMatrix;
-    transformationMatrixData->pointLightProjectionMatrix = pointLightProjectionMatrix;
 
     // Unlock the constant buffer.
     deviceContext->Unmap(transformationMatricesBuffer.Get(), 0);
@@ -131,7 +125,7 @@ void LightShader::updateTexture(ID3D11DeviceContext* deviceContext, Texture* tex
     deviceContext->PSSetSamplers(0, 1, materialTextureSampler.GetAddressOf());
 }
 
-void LightShader::updateDepthMapTexture(ID3D11DeviceContext* deviceContext, RenderTargetTexture* depthMapTexture) {
+void LightShader::updateDepthMapTexture(ID3D11DeviceContext* deviceContext, RenderTargetTextureCube* depthMapTexture) {
     deviceContext->PSSetShaderResources(1, 1, depthMapTexture->getTextureResource());
     deviceContext->PSSetSamplers(1, 1, depthMapTextureSampler.GetAddressOf());
 }
@@ -281,13 +275,13 @@ void LightShader::setupPixelShader(ID3D11Device* device) {
     }
 
     D3D11_SAMPLER_DESC depthMapSamplerDesc;
-    depthMapSamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    depthMapSamplerDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
     depthMapSamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
     depthMapSamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
     depthMapSamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
     depthMapSamplerDesc.MipLODBias = 0.0f;
     depthMapSamplerDesc.MaxAnisotropy = 1;
-    depthMapSamplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    depthMapSamplerDesc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
     depthMapSamplerDesc.BorderColor[0] = 0;
     depthMapSamplerDesc.BorderColor[1] = 0;
     depthMapSamplerDesc.BorderColor[2] = 0;

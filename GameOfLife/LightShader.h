@@ -6,7 +6,7 @@
 
 #include "PointLight.h"
 #include "Texture.h"
-#include "RenderTargetTexture.h"
+#include "RenderTargetTextureCube.h"
 
 class LightShader {
 public:
@@ -18,23 +18,19 @@ public:
     void updateTransformationMatricesBuffer(ID3D11DeviceContext* deviceContext,
                                             D3DXMATRIX objectWorldMatrix,
                                             D3DXMATRIX cameraViewMatrix,
-                                            D3DXMATRIX cameraProjectionMatrix,
-                                            D3DXMATRIX pointLightViewMatrix,
-                                            D3DXMATRIX pointLightProjectionMatrix);
+                                            D3DXMATRIX cameraProjectionMatrix);
     void updateCameraBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR3 cameraPosition);
     void updateAmbientLightBuffer(ID3D11DeviceContext* deviceContext, D3DXVECTOR4 ambientLightColor);
     void updatePointLightBuffer(ID3D11DeviceContext* deviceContext,  D3DXVECTOR4 diffuse, D3DXVECTOR4 specular, D3DXMATRIX worldMatrix);
     void updateMaterialBuffer(ID3D11DeviceContext* deviceContext,D3DXVECTOR4 materialAmbientColor, D3DXVECTOR4 materialDiffuseColor, D3DXVECTOR4 materialSpecularColor, bool isTextured);
     void updateTexture(ID3D11DeviceContext* deviceContext, Texture* texture);
-    void updateDepthMapTexture(ID3D11DeviceContext* deviceContext, RenderTargetTexture* depthMapTexture);
+    void updateDepthMapTexture(ID3D11DeviceContext* deviceContext, RenderTargetTextureCube* depthMapTexture);
 
 private:
     struct TransformationMatricesBuffer {
         D3DXMATRIX objectWorldMatrix;
         D3DXMATRIX cameraViewMatrix;
         D3DXMATRIX cameraProjectionMatrix;
-        D3DXMATRIX pointLightViewMatrix;
-        D3DXMATRIX pointLightProjectionMatrix;
     };
 
     struct CameraBuffer {
