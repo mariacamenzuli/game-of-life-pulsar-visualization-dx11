@@ -31,16 +31,6 @@ ApplicationConfig::ApplicationConfig() {
                 continue;
             }
 
-            if (key == "screen_height") {
-                screenHeight = std::stoi(value);
-                continue;
-            }
-
-            if (key == "screen_width") {
-                screenWidth = std::stoi(value);
-                continue;
-            }
-
             if (key == "vsync_enabled") {
                 vsyncEnabled = readBoolean(value);
                 continue;
@@ -55,6 +45,11 @@ ApplicationConfig::ApplicationConfig() {
                 screenNear = std::stof(value);
                 continue;
             }
+
+            if (key == "shadowmap_size") {
+                shadowMapSize = std::stoi(value);
+                continue;
+            }
         }
     }
 }
@@ -63,14 +58,6 @@ ApplicationConfig::~ApplicationConfig() = default;
 
 bool ApplicationConfig::isFullscreenEnabled() {
     return fullscreenEnabled;
-}
-
-int ApplicationConfig::getScreenHeight() {
-    return screenHeight;
-}
-
-int ApplicationConfig::getScreenWidth() {
-    return screenWidth;
 }
 
 bool ApplicationConfig::isVsyncEnabled() {
@@ -83,6 +70,10 @@ float ApplicationConfig::getScreenDepth() {
 
 float ApplicationConfig::getScreenNear() {
     return screenNear;
+}
+
+int ApplicationConfig::getShadowMapSize() {
+    return shadowMapSize;
 }
 
 bool ApplicationConfig::readBoolean(const std::string& property) {

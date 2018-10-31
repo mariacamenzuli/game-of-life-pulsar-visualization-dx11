@@ -9,12 +9,13 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle,
                              float screenNear,
                              float screenDepth,
                              const int screenWidth,
-                             const int screenHeight) : screenWidth(screenWidth),
-                                                       screenHeight(screenHeight),
-                                                       fullscreenEnabled(fullscreenEnabled),
-                                                       vsyncEnabled(vsyncEnabled),
-                                                       screenNear(screenNear),
-                                                       screenDepth(screenDepth) {
+                             const int screenHeight,
+                             const int shadowMapSize) : screenWidth(screenWidth),
+                                                        screenHeight(screenHeight),
+                                                        fullscreenEnabled(fullscreenEnabled),
+                                                        vsyncEnabled(vsyncEnabled),
+                                                        screenNear(screenNear),
+                                                        screenDepth(screenDepth) {
     hardwareInfo = queryPhysicalDeviceDescriptors();
     createSwapChainAndDevice(windowHandle);
 
@@ -46,7 +47,6 @@ D3D11Renderer::D3D11Renderer(HWND windowHandle,
     lightShader.initialize(device.Get(), deviceContext.Get());
     depthShader.initialize(device.Get(), deviceContext.Get());
 
-    const int shadowMapSize = 400;
     shadowMap.initialize(device.Get(), shadowMapSize);
 }
 

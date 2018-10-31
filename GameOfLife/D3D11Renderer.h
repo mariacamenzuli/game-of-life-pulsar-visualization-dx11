@@ -21,7 +21,14 @@
 
 class D3D11Renderer {
 public:
-    D3D11Renderer(HWND windowHandle, bool fullscreenEnabled, bool vsyncEnabled, float screenNear, float screenDepth, const int screenWidth, const int screenHeight);
+    D3D11Renderer(HWND windowHandle,
+                  bool fullscreenEnabled,
+                  bool vsyncEnabled,
+                  float screenNear,
+                  float screenDepth,
+                  const int screenWidth,
+                  const int screenHeight,
+                  const int shadowMapSize);
     ~D3D11Renderer();
 
     void setScene(Scene* scene);

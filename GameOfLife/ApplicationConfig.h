@@ -7,19 +7,17 @@ public:
     ~ApplicationConfig();
 
     bool isFullscreenEnabled();
-    int getScreenHeight();
-    int getScreenWidth();
     bool isVsyncEnabled();
     float getScreenDepth();
     float getScreenNear();
+    int getShadowMapSize();
 
 private:
     bool fullscreenEnabled = false;
-    int screenWidth = 800;
-    int screenHeight = 600;
     bool vsyncEnabled = true;
     float screenDepth = 1000.0f;
     float screenNear = 0.1f;
+    int shadowMapSize = 1080;
 
     bool readBoolean(const std::string& property);
 };

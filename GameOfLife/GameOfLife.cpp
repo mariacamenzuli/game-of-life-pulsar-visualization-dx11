@@ -86,8 +86,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
             screenWidth = GetSystemMetrics(SM_CXSCREEN);
             screenHeight = GetSystemMetrics(SM_CYSCREEN);
         } else {
-            screenWidth = config.getScreenWidth();
-            screenHeight = config.getScreenHeight();
+            screenWidth = 800;
+            screenHeight = 600;
         }
 
         Win32RenderingWindow renderingWindow("CMP502", isFullScreenEnabled, screenWidth, screenHeight, hInstance);
@@ -95,9 +95,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
                                     isFullScreenEnabled,
                                     config.isVsyncEnabled(),
                                     config.getScreenNear(),
-                                    config.getScreenHeight(),
+                                    config.getScreenDepth(),
                                     screenWidth,
-                                    screenHeight);
+                                    screenHeight,
+                                    config.getShadowMapSize());
 
         GameOfLifeSimulator simulation;
         d3D11Renderer.setScene(&simulation);
