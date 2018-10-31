@@ -23,6 +23,7 @@ public:
     bool isDPressed();
     bool isZPressed();
     bool isCPressed();
+    bool isSpacebarPressed();
     void getMouseLocationChange(int& mouseX, int& mouseY) const;
 
 private:

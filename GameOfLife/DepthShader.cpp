@@ -24,7 +24,7 @@ void DepthShader::updateTransformationMatricesBuffer(ID3D11DeviceContext* device
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     HRESULT result = deviceContext->Map(transformationMatricesBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result)) {
-        throw std::runtime_error("Failed to lock the transformation matrices buffer for the light shader input.");
+        throw std::runtime_error("Failed to lock the transformation matrices buffer for the depth shader input.");
     }
     
     auto transformationMatrixData = static_cast<TransformationMatricesBuffer*>(mappedResource.pData);

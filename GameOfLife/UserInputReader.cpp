@@ -111,6 +111,10 @@ bool UserInputReader::isCPressed() {
     return (keyboardState[DIK_C] & 0x80) != 0;
 }
 
+bool UserInputReader::isSpacebarPressed() {
+    return (keyboardState[DIK_SPACE] & 0x80) != 0;
+}
+
 void UserInputReader::getMouseLocationChange(int& mouseX, int& mouseY) const {
     mouseX = this->mouseState.lX;
     mouseY = this->mouseState.lY;

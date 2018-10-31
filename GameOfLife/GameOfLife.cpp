@@ -23,7 +23,7 @@ void logErrorAndNotifyUser(const std::string& log, const std::string& userNotifi
                MB_OK);
 }
 
-void readUserInput(UserInputReader& userInput, Win32RenderingWindow& renderingWindow, Camera& camera, float deltaTime) {
+void readUserInput(UserInputReader& userInput, Win32RenderingWindow& renderingWindow, D3D11Renderer& renderer, Camera& camera, float deltaTime) {
     userInput.read();
 
     if (userInput.isEscapePressed()) {
@@ -60,6 +60,10 @@ void readUserInput(UserInputReader& userInput, Win32RenderingWindow& renderingWi
 
     if (userInput.isCPressed()) {
         camera.pitch(0.5f * deltaTime);
+    }
+
+    if (userInput.isSpacebarPressed()) {
+        renderer.writeCurrentShadowMapToDds();
     }
 
     int mouseChangeX;
@@ -124,7 +128,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 
             while (metricsTracker.timeSinceLastSimulationUpdate > timePerFrame) {
                 metricsTracker.timeSinceLastSimulationUpdate -= timePerFrame;
-                readUserInput(userInput, renderingWindow, camera, timePerFrame);
+                readUserInput(userInput, renderingWindow, d3D11Renderer, camera, timePerFrame);
                 simulation.update(timePerFrame);
                 metricsTracker.newSimulationUpdate();
             }

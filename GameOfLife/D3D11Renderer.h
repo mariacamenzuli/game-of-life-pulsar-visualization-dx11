@@ -28,6 +28,7 @@ public:
     void setCamera(Camera* camera);
     void renderFrame();
     ID3D11Device* getDevice();
+    void writeCurrentShadowMapToDds();
 
 private:
     struct MonitorDescriptor {

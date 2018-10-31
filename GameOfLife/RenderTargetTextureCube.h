@@ -12,6 +12,7 @@ public:
     ID3D11ShaderResourceView** getTextureResource();
     void setAsRenderTarget(ID3D11DeviceContext* deviceContext, int faceIndex);
     void clearRenderTarget(ID3D11DeviceContext* deviceContext, int faceIndex);
+    void saveToFile(ID3D11DeviceContext* deviceContext);
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Texture2D> renderTargetTextureCube;

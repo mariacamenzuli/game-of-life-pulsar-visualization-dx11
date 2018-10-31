@@ -108,3 +108,7 @@ void RenderTargetTextureCube::clearRenderTarget(ID3D11DeviceContext* deviceConte
     deviceContext->ClearRenderTargetView(renderTargetViews[faceIndex].Get(), startingValues);
     deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
+
+void RenderTargetTextureCube::saveToFile(ID3D11DeviceContext* deviceContext) {
+    HRESULT result = D3DX11SaveTextureToFile(deviceContext, renderTargetTextureCube.Get(), D3DX11_IFF_DDS, L"shadow-map.dds");
+}
