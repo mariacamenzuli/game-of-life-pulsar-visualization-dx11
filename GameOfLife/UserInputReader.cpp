@@ -112,6 +112,14 @@ bool UserInputReader::isCPressed() {
     return (keyboardState[DIK_C] & 0x80) != 0;
 }
 
+bool UserInputReader::isRPressed() {
+    return (keyboardState[DIK_R] & 0x80) != 0;
+}
+
+bool UserInputReader::isTPressed() {
+    return (keyboardState[DIK_T] & 0x80) != 0;
+}
+
 bool UserInputReader::isSpacebarPressed() {
     return (keyboardState[DIK_SPACE] & 0x80) != 0;
 }

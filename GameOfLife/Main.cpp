@@ -9,6 +9,8 @@
 #include "ApplicationConfig.h"
 #include "GameOfLifeSimulator.h"
 
+bool shouldRender = true;
+
 void logErrorAndNotifyUser(const std::string& log, const std::string& userNotification) {
     std::cerr << log << std::endl;
     std::cerr << userNotification << std::endl;
@@ -23,7 +25,11 @@ void logErrorAndNotifyUser(const std::string& log, const std::string& userNotifi
                MB_OK);
 }
 
-void readUserInput(UserInputReader& userInput, Win32RenderingWindow& renderingWindow, D3D11Renderer& renderer, Camera& camera, float deltaTime) {
+void readUserInput(UserInputReader& userInput,
+                   Win32RenderingWindow& renderingWindow,
+                   D3D11Renderer& renderer,
+                   Camera& camera,
+                   float deltaTime) {
     userInput.read();
 
     if (userInput.isEscapePressed()) {
@@ -64,6 +70,14 @@ void readUserInput(UserInputReader& userInput, Win32RenderingWindow& renderingWi
 
     if (userInput.isSpacebarPressed()) {
         renderer.writeCurrentShadowMapToDds();
+    }
+
+    if (userInput.isRPressed()) {
+        shouldRender = false;
+    }
+
+    if (userInput.isTPressed()) {
+        shouldRender = true;
     }
 
     int mouseChangeX;
@@ -137,9 +151,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
                 metricsTracker.newSimulationUpdate();
             }
 
-            d3D11Renderer.renderFrame();
+            if (shouldRender) {
+                d3D11Renderer.renderFrame();
+                metricsTracker.newFrameRendered();
+            }
 
-            metricsTracker.newFrameRendered();
             fpsLogTracker++;
         }
     } catch (const D3D11RendererException& e) {

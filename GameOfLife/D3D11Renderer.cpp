@@ -542,7 +542,7 @@ void D3D11Renderer::setBackbufferAsRenderTargetAndClear() {
     deviceContext->OMSetRenderTargets(1, renderTargetView.GetAddressOf(), depthStencilView.Get());
     deviceContext->RSSetViewports(1, &viewport);
 
-    float backBufferStartingColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    float backBufferStartingColor[4] = { 0.0f, 0.0f, 0.01f, 1.0f };
     deviceContext->ClearRenderTargetView(renderTargetView.Get(), backBufferStartingColor);
     deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
