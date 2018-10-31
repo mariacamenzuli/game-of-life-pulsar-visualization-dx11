@@ -61,7 +61,6 @@ void SceneObject::show() {
 }
 
 void SceneObject::translate(float x, float y, float z) {
-    //todo: apply transformation to currentChildren
     D3DXMATRIX translationMatrix;
     D3DXMatrixTranslation(&translationMatrix, x, y, z);
     D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &translationMatrix);

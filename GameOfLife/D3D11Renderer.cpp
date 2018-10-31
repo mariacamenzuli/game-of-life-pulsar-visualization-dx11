@@ -480,7 +480,7 @@ void D3D11Renderer::renderShadowMap(D3DXMATRIX* pointLightProjectionMatrix) {
             if (sceneObject->isVisible()) {
                 // +VE X
                 shadowMap.setAsRenderTarget(deviceContext.Get(), 0);
-                depthShader.updateTransformationMatricesBuffer(deviceContext.Get(), //todo: extract method
+                depthShader.updateTransformationMatricesBuffer(deviceContext.Get(),
                                                                *sceneObject->getWorldMatrix(),
                                                                scene->getPointLight()->getViewMatrixPositiveX(),
                                                                *pointLightProjectionMatrix);

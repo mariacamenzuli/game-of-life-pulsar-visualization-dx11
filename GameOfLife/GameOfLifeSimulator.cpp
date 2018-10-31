@@ -117,7 +117,7 @@ PointLight* GameOfLifeSimulator::getPointLight() {
 void GameOfLifeSimulator::update(float deltaTime) {
     updateCount++;
 
-    rootSceneObject->getChild("world")->rotateY(0.01f * deltaTime);
+    rootSceneObject->getChild("world")->rotateY(0.1f * deltaTime);
 
     rootSceneObject->getChild("sun")->rotateX(-0.3f * deltaTime);
     pointLight.rotateX(-0.3f * deltaTime);

@@ -1,58 +1,59 @@
 #include "UserInputReader.h"
+#include <stdexcept>
 
 UserInputReader::UserInputReader(HINSTANCE hinstance, HWND hwnd) {
     HRESULT result;
 
     result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, reinterpret_cast<void**>(directInput.GetAddressOf()), nullptr);
     if (FAILED(result)) {
-        //todo handle error
+        throw std::runtime_error("Failed to create direct input.");
     }
 
     result = directInput->CreateDevice(GUID_SysKeyboard, keyboard.GetAddressOf(), nullptr);
     if (FAILED(result)) {
-        //todo handle error
+        throw std::runtime_error("Failed to create direct input keyboard.");
     }
 
     // Set the data format.  In this case since it is a keyboard we can use the predefined data format.
     result = keyboard->SetDataFormat(&c_dfDIKeyboard);
     if (FAILED(result)) {
-        //todo handle error
+        throw std::runtime_error("Failed to set they direct input keyboard data format.");
     }
 
     // Set the cooperative level of the keyboard to not share with other programs.
     result = keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
     if (FAILED(result)) {
-        //todo handle error
+        // no-op
     }
 
     // Now acquire the keyboard.
     result = keyboard->Acquire();
     if (FAILED(result)) {
-        //todo handle error
+        // no-op
     }
 
     // Initialize the direct input interface for the mouse.
     result = directInput->CreateDevice(GUID_SysMouse, mouse.GetAddressOf(), nullptr);
     if (FAILED(result)) {
-        //todo handle error
+        throw std::runtime_error("Failed to create direct input mouse.");
     }
 
     // Set the data format for the mouse using the pre-defined mouse data format.
     result = mouse->SetDataFormat(&c_dfDIMouse);
     if (FAILED(result)) {
-        //todo handle error
+        throw std::runtime_error("Failed to create direct input mouse data format.");
     }
 
     // Set the cooperative level of the mouse to share with other programs.
     result = mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
     if (FAILED(result)) {
-        //todo handle error
+        // no-op
     }
 
     // Acquire the mouse.
     result = mouse->Acquire();
     if (FAILED(result)) {
-        //todo handle error
+        // no-op
     }
 
     for (unsigned char& keyState : keyboardState) {
@@ -126,8 +127,6 @@ void UserInputReader::readKeyboard() {
         // If the keyboard lost focus or was not acquired then try to get control back.
         if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED)) {
             keyboard->Acquire();
-        } else {
-            // todo: handle error
         }
     }
 }
@@ -138,8 +137,6 @@ void UserInputReader::readMouse() {
         // If the mouse lost focus or was not acquired then try to get control back.
         if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED)) {
             mouse->Acquire();
-        } else {
-            // todo: handle error
         }
     }
 }
