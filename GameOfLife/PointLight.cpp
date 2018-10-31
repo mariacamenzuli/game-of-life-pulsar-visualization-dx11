@@ -48,94 +48,94 @@ void PointLight::rotateZ(float angleInRadians) {
     D3DXMatrixMultiply(&worldMatrix, &worldMatrix, &rotationMatrix);
 }
 
-void PointLight::getViewMatrixNegativeY(D3DXMATRIX& viewMatrix) {
-    D3DXVECTOR3 up(0.0f, 0.0f, 1.0f);
+D3DXVECTOR3 PointLight::getPosition() {
     D3DXVECTOR3 position3 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
     D3DXVECTOR4 position4;
     D3DXVec3Transform(&position4, &position3, &worldMatrix);
     position3.x = position4.x / position4.w;
     position3.y = position4.y / position4.w;
     position3.z = position4.z / position4.w;
 
-    D3DXVECTOR3 lookAtPoint = position3;
-    lookAtPoint.y -= 1;
-
-    D3DXMatrixLookAtLH(&viewMatrix, &position3, &lookAtPoint, &up);
+    return position3;
 }
 
-void PointLight::getViewMatrixPositiveY(D3DXMATRIX& viewMatrix) {
-    D3DXVECTOR3 up(0.0f, 0.0f, -1.0f);
-    D3DXVECTOR3 position3 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    D3DXVECTOR4 position4;
-    D3DXVec3Transform(&position4, &position3, &worldMatrix);
-    position3.x = position4.x / position4.w;
-    position3.y = position4.y / position4.w;
-    position3.z = position4.z / position4.w;
-
-    D3DXVECTOR3 lookAtPoint = position3;
-    lookAtPoint.y += 1;
-
-    D3DXMatrixLookAtLH(&viewMatrix, &position3, &lookAtPoint, &up);
-}
-
-void PointLight::getViewMatrixNegativeX(D3DXMATRIX& viewMatrix) {
+D3DXMATRIX PointLight::getViewMatrixPositiveX() {
     D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-    D3DXVECTOR3 position3 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    D3DXVECTOR4 position4;
-    D3DXVec3Transform(&position4, &position3, &worldMatrix);
-    position3.x = position4.x / position4.w;
-    position3.y = position4.y / position4.w;
-    position3.z = position4.z / position4.w;
 
-    D3DXVECTOR3 lookAtPoint = position3;
-    lookAtPoint.x -= 1;
-
-    D3DXMatrixLookAtLH(&viewMatrix, &position3, &lookAtPoint, &up);
-}
-
-void PointLight::getViewMatrixPositiveX(D3DXMATRIX& viewMatrix) {
-    D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-    D3DXVECTOR3 position3 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    D3DXVECTOR4 position4;
-    D3DXVec3Transform(&position4, &position3, &worldMatrix);
-    position3.x = position4.x / position4.w;
-    position3.y = position4.y / position4.w;
-    position3.z = position4.z / position4.w;
-
-    D3DXVECTOR3 lookAtPoint = position3;
+    D3DXVECTOR3 position = getPosition();
+    D3DXVECTOR3 lookAtPoint = D3DXVECTOR3(position.x, position.y, position.z);
     lookAtPoint.x += 1;
 
-    D3DXMatrixLookAtLH(&viewMatrix, &position3, &lookAtPoint, &up);
+    D3DXMATRIX viewMatrix;
+    D3DXMatrixLookAtLH(&viewMatrix, &position, &lookAtPoint, &up);
+
+    return viewMatrix;
 }
 
-void PointLight::getViewMatrixNegativeZ(D3DXMATRIX& viewMatrix) {
+D3DXMATRIX PointLight::getViewMatrixNegativeX() {
     D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-    D3DXVECTOR3 position3 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    D3DXVECTOR4 position4;
-    D3DXVec3Transform(&position4, &position3, &worldMatrix);
-    position3.x = position4.x / position4.w;
-    position3.y = position4.y / position4.w;
-    position3.z = position4.z / position4.w;
+    
+    D3DXVECTOR3 position = getPosition();
+    D3DXVECTOR3 lookAtPoint = D3DXVECTOR3(position.x, position.y, position.z);
+    lookAtPoint.x -= 1;
 
-    D3DXVECTOR3 lookAtPoint = position3;
-    lookAtPoint.z -= 1;
+    D3DXMATRIX viewMatrix;
+    D3DXMatrixLookAtLH(&viewMatrix, &position, &lookAtPoint, &up);
 
-    D3DXMatrixLookAtLH(&viewMatrix, &position3, &lookAtPoint, &up);
+    return viewMatrix;
 }
 
-void PointLight::getViewMatrixPositiveZ(D3DXMATRIX& viewMatrix) {
-    D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-    D3DXVECTOR3 position3 = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    D3DXVECTOR4 position4;
-    D3DXVec3Transform(&position4, &position3, &worldMatrix);
-    position3.x = position4.x / position4.w;
-    position3.y = position4.y / position4.w;
-    position3.z = position4.z / position4.w;
+D3DXMATRIX PointLight::getViewMatrixPositiveY() {
+    D3DXVECTOR3 up(0.0f, 0.0f, -1.0f);
 
-    D3DXVECTOR3 lookAtPoint = position3;
+    D3DXVECTOR3 position = getPosition();
+    D3DXVECTOR3 lookAtPoint = D3DXVECTOR3(position.x, position.y, position.z);
+    lookAtPoint.y += 1;
+
+    D3DXMATRIX viewMatrix;
+    D3DXMatrixLookAtLH(&viewMatrix, &position, &lookAtPoint, &up);
+
+    return viewMatrix;
+}
+
+D3DXMATRIX PointLight::getViewMatrixNegativeY() {
+    D3DXVECTOR3 up(0.0f, 0.0f, 1.0f);
+
+    D3DXVECTOR3 position = getPosition();
+    D3DXVECTOR3 lookAtPoint = D3DXVECTOR3(position.x, position.y, position.z);
+    lookAtPoint.y -= 1;
+
+    D3DXMATRIX viewMatrix;
+    D3DXMatrixLookAtLH(&viewMatrix, &position, &lookAtPoint, &up);
+
+    return viewMatrix;
+}
+
+D3DXMATRIX PointLight::getViewMatrixPositiveZ() {
+    D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
+    
+    D3DXVECTOR3 position = getPosition();
+    D3DXVECTOR3 lookAtPoint = D3DXVECTOR3(position.x, position.y, position.z);
     lookAtPoint.z += 1;
 
-    D3DXMatrixLookAtLH(&viewMatrix, &position3, &lookAtPoint, &up);
+    D3DXMATRIX viewMatrix;
+    D3DXMatrixLookAtLH(&viewMatrix, &position, &lookAtPoint, &up);
+
+    return viewMatrix;
+}
+
+D3DXMATRIX PointLight::getViewMatrixNegativeZ() {
+    D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
+   
+    D3DXVECTOR3 position = getPosition();
+    D3DXVECTOR3 lookAtPoint = D3DXVECTOR3(position.x, position.y, position.z);
+    lookAtPoint.z -= 1;
+
+    D3DXMATRIX viewMatrix;
+    D3DXMatrixLookAtLH(&viewMatrix, &position, &lookAtPoint, &up);
+
+    return viewMatrix;
 }
 
 D3DXMATRIX* PointLight::getProjectionMatrix() {

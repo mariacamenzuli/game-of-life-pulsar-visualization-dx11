@@ -17,12 +17,14 @@ public:
     void rotateY(float angleInRadians);
     void rotateZ(float angleInRadians);
 
-    void getViewMatrixNegativeY(D3DXMATRIX& viewMatrix);
-    void getViewMatrixPositiveY(D3DXMATRIX& viewMatrix);
-    void getViewMatrixNegativeX(D3DXMATRIX& viewMatrix);
-    void getViewMatrixPositiveX(D3DXMATRIX& viewMatrix);
-    void getViewMatrixNegativeZ(D3DXMATRIX& viewMatrix);
-    void getViewMatrixPositiveZ(D3DXMATRIX& viewMatrix);
+    D3DXVECTOR3 getPosition();
+
+    D3DXMATRIX getViewMatrixPositiveX();
+    D3DXMATRIX getViewMatrixNegativeX();
+    D3DXMATRIX getViewMatrixPositiveY();
+    D3DXMATRIX getViewMatrixNegativeY();
+    D3DXMATRIX getViewMatrixPositiveZ();
+    D3DXMATRIX getViewMatrixNegativeZ();
 
 private:
     D3DXVECTOR4 diffuse;
