@@ -7,8 +7,8 @@ GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 
 
     const auto worldBoardModel = modelLoader.getModel(ModelLoader::ModelId::WORLD_BOARD);
     auto worldBoard = world->attachChild(std::make_unique<SceneObject>(worldBoardModel), "world_board");
-    worldBoard->scale(37.5f, 7.5f, 37.5f);
-    worldBoard->translate(0.0f, -8.5f, 0.0f);
+    worldBoard->scale(37.5f, 8.0f, 37.5f);
+    worldBoard->translate(0.0f, -9.0f, 0.0f);
 
     auto trees = world->attachChild(std::make_unique<SceneObject>(), "trees");
     const auto treeModel = modelLoader.getModel(ModelLoader::ModelId::TREE);
@@ -94,8 +94,10 @@ GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 
     const auto sunModel = modelLoader.getModel(ModelLoader::ModelId::SUN);
     auto sun = rootSceneObject->attachChild(std::make_unique<SceneObject>(sunModel), "sun");
     sun->translate(0.0f, 0.0f, 150.0f);
+    sun->rotateX(1.5708f);
 
     pointLight.translate(0.0f, 0.0f, 100.0f);
+    pointLight.rotateX(1.5708f);
 }
 
 GameOfLifeSimulator::~GameOfLifeSimulator() = default;
@@ -123,7 +125,7 @@ void GameOfLifeSimulator::update(float deltaTime) {
     std::vector<Cell*> toKill;
     std::vector<Cell*> toSpawn;
 
-    if (updateCount % 1000 == 0) {
+    if (updateCount % 1256 == 0) {
         for (int i = 0; i < 17; i++) {
             for (int j = 0; j < 17; j++) {
                 int liveNeighbors = 0;

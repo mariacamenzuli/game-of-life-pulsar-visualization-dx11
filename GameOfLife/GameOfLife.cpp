@@ -31,19 +31,19 @@ void readUserInput(UserInputReader& userInput, Win32RenderingWindow& renderingWi
     }
 
     if (userInput.isWPressed()) {
-        camera.moveStraight(12.0f * deltaTime);
+        camera.moveStraight(40.0f * deltaTime);
     }
 
     if (userInput.isSPressed()) {
-        camera.moveStraight(-12.0f * deltaTime);
+        camera.moveStraight(-40.0f * deltaTime);
     }
 
     if (userInput.isAPressed()) {
-        camera.moveSideways(-12.0f * deltaTime);
+        camera.moveSideways(-40.0f * deltaTime);
     }
 
     if (userInput.isDPressed()) {
-        camera.moveSideways(12.0f * deltaTime);
+        camera.moveSideways(40.0f * deltaTime);
     }
 
     if (userInput.isQPressed()) {
@@ -102,11 +102,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
         GameOfLifeSimulator simulation;
         d3D11Renderer.setScene(&simulation);
 
-        Camera camera; // todo: should this be in the scene? if so, also move movement of camera
+        Camera camera;
         d3D11Renderer.setCamera(&camera);
 
-        camera.moveStraight(-55.0f);
-        camera.moveVertical(20.0f);
+        // set camera initial position
+        camera.yaw(-1.5708f);
+        camera.moveStraight(-275.0f);
+        camera.moveVertical(50.0f);
+        camera.pitch(0.261799f);
         UserInputReader userInput(hInstance, renderingWindow.getWindowHandle());
 
         renderingWindow.showWindow();
