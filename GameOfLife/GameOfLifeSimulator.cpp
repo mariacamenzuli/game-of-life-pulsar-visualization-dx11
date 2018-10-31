@@ -7,8 +7,8 @@ GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 
 
     const auto worldBoardModel = modelLoader.getModel(ModelLoader::ModelId::WORLD_BOARD);
     auto worldBoard = world->attachChild(std::make_unique<SceneObject>(worldBoardModel), "world_board");
-    worldBoard->scale(37.5f, 1.0f, 37.5f);
-    worldBoard->translate(0.0f, -2.0f, 0.0f);
+    worldBoard->scale(37.5f, 7.5f, 37.5f);
+    worldBoard->translate(0.0f, -8.5f, 0.0f);
 
     auto trees = world->attachChild(std::make_unique<SceneObject>(), "trees");
     const auto treeModel = modelLoader.getModel(ModelLoader::ModelId::TREE);
