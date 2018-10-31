@@ -18,8 +18,8 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Texture2D> renderTargetTextureCube;
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetViews[6];
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer[6];
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView[6];
     D3D11_VIEWPORT viewport;
 };
 

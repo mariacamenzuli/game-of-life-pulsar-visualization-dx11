@@ -51,7 +51,7 @@ bool isInPointLightShadow(PixelDescriptor pixel) {
     float pixelDepthValue = length(shadowMapSamplerVector);
 
     // Set the bias value for fixing the floating point precision issues.
-    float bias = 0.000025f;
+    float bias = 0.555f;
 
     // Subtract the bias from the lightDepthValue.
     pixelDepthValue = pixelDepthValue - bias;

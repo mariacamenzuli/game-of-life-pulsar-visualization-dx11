@@ -54,35 +54,37 @@ void RenderTargetTextureCube::initialize(ID3D11Device* device, int cubeSize) {
         throw std::runtime_error("Failed to create shader resource view for render target texture.");
     }
 
-    D3D11_TEXTURE2D_DESC depthBufferDesc;
-    ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
-    depthBufferDesc.Width = cubeSize;
-    depthBufferDesc.Height = cubeSize;
-    depthBufferDesc.MipLevels = 1;
-    depthBufferDesc.ArraySize = 1;
-    depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthBufferDesc.SampleDesc.Count = 1;
-    depthBufferDesc.SampleDesc.Quality = 0;
-    depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthBufferDesc.CPUAccessFlags = 0;
-    depthBufferDesc.MiscFlags = 0;
+    for (int i = 0; i < 6; ++i) {
+        D3D11_TEXTURE2D_DESC depthBufferDesc;
+        ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
+        depthBufferDesc.Width = cubeSize;
+        depthBufferDesc.Height = cubeSize;
+        depthBufferDesc.MipLevels = 1;
+        depthBufferDesc.ArraySize = 1;
+        depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        depthBufferDesc.SampleDesc.Count = 1;
+        depthBufferDesc.SampleDesc.Quality = 0;
+        depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+        depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        depthBufferDesc.CPUAccessFlags = 0;
+        depthBufferDesc.MiscFlags = 0;
 
-    result = device->CreateTexture2D(&depthBufferDesc, nullptr, depthStencilBuffer.GetAddressOf());
-    if (FAILED(result)) {
-        throw std::runtime_error("Failed to create depth stencil buffer for render target texture.");
-    }
+        result = device->CreateTexture2D(&depthBufferDesc, nullptr, depthStencilBuffer[i].GetAddressOf());
+        if (FAILED(result)) {
+            throw std::runtime_error("Failed to create depth stencil buffer for render target texture.");
+        }
 
-    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-    ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-    depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    depthStencilViewDesc.Texture2D.MipSlice = 0;
+        D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+        ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
+        depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+        depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-    // Create the depth stencil view.
-    result = device->CreateDepthStencilView(depthStencilBuffer.Get(), &depthStencilViewDesc, depthStencilView.GetAddressOf());
-    if (FAILED(result)) {
-        throw std::runtime_error("Failed to create depth stencil view for render target texture.");
+        // Create the depth stencil view.
+        result = device->CreateDepthStencilView(depthStencilBuffer[i].Get(), &depthStencilViewDesc, depthStencilView[i].GetAddressOf());
+        if (FAILED(result)) {
+            throw std::runtime_error("Failed to create depth stencil view for render target texture.");
+        }
     }
 
     // Setup the viewport for rendering.
@@ -99,14 +101,14 @@ ID3D11ShaderResourceView** RenderTargetTextureCube::getTextureResource() {
 }
 
 void RenderTargetTextureCube::setAsRenderTarget(ID3D11DeviceContext* deviceContext, int faceIndex) {
-    deviceContext->OMSetRenderTargets(1, renderTargetViews[faceIndex].GetAddressOf(), depthStencilView.Get());
+    deviceContext->OMSetRenderTargets(1, renderTargetViews[faceIndex].GetAddressOf(), depthStencilView[faceIndex].Get());
     deviceContext->RSSetViewports(1, &viewport);
 }
 
 void RenderTargetTextureCube::clearRenderTarget(ID3D11DeviceContext* deviceContext, int faceIndex) {
     float startingValues[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
     deviceContext->ClearRenderTargetView(renderTargetViews[faceIndex].Get(), startingValues);
-    deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+    deviceContext->ClearDepthStencilView(depthStencilView[faceIndex].Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void RenderTargetTextureCube::saveToFile(ID3D11DeviceContext* deviceContext) {
