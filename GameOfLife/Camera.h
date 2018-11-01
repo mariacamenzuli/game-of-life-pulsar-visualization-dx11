@@ -25,7 +25,7 @@ private:
     };
 
     Orientation orientation;
-    D3DXVECTOR3 position, rotation, lookAtPoint;
+    D3DXVECTOR3 position, rotation;
     D3DXMATRIX viewMatrix;
 
     void initOrientation();

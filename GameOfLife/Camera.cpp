@@ -10,8 +10,6 @@ Camera::Camera() {
     rotation.z = 0.0f;
 
     initOrientation();
-
-    lookAtPoint = position + orientation.forward;
 }
 
 Camera::~Camera() = default;
@@ -22,38 +20,33 @@ D3DXVECTOR3 Camera::getPosition() {
 
 void Camera::moveStraight(float motion) {
     position += motion * orientation.forward;
-    lookAtPoint = position + orientation.forward;
 }
 
 void Camera::moveSideways(float motion) {
     position += motion * orientation.right;
-    lookAtPoint = position + orientation.forward;
 }
 
 void Camera::moveVertical(float motion) {
     position += motion * orientation.up;
-    lookAtPoint = position + orientation.forward;
 }
 
 void Camera::pitch(float rotationX) {
     this->rotation.x += rotationX;
     initOrientation();
-    lookAtPoint = position + orientation.forward;
 }
 
 void Camera::yaw(float rotationY) {
     this->rotation.y += rotationY;
     initOrientation();
-    lookAtPoint = position + orientation.forward;
 }
 
 void Camera::roll(float rotationZ) {
     this->rotation.z += rotationZ;
     initOrientation();
-    lookAtPoint = position + orientation.forward;
 }
 
 void Camera::calculateViewMatrix() {
+    D3DXVECTOR3 lookAtPoint = position + orientation.forward;
     D3DXMatrixLookAtLH(&viewMatrix, &position, &lookAtPoint, &orientation.up);
 }
 
