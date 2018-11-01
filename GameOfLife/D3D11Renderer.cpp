@@ -98,16 +98,15 @@ void D3D11Renderer::renderFrame() {
 
     D3DXMATRIX* pointLightProjectionMatrix = scene->getPointLight()->getProjectionMatrix();
 
-    lightShader.updateCameraBuffer(deviceContext.Get(), camera->getPosition());
-    lightShader.updateAmbientLightBuffer(deviceContext.Get(), scene->getAmbientLight());
-    lightShader.updatePointLightBuffer(deviceContext.Get(), scene->getPointLight()->getDiffuse(), scene->getPointLight()->getSpecular(), *scene->getPointLight()->getWorldMatrix());
-
     depthShader.setActive(deviceContext.Get());
     renderShadowMap(pointLightProjectionMatrix);
     setBackbufferAsRenderTargetAndClear();
 
     lightShader.setActive(deviceContext.Get());
     lightShader.updateDepthMapTexture(deviceContext.Get(), &shadowMap);
+    lightShader.updateCameraBuffer(deviceContext.Get(), camera->getPosition());
+    lightShader.updateAmbientLightBuffer(deviceContext.Get(), scene->getAmbientLight());
+    lightShader.updatePointLightBuffer(deviceContext.Get(), scene->getPointLight()->getDiffuse(), scene->getPointLight()->getSpecular(), *scene->getPointLight()->getWorldMatrix());
     
     int indexStartLocation = 0;
     int vertexStartLocation = 0;
