@@ -10,11 +10,10 @@ GameOfLifeSimulator::GameOfLifeSimulator() : pointLight(D3DXVECTOR4(1.0f, 1.0f, 
     worldBoard->scale(37.5f, 8.0f, 37.5f);
     worldBoard->translate(0.0f, -9.0f, 0.0f);
 
-    auto trees = world->attachChild(std::make_unique<SceneObject>(), "trees");
     const auto treeModel = modelLoader.getModel(ModelLoader::ModelId::TREE);
-    auto tree1 = trees->attachChild(std::make_unique<SceneObject>(treeModel));
-    tree1->scale(6.0f, 6.0f, 6.0f);
-    tree1->translate(0.0f, 10.0f, 0.0f);
+    auto tree = world->attachChild(std::make_unique<SceneObject>(treeModel));
+    tree->scale(6.0f, 6.0f, 6.0f);
+    tree->translate(0.0f, 10.0f, 0.0f);
 
     const auto cellModel = modelLoader.getModel(ModelLoader::ModelId::BUSH);
     auto cellCubes = world->attachChild(std::make_unique<SceneObject>(), "cells");
