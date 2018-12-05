@@ -6,4 +6,4 @@ vsync_enabled: true
 screen_depth: 1000.0
 screen_near: 0.1
 
-shadowmap_size: 1920
+shadowmap_size: 1080
