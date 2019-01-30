@@ -104,7 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
             screenHeight = 600;
         }
 
-        Win32RenderingWindow renderingWindow("CMP502", isFullScreenEnabled, screenWidth, screenHeight, hInstance);
+        Win32RenderingWindow renderingWindow("Game of Life Pulsar", isFullScreenEnabled, screenWidth, screenHeight, hInstance);
         D3D11Renderer d3D11Renderer(renderingWindow.getWindowHandle(),
                                     isFullScreenEnabled,
                                     config.isVsyncEnabled(),

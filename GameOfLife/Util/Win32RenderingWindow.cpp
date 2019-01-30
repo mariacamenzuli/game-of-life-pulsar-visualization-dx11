@@ -4,7 +4,7 @@
 
 Win32RenderingWindow::Win32RenderingWindow(std::string applicationName, bool fullscreenEnabled, int screenWidth, int screenHeight, HINSTANCE& hInstance) {
     WNDCLASS windowClass;
-    windowClass.lpszClassName = L"CMP502 Window Class";
+    windowClass.lpszClassName = L"Rendering Window Class";
     windowClass.lpfnWndProc = WindowProc;
     windowClass.hInstance = hInstance;
     windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
