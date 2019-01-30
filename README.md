@@ -30,4 +30,13 @@ While viewing the scene, the following controls are available.
 - **Escape** terminates the program.
 - **Spacebar** will cause the current state of the shadow map to be written to file for inspection. The file will be saved in the scene’s working directory and will be named shadow-map.dds.
 - **R** will cause the program to stop rendering new frames, without stopping the simulation.
-- **T** will cause the program to continue rendering new frames
+- **T** will cause the program to continue rendering new frames.
+
+## 3D Models Used
+
+The simulation is rendered using the following models.
+
+- World board, an instance of a custom cube model that has been defined manually in the source code. The cube is scaled to become more rectangular in shape. The model is textured using a texture made available on the [Unity Asset Store](https://assetstore.unity.com/packages/2d/textures-materials/floors/tileable-hand-painted-ground-texture-pack-2-62018).
+- Sun model, a mesh made available online on [Google Poly](https://poly.google.com/view/8atTd-V-X7i).
+- Bush model, a mesh made available online on [Free3D](https://free3d.com/3d-model/free-low-poly-nature-pack-16603.html). The cells in the simulation are represented as bushes.
+- Tree model, a mesh made available online on [Free3D](https://free3d.com/3d-model/low-poly-tree-73217.html).
