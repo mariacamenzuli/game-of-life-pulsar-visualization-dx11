@@ -132,19 +132,19 @@
     <ClInclude Include="Util\Win32RenderingWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="depth-pixel.hlsl">
+    <FxCompile Include="Rendering\Shaders\depth-pixel.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">calculateDepth</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="depth-vertex.hlsl">
+    <FxCompile Include="Rendering\Shaders\depth-vertex.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">transformToScreenSpace</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="light-pixel.hlsl">
+    <FxCompile Include="Rendering\Shaders\light-pixel.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">colorPixel</EntryPointName>
     </FxCompile>
-    <FxCompile Include="light-vertex.hlsl">
+    <FxCompile Include="Rendering\Shaders\light-vertex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">transformToScreenSpace</EntryPointName>
     </FxCompile>
