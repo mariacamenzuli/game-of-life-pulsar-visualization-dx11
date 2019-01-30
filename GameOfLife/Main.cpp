@@ -1,13 +1,13 @@
 #include <iostream>
 #include <Windows.h>
 
-#include "Win32RenderingWindow.h"
-#include "D3D11Renderer.h"
-#include "Camera.h"
-#include "UserInputReader.h"
-#include "MetricsTracker.h"
+#include "Util/Win32RenderingWindow.h"
+#include "Rendering/D3D11Renderer.h"
+#include "Rendering/Camera.h"
+#include "Util/UserInputReader.h"
+#include "Util/MetricsTracker.h"
 #include "ApplicationConfig.h"
-#include "GameOfLifeSimulator.h"
+#include "Simulation/GameOfLifeSimulator.h"
 
 bool shouldRender = true;
 

@@ -3,7 +3,7 @@
 #include <map>
 #include <memory>
 
-#include "Model.h"
+#include "../3D Components/Models/Model.h"
 
 class ModelLoader {
 public:

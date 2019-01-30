@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-#include "Model.h"
+#include "Models/Model.h"
 
 class SceneObject {
 public:

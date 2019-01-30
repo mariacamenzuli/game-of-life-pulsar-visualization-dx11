@@ -12,12 +12,12 @@
 #include <wrl.h>
 #include <D3DX10math.h>
 
-#include "Scene.h"
+#include "../3D Components/Scene.h"
 #include "Camera.h"
-#include "LightShader.h"
+#include "Shaders/LightShader.h"
 #include "Texture.h"
 #include "RenderTargetTextureCube.h"
-#include "DepthShader.h"
+#include "Shaders/DepthShader.h"
 
 class D3D11Renderer {
 public:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.h"
+#include "../3D Components/Scene.h"
 #include "ModelLoader.h"
 
 class GameOfLifeSimulator : public Scene {

@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <string>
 
-#include "D3D11Renderer.h"
+#include "../Rendering/D3D11Renderer.h"
 
 class Win32RenderingWindow {
 public:

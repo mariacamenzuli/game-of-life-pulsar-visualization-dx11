@@ -3,7 +3,7 @@
 #include <D3DX10.h>
 #include <vector>
 
-#include "Material.h"
+#include "../Material.h"
 
 class Model {
 public:

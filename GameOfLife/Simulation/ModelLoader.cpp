@@ -1,6 +1,6 @@
 #include "ModelLoader.h"
-#include "ObjModel.h"
-#include "CubeModel.h"
+#include "../3D Components/Models/ObjModel.h"
+#include "../3D Components/Models/CubeModel.h"
 
 ModelLoader::ModelLoader() = default;
 

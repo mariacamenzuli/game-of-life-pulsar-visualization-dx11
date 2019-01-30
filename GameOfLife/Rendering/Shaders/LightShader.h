@@ -4,9 +4,9 @@
 #include <D3D11.h>
 #include <wrl/client.h>
 
-#include "PointLight.h"
-#include "Texture.h"
-#include "RenderTargetTextureCube.h"
+#include "../../3D Components/PointLight.h"
+#include "../Texture.h"
+#include "../RenderTargetTextureCube.h"
 
 class LightShader {
 public:

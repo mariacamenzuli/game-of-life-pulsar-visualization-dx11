@@ -2,7 +2,7 @@
 #include <D3DX11async.h>
 
 #include "LightShader.h"
-#include "FileReader.h"
+#include "../../Util/FileReader.h"
 
 LightShader::LightShader() = default;
 
